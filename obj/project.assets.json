@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\polskalok\\source\\repos\\przychodnia\\przychodnia.csproj",
+      "projectUniqueName": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\przychodnia.csproj",
       "projectName": "przychodnia",
-      "projectPath": "C:\\Users\\polskalok\\source\\repos\\przychodnia\\przychodnia.csproj",
+      "projectPath": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\przychodnia.csproj",
       "packagesPath": "C:\\Users\\polskalok\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\polskalok\\source\\repos\\przychodnia\\obj\\",
+      "outputPath": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
