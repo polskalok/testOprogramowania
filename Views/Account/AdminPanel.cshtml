@@ -1,0 +1,98 @@
+﻿@model List<przychodnia.Models.Uzytkownik>
+
+@{
+    ViewData["Title"] = "Panel Administratora";
+}
+
+<style>
+    .admin-actions {
+        margin-bottom: 20px;
+        display: flex;
+        gap: 10px;
+    }
+
+    .search-box {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .table-custom {
+        width: 100%;
+        background-color: white;
+        border-collapse: collapse;
+    }
+
+        .table-custom th {
+            background-color: #B2DAFA; /* Jasny błękitny z nagłówka */
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid #1B263B;
+        }
+
+        .table-custom td {
+            padding: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+    .btn-action {
+        padding: 5px 10px;
+        text-decoration: none;
+        font-size: 0.9rem;
+        border: 1px solid #1B263B;
+        color: #1B263B;
+    }
+
+        .btn-action:hover {
+            background-color: #1B263B;
+            color: white;
+        }
+</style>
+
+<h2>Panel Administratora</h2>
+
+<div class="admin-actions">
+    <a href="#" class="nav-btn">Dodanie użytkownika</a>
+    <a href="#" class="nav-btn">Wyświetlenie listy użytkowników</a>
+</div>
+
+<div class="search-box">
+    <input type="text" class="form-control" placeholder="Wyszukaj po nazwisku..." style="max-width: 300px;" />
+    <input type="text" class="form-control" placeholder="Wyszukaj zapomnianych (PESEL)..." style="max-width: 300px;" />
+</div>
+
+<table class="table-custom">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Login</th>
+            <th>Imię i Nazwisko</th>
+            <th>Rola</th>
+            <th>Status</th>
+            <th>Akcje</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Id</td>
+                <td>@user.Login</td>
+                <td>@user.Imie @user.Nazwisko</td>
+                <td>
+                    @(user.Permisje == 1 ? "Admin" : user.Permisje == 2 ? "Pracownik" : "Pacjent")
+                </td>
+                <td>
+                    <span class="badge @(user.CzyAktywny ? "bg-success" : "bg-danger")">
+                        @(user.CzyAktywny ? "Aktywny" : "Zapomniany")
+                    </span>
+                </td>
+                <td>
+                    <a href="#" class="btn-action">Edytuj</a>
+                    <a href="#" class="btn-action">Zapomnij</a>
+                    <a href="@Url.Action("Podglad", "Account", new { id = user.Id })" class="btn-action">Podgląd</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
