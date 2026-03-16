@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Panel Pacjenta";
+}
+
+<div class="container text-center" style="margin-top: 50px;">
+    <div class="card shadow" style="padding: 40px; border-radius: 15px; border-left: 5px solid #28a745;">
+        <h1 class="display-4" style="color: #28a745;">Jesteś pacjentem</h1>
+        <hr />
+        <p class="lead">Witaj w Twoim internetowym koncie pacjenta.</p>
+        <p>Tutaj będziesz mógł wkrótce sprawdzać swoje wizyty i wyniki badań.</p>
+        <div class="mt-4">
+            <a href="@Url.Action("Index", "Home")" class="btn btn-success">Wróć do strony głównej</a>
+        </div>
+    </div>
+</div>

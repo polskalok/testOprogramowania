@@ -1,62 +1,14 @@
 ﻿@{
-    Layout = "_Layout"; // Upewnij się, że w _Layout.cshtml masz gradient w CSS
-}
-
-<style>
-    /* Specyficzne style dla sekcji logowania */
-    .login-container {
-        max-width: 400px;
-        margin: 50px auto;
-        background: white;
-        padding: 30px;
-        /* Brak mocnych pogrubień w głównej sekcji zgodnie z Twoim życzeniem */
-    }
-
-    .login-header {
-        border-bottom: 4px solid #2C3E50; /* Pogrubione oddzielenie nagłówka */
-        margin-bottom: 20px;
-        padding-bottom: 10px;
-        text-align: center;
-    }
-
-    .form-control {
-        margin-bottom: 15px;
-        border: 2px solid #B2DAFA; /* Delikatniejsza ramka dla pól tekstowych */
-    }
-
-    .btn-login {
-        background-color: #2C3E50;
-        color: white;
-        width: 100%;
-        font-weight: bold;
-    }
-</style>
-
-<div class="login-container">
-    <div class="login-header">
-        <h2>Logowanie</h2>
-    </div>
-
-    <form method="post" action="/Account/Login">
-        <div class="form-group">
-            <label>Login:</label>
-            <input type="text" name="Username" class="form-control" placeholder="Wprowadź login" required />
-        </div>
-        <div class="form-group">
-            <label>Hasło:</label>
-            <input type="password" name="Password" class="form-control" placeholder="Wprowadź hasło" required />
-        </div>
-        
-        <button type="submit" class="btn btn-login">Zaloguj się</button>
-        <button type="button" class="btn btn-outline-secondary w-100 mt-2" disabled>Rejestracja (wkrótce)</button>
-    </form>
-</div>
-
-@{
     ViewData["Title"] = "Strona Główna";
 }
 
-<div class="welcome-section" style="text-align: center; padding: 50px;">
-    <h1>Witaj w systemie Przychodni</h1>
-    <p>Zalogowałeś się pomyślnie jako pacjent/pracownik.</p>
+<div class="text-center" style="margin-top: 100px;">
+    <h1 class="display-4" style="font-weight: bold; color: #1B263B;">Witaj w systemie Przychodni</h1>
+    <p class="lead">Zadbaj o swoje zdrowie z naszym profesjonalnym personelem.</p>
+    
+    <div class="mt-5">
+        <a href="@Url.Action("Login", "Account")" class="btn btn-primary btn-lg" style="background-color: #1B263B; padding: 15px 40px;">
+            Zaloguj się do systemu
+        </a>
+    </div>
 </div>

@@ -11,20 +11,16 @@
         gap: 10px;
     }
 
-    .search-box {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 20px;
-    }
-
     .table-custom {
         width: 100%;
         background-color: white;
         border-collapse: collapse;
+        margin-top: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
         .table-custom th {
-            background-color: #B2DAFA; /* Jasny błękitny z nagłówka */
+            background-color: #B2DAFA;
             padding: 12px;
             text-align: left;
             border-bottom: 2px solid #1B263B;
@@ -36,15 +32,30 @@
         }
 
     .btn-action {
-        padding: 5px 10px;
+        padding: 5px 12px;
         text-decoration: none;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         border: 1px solid #1B263B;
         color: #1B263B;
+        border-radius: 4px;
+        transition: 0.2s;
     }
 
         .btn-action:hover {
             background-color: #1B263B;
+            color: white;
+        }
+
+    .nav-btn {
+        padding: 10px 20px;
+        background-color: #1B263B;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+    
+        .nav-btn:hover {
+            background-color: #2c3e50;
             color: white;
         }
 </style>
@@ -52,14 +63,29 @@
 <h2>Panel Administratora</h2>
 
 <div class="admin-actions">
-    <a href="#" class="nav-btn">Dodanie użytkownika</a>
-    <a href="#" class="nav-btn">Wyświetlenie listy użytkowników</a>
+    <a href="@Url.Action("DodajUzytkownik", "Account")" class="nav-btn">Dodaj Nowego Użytkownika</a>
+    <a href="@Url.Action("AdminPanel", "Account")" class="btn btn-outline-secondary">Odśwież Listę</a>
 </div>
 
-<div class="search-box">
-    <input type="text" class="form-control" placeholder="Wyszukaj po nazwisku..." style="max-width: 300px;" />
-    <input type="text" class="form-control" placeholder="Wyszukaj zapomnianych (PESEL)..." style="max-width: 300px;" />
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <form asp-action="AdminPanel" method="get" class="row g-3">
+            <div class="col-md-9">
+                <input type="text" name="searchString" value="@ViewBag.CurrentFilter"
+                       class="form-control" placeholder="Wyszukaj po nazwisku lub PESEL..." />
+            </div>
+            <div class="col-md-3 d-grid gap-2 d-md-block">
+                <button type="submit" class="btn btn-primary" style="background-color: #1B263B;">Szukaj</button>
+                <a href="@Url.Action("AdminPanel")" class="btn btn-outline-secondary">Wyczyść</a>
+            </div>
+        </form>
+    </div>
 </div>
+
+@if (!string.IsNullOrEmpty(ViewBag.CurrentFilter))
+{
+    <p class="text-muted">Wyniki wyszukiwania dla: <strong>@ViewBag.CurrentFilter</strong></p>
+}
 
 <table class="table-custom">
     <thead>
@@ -80,7 +106,20 @@
                 <td>@user.Login</td>
                 <td>@user.Imie @user.Nazwisko</td>
                 <td>
-                    @(user.Permisje == 1 ? "Admin" : user.Permisje == 2 ? "Pracownik" : "Pacjent")
+                    @if (user.Permisje == 1)
+                    {
+                        <span>Admin</span>
+                    }
+                    else if (user.Permisje == 2)
+                    {
+
+                        <span>Pracownik</span>
+                    }
+                    else
+                    {
+
+                        <span>Pacjent</span>
+                    }
                 </td>
                 <td>
                     <span class="badge @(user.CzyAktywny ? "bg-success" : "bg-danger")">
@@ -88,9 +127,14 @@
                     </span>
                 </td>
                 <td>
-                    <a href="#" class="btn-action">Edytuj</a>
-                    <a href="#" class="btn-action">Zapomnij</a>
                     <a href="@Url.Action("Podglad", "Account", new { id = user.ID })" class="btn-action">Podgląd</a>
+                    
+                    @if (user.CzyAktywny)
+                    {
+                        <a href="@Url.Action("Zapomnij", "Account", new { id = user.ID })"
+                           class="btn-action"
+                           onclick="return confirm('Czy na pewno chcesz zmienić status na Zapomniany?')">Zapomnij</a>
+                    }
                 </td>
             </tr>
         }

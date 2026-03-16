@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using przychodnia.Models;
 using przychodnia.Services;
-using przychodnia.Data; // Musisz mieć tu swój DbContext
+using przychodnia.Data; 
 using System.Linq;
 
 namespace przychodnia.Controllers
@@ -10,7 +10,7 @@ namespace przychodnia.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        // Konstruktor, który wstrzykuje bazę danych
+        
         public AccountController(ApplicationDbContext context)
         {
             _context = context;
@@ -19,38 +19,66 @@ namespace przychodnia.Controllers
         [HttpGet]
         public IActionResult Login() => View();
 
-
         [HttpPost]
         public IActionResult Login(string login, string password)
         {
             var hashed = PasswordHasher.HashPassword(password);
+            var userCheck = _context.Uzytkownicy.FirstOrDefault(u => u.Login == login);
 
-            // Dodajemy warunek: u.CzyAktywny == true
-            var user = _context.Uzytkownicy.FirstOrDefault(u =>
-                u.Login == login &&
-                u.Haslo == hashed &&
-                u.CzyAktywny == true);
-
-            if (user != null)
+            if (userCheck == null || userCheck.Haslo != hashed || !userCheck.CzyAktywny)
             {
-                if (user.Permisje == 1) return RedirectToAction("AdminPanel");
-                return RedirectToAction("Index", "Home");
+                ViewBag.Error = "Błędny login, hasło lub konto nieaktywne.";
+                return View();
             }
 
-            ViewBag.Error = "Błędny login, hasło lub konto jest nieaktywne";
+            
+            switch (userCheck.Permisje)
+            {
+                case 1: // Administrator
+                    return RedirectToAction("AdminPanel");
+                case 2: // Pracownik
+                    return RedirectToAction("PracownikPanel");
+                case 0: // Zwykły użytkownik
+                    return RedirectToAction("PacjentPanel");
+                default:
+                    return RedirectToAction("Index", "Home");
+            }
+        }
+
+        
+        public IActionResult PracownikPanel()
+        {
             return View();
         }
 
-        public IActionResult AdminPanel()
+       
+        public IActionResult PacjentPanel()
         {
-            // Pobieramy wszystkich użytkowników prosto z bazy do tabeli
-            var listaUzytkownikow = _context.Uzytkownicy.ToList();
-            return View(listaUzytkownikow);
+            return View();
+        }
+
+        public IActionResult AdminPanel(string searchString)
+        {
+
+            var uzytkownicy = from u in _context.Uzytkownicy
+                              select u;
+
+       
+            if (!string.IsNullOrEmpty(searchString))
+            {
+               
+                uzytkownicy = uzytkownicy.Where(s => s.Nazwisko.Contains(searchString)
+                                                  || s.Pesel.Contains(searchString));
+
+              
+                ViewBag.CurrentFilter = searchString;
+            }
+
+            return View(uzytkownicy.ToList());
         }
 
         public IActionResult Podglad(int id)
         {
-            // Szukamy w bazie po ID (klucz główny)
             var user = _context.Uzytkownicy.FirstOrDefault(u => u.ID == id);
 
             if (user == null)
@@ -63,14 +91,19 @@ namespace przychodnia.Controllers
 
         [HttpGet]
         public IActionResult DodajUzytkownik() => View();
-
         [HttpPost]
         public IActionResult DodajUzytkownik(Uzytkownik nowyUzytkownik)
         {
-            // Haszujemy hasło przed zapisem do bazy
-            nowyUzytkownik.Haslo = PasswordHasher.HashPassword(nowyUzytkownik.Haslo);
+            
+            if (string.IsNullOrEmpty(nowyUzytkownik.Haslo))
+            {
+                ViewBag.Error = "Hasło nie może być puste!";
+                return View();
+            }
 
-            // Logika wyciągania daty urodzenia z PESEL (BirthDate)
+            nowyUzytkownik.Haslo = PasswordHasher.HashPassword(nowyUzytkownik.Haslo);
+          
+
             if (!string.IsNullOrEmpty(nowyUzytkownik.Pesel) && nowyUzytkownik.Pesel.Length >= 6)
             {
                 try
@@ -90,7 +123,6 @@ namespace przychodnia.Controllers
                 }
             }
 
-            // Zapis do prawdziwej bazy projekt.db
             _context.Uzytkownicy.Add(nowyUzytkownik);
             _context.SaveChanges();
             return RedirectToAction("AdminPanel");
@@ -101,8 +133,8 @@ namespace przychodnia.Controllers
 
             if (user != null)
             {
-                user.CzyAktywny = false; // Zmieniamy status
-                _context.SaveChanges();  // Zapisujemy w projekt.db
+                user.CzyAktywny = false; 
+                _context.SaveChanges();  
             }
 
             return RedirectToAction("AdminPanel");

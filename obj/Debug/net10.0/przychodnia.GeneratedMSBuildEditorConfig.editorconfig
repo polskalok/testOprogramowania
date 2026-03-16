@@ -34,16 +34,24 @@ build_property.EnableCodeStyleSeverity =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxBZG1pblBhbmVsLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/polskalok/Documents/GitHub/testOprogramowania/Views/Account/DodajUzytkownika.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxEb2RhalV6eXRrb3duaWthLmNzaHRtbA==
+[C:/Users/polskalok/Documents/GitHub/testOprogramowania/Views/Account/DodajUzytkownik.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxEb2RhalV6eXRrb3duaWsuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/polskalok/Documents/GitHub/testOprogramowania/Views/Account/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/polskalok/Documents/GitHub/testOprogramowania/Views/Account/PacjentPanel.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxQYWNqZW50UGFuZWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/polskalok/Documents/GitHub/testOprogramowania/Views/Account/Podglad.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxQb2RnbGFkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/polskalok/Documents/GitHub/testOprogramowania/Views/Account/PracownikPanel.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxQcmFjb3duaWtQYW5lbC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/polskalok/Documents/GitHub/testOprogramowania/Views/Home/Index.cshtml]
