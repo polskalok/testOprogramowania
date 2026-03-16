@@ -76,7 +76,7 @@
         @foreach (var user in Model)
         {
             <tr>
-                <td>@user.Id</td>
+                <td>@user.ID</td>
                 <td>@user.Login</td>
                 <td>@user.Imie @user.Nazwisko</td>
                 <td>
@@ -90,7 +90,7 @@
                 <td>
                     <a href="#" class="btn-action">Edytuj</a>
                     <a href="#" class="btn-action">Zapomnij</a>
-                    <a href="@Url.Action("Podglad", "Account", new { id = user.Id })" class="btn-action">Podgląd</a>
+                    <a href="@Url.Action("Podglad", "Account", new { id = user.ID })" class="btn-action">Podgląd</a>
                 </td>
             </tr>
         }

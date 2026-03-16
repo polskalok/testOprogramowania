@@ -1,34 +1,58 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\ukran\\Documents\\GitHub\\testOprogramowania\\",
+  "WorkspaceRootPath": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\ukran\\documents\\github\\testoprogramowania\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\polskalok\\documents\\github\\testoprogramowania\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\ukran\\documents\\github\\testoprogramowania\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\polskalok\\documents\\github\\testoprogramowania\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\polskalok\\documents\\github\\testoprogramowania\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\polskalok\\documents\\github\\testoprogramowania\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\ukran\\documents\\github\\testoprogramowania\\views\\account\\login.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:views\\account\\login.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}"
+      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\polskalok\\documents\\github\\testoprogramowania\\models\\uzytkownik.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:models\\uzytkownik.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\ukran\\documents\\github\\testoprogramowania\\views\\account\\dodajuzytkownika.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\polskalok\\documents\\github\\testoprogramowania\\views\\account\\dodajuzytkownika.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:views\\account\\dodajuzytkownika.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\ukran\\documents\\github\\testoprogramowania\\przychodnia.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\polskalok\\documents\\github\\testoprogramowania\\views\\account\\adminpanel.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:views\\account\\adminpanel.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\polskalok\\documents\\github\\testoprogramowania\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\polskalok\\documents\\github\\testoprogramowania\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\polskalok\\documents\\github\\testoprogramowania\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\polskalok\\documents\\github\\testoprogramowania\\views\\account\\login.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:views\\account\\login.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\polskalok\\documents\\github\\testoprogramowania\\przychodnia.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
       "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:przychodnia.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\ukran\\documents\\github\\testoprogramowania\\views\\account\\podglad.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\polskalok\\documents\\github\\testoprogramowania\\views\\account\\podglad.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:views\\account\\podglad.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\ukran\\documents\\github\\testoprogramowania\\models\\uzytkownik.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:models\\uzytkownik.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -38,56 +62,95 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "przychodnia",
-              "DocumentMoniker": "C:\\Users\\ukran\\Documents\\GitHub\\testOprogramowania\\przychodnia.csproj",
-              "RelativeDocumentMoniker": "przychodnia.csproj",
-              "ToolTip": "C:\\Users\\ukran\\Documents\\GitHub\\testOprogramowania\\przychodnia.csproj",
-              "RelativeToolTip": "przychodnia.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-03-16T00:42:32.803Z",
+              "DocumentIndex": 6,
+              "Title": "AdminPanel.cshtml",
+              "DocumentMoniker": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\Views\\Account\\AdminPanel.cshtml",
+              "RelativeDocumentMoniker": "Views\\Account\\AdminPanel.cshtml",
+              "ToolTip": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\Views\\Account\\AdminPanel.cshtml",
+              "RelativeToolTip": "Views\\Account\\AdminPanel.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFwAAABRAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-03-16T11:19:57.41Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "DodajUzytkownika.cshtml",
-              "DocumentMoniker": "C:\\Users\\ukran\\Documents\\GitHub\\testOprogramowania\\Views\\Account\\DodajUzytkownika.cshtml",
-              "RelativeDocumentMoniker": "Views\\Account\\DodajUzytkownika.cshtml",
-              "ToolTip": "C:\\Users\\ukran\\Documents\\GitHub\\testOprogramowania\\Views\\Account\\DodajUzytkownika.cshtml",
-              "RelativeToolTip": "Views\\Account\\DodajUzytkownika.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-03-15T19:58:30.548Z",
+              "DocumentIndex": 7,
+              "Title": "ApplicationDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\Data\\ApplicationDbContext.cs",
+              "RelativeDocumentMoniker": "Data\\ApplicationDbContext.cs",
+              "ToolTip": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\Data\\ApplicationDbContext.cs",
+              "RelativeToolTip": "Data\\ApplicationDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-16T11:15:56.067Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Uzytkownik.cs",
+              "DocumentMoniker": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\Models\\Uzytkownik.cs",
+              "RelativeDocumentMoniker": "Models\\Uzytkownik.cs",
+              "ToolTip": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\Models\\Uzytkownik.cs",
+              "RelativeToolTip": "Models\\Uzytkownik.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-15T19:27:14.545Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "Login.cshtml",
-              "DocumentMoniker": "C:\\Users\\ukran\\Documents\\GitHub\\testOprogramowania\\Views\\Account\\Login.cshtml",
-              "RelativeDocumentMoniker": "Views\\Account\\Login.cshtml",
-              "ToolTip": "C:\\Users\\ukran\\Documents\\GitHub\\testOprogramowania\\Views\\Account\\Login.cshtml",
-              "RelativeToolTip": "Views\\Account\\Login.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-03-16T11:10:48.777Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\Views\\Home\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Home\\Index.cshtml",
+              "ToolTip": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\Views\\Home\\Index.cshtml",
+              "RelativeToolTip": "Views\\Home\\Index.cshtml",
+              "ViewState": "AgIAAB8AAAAAAAAAAAAAAD0AAAAGAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-03-15T19:58:31.324Z",
+              "WhenOpened": "2026-03-16T11:10:25.219Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\Views\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\Views\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "Views\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAADoAAAAAAAAAAAAqwF4AAABNAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-03-16T11:09:19.167Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\ukran\\Documents\\GitHub\\testOprogramowania\\Program.cs",
+              "DocumentMoniker": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "C:\\Users\\ukran\\Documents\\GitHub\\testOprogramowania\\Program.cs",
+              "ToolTip": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-15T19:23:34.545Z",
               "EditorCaption": ""
@@ -96,40 +159,76 @@
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "AccountController.cs",
-              "DocumentMoniker": "C:\\Users\\ukran\\Documents\\GitHub\\testOprogramowania\\Controllers\\AccountController.cs",
+              "DocumentMoniker": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\Controllers\\AccountController.cs",
               "RelativeDocumentMoniker": "Controllers\\AccountController.cs",
-              "ToolTip": "C:\\Users\\ukran\\Documents\\GitHub\\testOprogramowania\\Controllers\\AccountController.cs",
+              "ToolTip": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\Controllers\\AccountController.cs",
               "RelativeToolTip": "Controllers\\AccountController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAvAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAF8AAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-14T18:19:55.609Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Uzytkownik.cs",
-              "DocumentMoniker": "C:\\Users\\ukran\\Documents\\GitHub\\testOprogramowania\\Models\\Uzytkownik.cs",
-              "RelativeDocumentMoniker": "Models\\Uzytkownik.cs",
-              "ToolTip": "C:\\Users\\ukran\\Documents\\GitHub\\testOprogramowania\\Models\\Uzytkownik.cs",
-              "RelativeToolTip": "Models\\Uzytkownik.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACUAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-15T19:27:14.545Z",
+              "DocumentIndex": 5,
+              "Title": "DodajUzytkownika.cshtml",
+              "DocumentMoniker": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\Views\\Account\\DodajUzytkownika.cshtml",
+              "RelativeDocumentMoniker": "Views\\Account\\DodajUzytkownika.cshtml",
+              "ToolTip": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\Views\\Account\\DodajUzytkownika.cshtml",
+              "RelativeToolTip": "Views\\Account\\DodajUzytkownika.cshtml",
+              "ViewState": "AgIAACwAAAAAAAAAAADwv00AAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-03-15T19:58:30.548Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 9,
+              "Title": "HomeController.cs",
+              "DocumentMoniker": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\Controllers\\HomeController.cs",
+              "RelativeDocumentMoniker": "Controllers\\HomeController.cs",
+              "ToolTip": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\Controllers\\HomeController.cs",
+              "RelativeToolTip": "Controllers\\HomeController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-16T11:10:00.563Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Login.cshtml",
+              "DocumentMoniker": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\Views\\Account\\Login.cshtml",
+              "RelativeDocumentMoniker": "Views\\Account\\Login.cshtml",
+              "ToolTip": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\Views\\Account\\Login.cshtml",
+              "RelativeToolTip": "Views\\Account\\Login.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-03-15T19:58:31.324Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "przychodnia.csproj",
+              "DocumentMoniker": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\przychodnia.csproj",
+              "RelativeDocumentMoniker": "przychodnia.csproj",
+              "ToolTip": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\przychodnia.csproj",
+              "RelativeToolTip": "przychodnia.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-03-16T00:42:32.803Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
               "Title": "Podglad.cshtml",
-              "DocumentMoniker": "C:\\Users\\ukran\\Documents\\GitHub\\testOprogramowania\\Views\\Account\\Podglad.cshtml",
+              "DocumentMoniker": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\Views\\Account\\Podglad.cshtml",
               "RelativeDocumentMoniker": "Views\\Account\\Podglad.cshtml",
-              "ToolTip": "C:\\Users\\ukran\\Documents\\GitHub\\testOprogramowania\\Views\\Account\\Podglad.cshtml",
+              "ToolTip": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\Views\\Account\\Podglad.cshtml",
               "RelativeToolTip": "Views\\Account\\Podglad.cshtml",
               "ViewState": "AgIAAEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-03-15T19:40:48.674Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-15T19:40:48.674Z"
             }
           ]
         }

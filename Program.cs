@@ -1,4 +1,12 @@
+using Microsoft.EntityFrameworkCore;
+using przychodnia.Data;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlite("Data Source=projekt.db"));
+
+builder.Services.AddControllersWithViews();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

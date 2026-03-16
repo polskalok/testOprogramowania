@@ -80,7 +80,7 @@
     </header>
 
     <nav class="main-nav">
-        <a href="/" class="nav-btn">Przycisk 1</a>
+        <a asp-controller="Home" asp-action="Index" class="nav-btn">Strona Główna</a>
         <a href="#" class="nav-btn">Przycisk 2</a>
         <a href="#" class="nav-btn">Przycisk 3</a>
         <a href="#" class="nav-btn">Przycisk 4</a>
@@ -90,6 +90,9 @@
     <main class="main-content">
         @RenderBody()
     </main>
+    <link rel="stylesheet" href="css/site.css" />
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
 </body>
 </html>
