@@ -24,7 +24,7 @@ namespace przychodnia.Controllers
         public IActionResult Login(string login, string password)
         {
             var hashed = PasswordHasher.HashPassword(password);
-            var userCheck = _context.Uzytkownicy.FirstOrDefault(u => u.Login == login);
+            var userCheck = _context.Uzytkownicy.FirstOrDefault(user => user.Login == login);
 
             if (userCheck == null || userCheck.Haslo != hashed || !userCheck.CzyAktywny)
             {
@@ -60,22 +60,21 @@ namespace przychodnia.Controllers
 
         public IActionResult AdminPanel(string searchString, bool showForgotten = false)
         {
-            // Start with all users and then filter by active/forgotten based on showForgotten
             var uzytkownicy = _context.Uzytkownicy.AsQueryable();
 
             if (showForgotten)
             {
-                uzytkownicy = uzytkownicy.Where(u => !u.CzyAktywny);
+                uzytkownicy = uzytkownicy.Where(uzytkownik => !uzytkownik.CzyAktywny);
             }
             else
             {
-                uzytkownicy = uzytkownicy.Where(u => u.CzyAktywny);
+                uzytkownicy = uzytkownicy.Where(uzytkownik => uzytkownik.CzyAktywny);
             }
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                uzytkownicy = uzytkownicy.Where(s => s.Nazwisko.Contains(searchString)
-                                                  || s.Pesel.Contains(searchString));
+                uzytkownicy = uzytkownicy.Where(search => search.Nazwisko.Contains(searchString)
+                                                  || search.Pesel.Contains(searchString));
             }
 
             ViewBag.ShowForgotten = showForgotten;
@@ -86,7 +85,7 @@ namespace przychodnia.Controllers
 
         public IActionResult Podglad(int id)
         {
-            var user = _context.Uzytkownicy.FirstOrDefault(u => u.ID == id);
+            var user = _context.Uzytkownicy.FirstOrDefault(user => user.ID == id);
 
             if (user == null)
             {
@@ -102,31 +101,28 @@ namespace przychodnia.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DodajUzytkownik(Uzytkownik nowyUzytkownik)
         {
-            // Server-side model validation
             if (!ModelState.IsValid)
             {
                 return View(nowyUzytkownik);
             }
 
-            // Required password check (we store only hashed)
             if (string.IsNullOrWhiteSpace(nowyUzytkownik.Haslo))
             {
                 ModelState.AddModelError("Haslo", "Hasło jest wymagane");
                 return View(nowyUzytkownik);
             }
 
-            // Uniqueness checks
-            if (_context.Uzytkownicy.Any(u => u.Login == nowyUzytkownik.Login))
+            if (_context.Uzytkownicy.Any(uzytkownik => uzytkownik.Login == nowyUzytkownik.Login))
             {
                 ModelState.AddModelError("Login", "Login już istnieje");
             }
 
-            if (_context.Uzytkownicy.Any(u => u.Pesel == nowyUzytkownik.Pesel))
+            if (_context.Uzytkownicy.Any(uzytkownik => uzytkownik.Pesel == nowyUzytkownik.Pesel))
             {
                 ModelState.AddModelError("Pesel", "PESEL już istnieje w systemie");
             }
 
-            if (_context.Uzytkownicy.Any(u => u.Email == nowyUzytkownik.Email))
+            if (_context.Uzytkownicy.Any(uzytkownik => uzytkownik.Email == nowyUzytkownik.Email))
             {
                 ModelState.AddModelError("Email", "E-mail już istnieje w systemie");
             }
@@ -136,7 +132,6 @@ namespace przychodnia.Controllers
                 return View(nowyUzytkownik);
             }
 
-            // Validate PESEL fully
             if (!TryValidatePesel(nowyUzytkownik.Pesel, nowyUzytkownik.Plec, out DateTime dob, out string peselError))
             {
                 ModelState.AddModelError("Pesel", peselError);
@@ -145,7 +140,6 @@ namespace przychodnia.Controllers
 
             nowyUzytkownik.DataUrodzenia = dob;
 
-            // Hash password and save
             nowyUzytkownik.Haslo = PasswordHasher.HashPassword(nowyUzytkownik.Haslo);
 
             _context.Uzytkownicy.Add(nowyUzytkownik);
@@ -153,7 +147,6 @@ namespace przychodnia.Controllers
             return RedirectToAction("AdminPanel");
         }
 
-        // PESEL validation: date, gender, control digit
         private bool TryValidatePesel(string pesel, string plec, out DateTime dateOfBirth, out string error)
         {
             dateOfBirth = default;
@@ -210,7 +203,7 @@ namespace przychodnia.Controllers
                 return false;
             }
 
-            // Gender check: the 10th digit (index 9) determines gender (odd male, even female)
+            
             int genderDigit = int.Parse(pesel.Substring(9, 1));
             bool isMale = (genderDigit % 2) == 1;
             bool modelSaysMale = (plec ?? string.Empty).ToLower().Contains("m");
@@ -221,7 +214,7 @@ namespace przychodnia.Controllers
                 return false;
             }
 
-            // Checksum
+            
             int[] weights = new[] { 1, 3, 7, 9, 1, 3, 7, 9, 1, 3 };
             int sum = 0;
             for (int i = 0; i < 10; i++)
@@ -248,42 +241,42 @@ namespace przychodnia.Controllers
             if (!user.CzyAktywny)
                 return RedirectToAction("AdminPanel");
 
-            // Generate anonymized unique login
+            
             user.Login = GenerateUniqueLogin();
 
-            // Generate anonymized unique email
+            
             user.Email = GenerateUniqueEmail();
 
-            // Random phone (9 digits)
+            
             user.Telefon = GenerateRandomDigits(9);
 
-            // Random gender
+
             var genderIsMale = RandomNumberGenerator.GetInt32(0, 2) == 1;
             user.Plec = genderIsMale ? "Mężczyzna" : "Kobieta";
 
-            // Random DOB between 18 and 90 years old
+
             var dob = GenerateRandomDateOfBirth(18, 90);
             user.DataUrodzenia = dob;
 
-            // Generate PESEL matching DOB and gender, ensure uniqueness
+
             string pesel;
             int attempts = 0;
             do
             {
                 pesel = GeneratePeselFor(dob, genderIsMale);
                 attempts++;
-            } while (_context.Uzytkownicy.Any(u => u.Pesel == pesel) && attempts < 10);
+            } while (_context.Uzytkownicy.Any(uzytkownik => uzytkownik.Pesel == pesel) && attempts < 10);
             user.Pesel = pesel;
 
-            // Replace name/surname with anonymized values
+
             user.Imie = "Anonim" + RandomString(6);
             user.Nazwisko = "Uzytkownik" + RandomString(6);
 
-            // Revoke privileges and deactivate
+
             user.Permisje = 0;
             user.CzyAktywny = false;
 
-            // Replace password with random hash
+
             user.Haslo = PasswordHasher.HashPassword(Guid.NewGuid().ToString());
 
             _context.SaveChanges();
@@ -332,7 +325,7 @@ namespace przychodnia.Controllers
             {
                 email = $"deleted_{Guid.NewGuid():N}@example.invalid";
                 attempts++;
-            } while (_context.Uzytkownicy.Any(u => u.Email == email) && attempts < 10);
+            } while (_context.Uzytkownicy.Any(uzytkownik => uzytkownik.Email == email) && attempts < 10);
             return email;
         }
 
@@ -348,7 +341,7 @@ namespace przychodnia.Controllers
 
         private string GeneratePeselFor(DateTime dob, bool isMale)
         {
-            // PESEL: YYMMDD (with month offset per century) + 4 digits + gender digit + control
+            // losowy pesel
             int year = dob.Year;
             int month = dob.Month;
             int day = dob.Day;
@@ -360,11 +353,11 @@ namespace przychodnia.Controllers
             else if (year >= 2100 && year <= 2199) monthCode = month + 40;
             else if (year >= 2200 && year <= 2299) monthCode = month + 60;
             else if (year >= 1800 && year <= 1899) monthCode = month + 80;
-            // else 1900-1999 no change
+            
 
             string part = yearTwo.ToString("D2") + monthCode.ToString("D2") + day.ToString("D2");
 
-            // next 4 digits random
+            
             var digits = new int[11];
             digits[0] = part[0] - '0';
             digits[1] = part[1] - '0';
@@ -378,13 +371,13 @@ namespace przychodnia.Controllers
                 digits[i] = RandomNumberGenerator.GetInt32(0, 10);
             }
 
-            // gender digit at position 9 (index 9) should be odd for male, even for female
+            
             int genderDigit = RandomNumberGenerator.GetInt32(0, 10);
             if (isMale && genderDigit % 2 == 0) genderDigit = (genderDigit + 1) % 10;
             if (!isMale && genderDigit % 2 == 1) genderDigit = (genderDigit + 1) % 10;
             digits[9] = genderDigit;
 
-            // compute control digit
+            // cyfra kontrolna
             int[] weights = { 1, 3, 7, 9, 1, 3, 7, 9, 1, 3 };
             int sum = 0;
             for (int i = 0; i < 10; i++) sum += weights[i] * digits[i];
