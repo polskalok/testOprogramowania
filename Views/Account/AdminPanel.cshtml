@@ -65,18 +65,30 @@
 <div class="admin-actions">
     <a href="@Url.Action("DodajUzytkownik", "Account")" class="nav-btn">Dodaj Nowego Użytkownika</a>
     <a href="@Url.Action("AdminPanel", "Account")" class="btn btn-outline-secondary">Odśwież Listę</a>
+    @{ 
+        var showForgotten = (ViewBag.ShowForgotten as bool?) ?? false;
+        var toggleText = showForgotten ? "Pokaż aktywnych" : "Wyświetl użytkowników zapomnianych";
+        var toggleAction = Url.Action("AdminPanel", "Account", new { searchString = ViewBag.CurrentFilter, showForgotten = !showForgotten });
+    }
+    <a href="@toggleAction" class="btn-action">@toggleText</a>
 </div>
+
+@{
+    var showForgottenForm = (ViewBag.ShowForgotten as bool?) ?? false;
+    var placeholder = showForgottenForm ? "Wyszukaj zapomnianych po nazwisku lub PESEL..." : "Wyszukaj aktywnych po nazwisku lub PESEL...";
+}
 
 <div class="card shadow-sm mb-4">
     <div class="card-body">
         <form asp-action="AdminPanel" method="get" class="row g-3">
             <div class="col-md-9">
                 <input type="text" name="searchString" value="@ViewBag.CurrentFilter"
-                       class="form-control" placeholder="Wyszukaj po nazwisku lub PESEL..." />
+                       class="form-control" placeholder="@placeholder" />
+                <input type="hidden" name="showForgotten" value="@showForgottenForm" />
             </div>
             <div class="col-md-3 d-grid gap-2 d-md-block">
                 <button type="submit" class="btn btn-primary" style="background-color: #1B263B;">Szukaj</button>
-                <a href="@Url.Action("AdminPanel")" class="btn btn-outline-secondary">Wyczyść</a>
+                <a href="@Url.Action("AdminPanel", "Account", new { showForgotten = showForgottenForm })" class="btn btn-outline-secondary">Wyczyść</a>
             </div>
         </form>
     </div>

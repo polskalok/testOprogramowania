@@ -1,0 +1,256 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using przychodnia.Models;
+using przychodnia.Services;
+using przychodnia.Data; 
+using System.Linq;
+
+namespace przychodnia.Controllers
+{
+    public class AccountController : Controller
+    {
+        private readonly ApplicationDbContext _context;
+
+        
+        public AccountController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        [HttpGet]
+        public IActionResult Login() => View();
+
+        [HttpPost]
+        public IActionResult Login(string login, string password)
+        {
+            var hashed = PasswordHasher.HashPassword(password);
+            var userCheck = _context.Uzytkownicy.FirstOrDefault(u => u.Login == login);
+
+            if (userCheck == null || userCheck.Haslo != hashed || !userCheck.CzyAktywny)
+            {
+                ViewBag.Error = "Błędny login, hasło lub konto nieaktywne.";
+                return View();
+            }
+
+            
+            switch (userCheck.Permisje)
+            {
+                case 1: // Administrator
+                    return RedirectToAction("AdminPanel");
+                case 2: // Pracownik
+                    return RedirectToAction("PracownikPanel");
+                case 0: // Zwykły użytkownik
+                    return RedirectToAction("PacjentPanel");
+                default:
+                    return RedirectToAction("Index", "Home");
+            }
+        }
+
+        
+        public IActionResult PracownikPanel()
+        {
+            return View();
+        }
+
+       
+        public IActionResult PacjentPanel()
+        {
+            return View();
+        }
+
+        public IActionResult AdminPanel(string searchString, bool showForgotten = false)
+        {
+            // Start with all users and then filter by active/forgotten based on showForgotten
+            var uzytkownicy = _context.Uzytkownicy.AsQueryable();
+
+            if (showForgotten)
+            {
+                uzytkownicy = uzytkownicy.Where(u => !u.CzyAktywny);
+            }
+            else
+            {
+                uzytkownicy = uzytkownicy.Where(u => u.CzyAktywny);
+            }
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                uzytkownicy = uzytkownicy.Where(s => s.Nazwisko.Contains(searchString)
+                                                  || s.Pesel.Contains(searchString));
+            }
+
+            ViewBag.ShowForgotten = showForgotten;
+            ViewBag.CurrentFilter = searchString;
+
+            return View(uzytkownicy.ToList());
+        }
+
+        public IActionResult Podglad(int id)
+        {
+            var user = _context.Uzytkownicy.FirstOrDefault(u => u.ID == id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return View(user);
+        }
+
+        [HttpGet]
+        public IActionResult DodajUzytkownik() => View();
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DodajUzytkownik(Uzytkownik nowyUzytkownik)
+        {
+            // Server-side model validation
+            if (!ModelState.IsValid)
+            {
+                return View(nowyUzytkownik);
+            }
+
+            // Required password check (we store only hashed)
+            if (string.IsNullOrWhiteSpace(nowyUzytkownik.Haslo))
+            {
+                ModelState.AddModelError("Haslo", "Hasło jest wymagane");
+                return View(nowyUzytkownik);
+            }
+
+            // Uniqueness checks
+            if (_context.Uzytkownicy.Any(u => u.Login == nowyUzytkownik.Login))
+            {
+                ModelState.AddModelError("Login", "Login już istnieje");
+            }
+
+            if (_context.Uzytkownicy.Any(u => u.Pesel == nowyUzytkownik.Pesel))
+            {
+                ModelState.AddModelError("Pesel", "PESEL już istnieje w systemie");
+            }
+
+            if (_context.Uzytkownicy.Any(u => u.Email == nowyUzytkownik.Email))
+            {
+                ModelState.AddModelError("Email", "E-mail już istnieje w systemie");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(nowyUzytkownik);
+            }
+
+            // Validate PESEL fully
+            if (!TryValidatePesel(nowyUzytkownik.Pesel, nowyUzytkownik.Plec, out DateTime dob, out string peselError))
+            {
+                ModelState.AddModelError("Pesel", peselError);
+                return View(nowyUzytkownik);
+            }
+
+            nowyUzytkownik.DataUrodzenia = dob;
+
+            // Hash password and save
+            nowyUzytkownik.Haslo = PasswordHasher.HashPassword(nowyUzytkownik.Haslo);
+
+            _context.Uzytkownicy.Add(nowyUzytkownik);
+            _context.SaveChanges();
+            return RedirectToAction("AdminPanel");
+        }
+
+        // PESEL validation: date, gender, control digit
+        private bool TryValidatePesel(string pesel, string plec, out DateTime dateOfBirth, out string error)
+        {
+            dateOfBirth = default;
+            error = string.Empty;
+
+            if (string.IsNullOrEmpty(pesel) || pesel.Length != 11 || !pesel.All(char.IsDigit))
+            {
+                error = "PESEL nieprawidłowy – niepoprawna data";
+                return false;
+            }
+
+            int year = int.Parse(pesel.Substring(0, 2));
+            int month = int.Parse(pesel.Substring(2, 2));
+            int day = int.Parse(pesel.Substring(4, 2));
+
+            int fullYear;
+            int realMonth = month;
+
+            if (month >= 1 && month <= 12)
+                fullYear = 1900 + year;
+            else if (month >= 21 && month <= 32)
+            {
+                fullYear = 2000 + year;
+                realMonth = month - 20;
+            }
+            else if (month >= 41 && month <= 52)
+            {
+                fullYear = 2100 + year;
+                realMonth = month - 40;
+            }
+            else if (month >= 61 && month <= 72)
+            {
+                fullYear = 2200 + year;
+                realMonth = month - 60;
+            }
+            else if (month >= 81 && month <= 92)
+            {
+                fullYear = 1800 + year;
+                realMonth = month - 80;
+            }
+            else
+            {
+                error = "PESEL nieprawidłowy – niepoprawna data";
+                return false;
+            }
+
+            try
+            {
+                dateOfBirth = new DateTime(fullYear, realMonth, day);
+            }
+            catch
+            {
+                error = "PESEL nieprawidłowy – niepoprawna data";
+                return false;
+            }
+
+            // Gender check: the 10th digit (index 9) determines gender (odd male, even female)
+            int genderDigit = int.Parse(pesel.Substring(9, 1));
+            bool isMale = (genderDigit % 2) == 1;
+            bool modelSaysMale = (plec ?? string.Empty).ToLower().Contains("m");
+
+            if (modelSaysMale != isMale)
+            {
+                error = "PESEL nieprawidłowy – niepoprawna płeć";
+                return false;
+            }
+
+            // Checksum
+            int[] weights = new[] { 1, 3, 7, 9, 1, 3, 7, 9, 1, 3 };
+            int sum = 0;
+            for (int i = 0; i < 10; i++)
+            {
+                sum += weights[i] * (pesel[i] - '0');
+            }
+            int control = (10 - (sum % 10)) % 10;
+            int lastDigit = pesel[10] - '0';
+            if (control != lastDigit)
+            {
+                error = "PESEL nieprawidłowy – niepoprawna cyfra kontrolna";
+                return false;
+            }
+
+            return true;
+        }
+            public IActionResult Zapomnij(int id)
+        {
+            var user = _context.Uzytkownicy.FirstOrDefault(u => u.ID == id);
+
+            if (user != null)
+            {
+                user.CzyAktywny = false; 
+                _context.SaveChanges();  
+            }
+
+            return RedirectToAction("AdminPanel");
+        }
+
+
+    }
+
+}
