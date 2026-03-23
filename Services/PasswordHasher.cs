@@ -1,13 +1,11 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace przychodnia.Services // Upewnij się, że nazwa pasuje do Twojego projektu
+namespace przychodnia.Services 
 {
     public static class PasswordHasher
     {
-        /// <summary>
-        /// Metoda zamieniająca tekst jawny na hash SHA256.
-        /// </summary>
+       
         public static string HashPassword(string password)
         {
             if (string.IsNullOrEmpty(password)) return string.Empty;

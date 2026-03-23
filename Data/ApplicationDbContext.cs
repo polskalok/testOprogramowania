@@ -11,7 +11,7 @@ namespace przychodnia.Data
         {
         }
 
-        // To mapuje Twoją tabelę z projekt.db na obiekty w C#
+        
         public DbSet<Uzytkownik> Uzytkownicy { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

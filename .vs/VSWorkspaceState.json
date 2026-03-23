@@ -1,8 +1,16 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Controllers"
+    "\\Controllers",
+    "\\Data",
+    "\\Models",
+    "\\obj\\Debug",
+    "\\Services",
+    "\\Views",
+    "\\Views\\Account",
+    "\\Views\\Home",
+    "\\Views\\Shared"
   ],
-  "SelectedNode": "\\przychodnia.slnx",
+  "SelectedNode": "\\Views\\Account\\Login.cshtml",
   "PreviewInSolutionExplorer": false
 }
