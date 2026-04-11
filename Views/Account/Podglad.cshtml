@@ -98,6 +98,13 @@
     </div>
     
     <div class="p-3 bg-light text-end">
-        <a href="@Url.Action("AdminPanel")" class="btn-action">Powrót do listy</a>
-    </div>
+    <a href="@Url.Action("AdminPanel")" class="btn btn-secondary">Powrót do listy</a>
+
+    @if (Model.CzyAktywny)
+    {
+        <a href="@Url.Action("Uprawnienia", new { id = Model.ID })" class="btn btn-warning" style="font-weight: bold; margin-left: 10px;">
+            Modyfikuj Uprawnienia
+        </a>
+    }
+</div>
 </div>

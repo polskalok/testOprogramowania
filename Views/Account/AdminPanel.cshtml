@@ -65,6 +65,9 @@
 <div class="admin-actions">
     <a href="@Url.Action("DodajUzytkownik", "Account")" class="nav-btn">Dodaj Nowego Użytkownika</a>
     <a href="@Url.Action("AdminPanel", "Account")" class="btn btn-outline-secondary">Odśwież Listę</a>
+    <a href="@Url.Action("ListaUprawnien", "Account")" class="btn btn-outline-primary shadow-sm" style="border-radius: 8px; font-weight: 500;">
+        <i class="fas fa-shield-alt"></i> Lista Uprawnień
+    </a>
     @{ 
         var showForgotten = (ViewBag.ShowForgotten as bool?) ?? false;
         var toggleText = showForgotten ? "Pokaż aktywnych" : "Wyświetl użytkowników zapomnianych";

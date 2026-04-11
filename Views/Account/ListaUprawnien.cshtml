@@ -1,0 +1,95 @@
+﻿@model IEnumerable<dynamic>
+
+
+
+@{
+    ViewData["Title"] = "Lista Uprawnień";
+}
+
+<style>
+    .perm-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        max-width: 900px;
+        margin: 20px auto;
+        overflow: hidden;
+        border: 1px solid #dee2e6;
+    }
+
+    .card-header-custom {
+        background-color: #B2DAFA;
+        padding: 20px;
+        border-bottom: 4px solid #1B263B;
+    }
+
+    .perm-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .perm-table th {
+        background-color: #f8f9fa;
+        color: #1B263B;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        padding: 15px;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .perm-table td {
+        padding: 15px;
+        border-bottom: 1px solid #eee;
+        vertical-align: middle;
+    }
+
+    .perm-id-badge {
+        background-color: #1B263B;
+        color: white;
+        padding: 4px 10px;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+</style>
+
+<div class="perm-card">
+    <div class="card-header-custom">
+        <h3 class="m-0 text-dark">Dostępne Uprawnienia Systemowe</h3>
+    </div>
+
+    <div class="p-4">
+        <table class="perm-table">
+            <thead>
+                <tr>
+                    <th style="width: 100px;">Kod (ID)</th>
+                    <th style="width: 200px;">Nazwa uprawnienia</th>
+                    <th>Opis funkcjonalności</th>
+                    <th style="width: 200px;">Akcja</th> </tr>
+                </tr>
+            </thead>
+        <tbody>
+            @foreach (var perm in Model)
+            {
+                <tr>
+                    <td><span class="perm-id-badge">@perm.ID</span></td>
+                    <td><strong>@perm.Nazwa</strong></td>
+                    <td class="text-muted">@perm.Opis</td>
+                    <td>
+                        <a href="@Url.Action("UzytkownicyZUprawnieniem", new { id = perm.ID })" class="text-primary" style="font-weight: bold;">
+                            Pokaż użytkowników
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+            
+        </table>
+    
+
+    <div class="p-3 bg-light text-end">
+       
+        <a href="@Url.Action("AdminPanel")" class="btn btn-primary" style="background-color: #1B263B; border: none;">
+            Powrót do panelu
+        </a>
+    </div>
+</div>

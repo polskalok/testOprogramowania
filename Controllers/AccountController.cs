@@ -11,7 +11,7 @@ namespace przychodnia.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        
+
         public AccountController(ApplicationDbContext context)
         {
             _context = context;
@@ -32,7 +32,7 @@ namespace przychodnia.Controllers
                 return View();
             }
 
-            
+
             switch (userCheck.Permisje)
             {
                 case 1: // Administrator
@@ -46,13 +46,13 @@ namespace przychodnia.Controllers
             }
         }
 
-        
+
         public IActionResult PracownikPanel()
         {
             return View();
         }
 
-       
+
         public IActionResult PacjentPanel()
         {
             return View();
@@ -203,7 +203,7 @@ namespace przychodnia.Controllers
                 return false;
             }
 
-            
+
             int genderDigit = int.Parse(pesel.Substring(9, 1));
             bool isMale = (genderDigit % 2) == 1;
             bool modelSaysMale = (plec ?? string.Empty).ToLower().Contains("m");
@@ -214,7 +214,7 @@ namespace przychodnia.Controllers
                 return false;
             }
 
-            
+
             int[] weights = new[] { 1, 3, 7, 9, 1, 3, 7, 9, 1, 3 };
             int sum = 0;
             for (int i = 0; i < 10; i++)
@@ -241,13 +241,13 @@ namespace przychodnia.Controllers
             if (!user.CzyAktywny)
                 return RedirectToAction("AdminPanel");
 
-            
+
             user.Login = GenerateUniqueLogin();
 
-            
+
             user.Email = GenerateUniqueEmail();
 
-            
+
             user.Telefon = GenerateRandomDigits(9);
 
 
@@ -353,11 +353,11 @@ namespace przychodnia.Controllers
             else if (year >= 2100 && year <= 2199) monthCode = month + 40;
             else if (year >= 2200 && year <= 2299) monthCode = month + 60;
             else if (year >= 1800 && year <= 1899) monthCode = month + 80;
-            
+
 
             string part = yearTwo.ToString("D2") + monthCode.ToString("D2") + day.ToString("D2");
 
-            
+
             var digits = new int[11];
             digits[0] = part[0] - '0';
             digits[1] = part[1] - '0';
@@ -371,7 +371,7 @@ namespace przychodnia.Controllers
                 digits[i] = RandomNumberGenerator.GetInt32(0, 10);
             }
 
-            
+
             int genderDigit = RandomNumberGenerator.GetInt32(0, 10);
             if (isMale && genderDigit % 2 == 0) genderDigit = (genderDigit + 1) % 10;
             if (!isMale && genderDigit % 2 == 1) genderDigit = (genderDigit + 1) % 10;
@@ -390,6 +390,71 @@ namespace przychodnia.Controllers
         }
 
 
+        
+        public IActionResult ListaUprawnien()
+        {
+            
+            var uprawnienia = new List<dynamic>
+    {
+        new { ID = 1, Nazwa = "Administrator", Opis = "Pełny dostęp do zarządzania użytkownikami i systemem." },
+        new { ID = 2, Nazwa = "Pracownik", Opis = "Dostęp do modułów operacyjnych przychodni." },
+        new { ID = 0, Nazwa = "Użytkownik", Opis = "Podstawowe uprawnienia dla pacjentów." }
+    };
+
+            return View(uprawnienia);
+        }
+
+        
+        [HttpGet]
+        public IActionResult Uprawnienia(int id)
+        {
+            var user = _context.Uzytkownicy.FirstOrDefault(u => u.ID == id);
+
+
+            if (user == null || !user.CzyAktywny)
+            {
+                return RedirectToAction("AdminPanel");
+            }
+
+            return View(user);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Uprawnienia(int id, int[] wybraneRole)
+        {
+            var user = _context.Uzytkownicy.FirstOrDefault(u => u.ID == id);
+            if (user == null || !user.CzyAktywny) return NotFound();
+
+            
+            if (wybraneRole == null || wybraneRole.Length == 0)
+            {
+                ViewBag.Error = "nie zaznaczono żadnych uprawnień"; 
+                return View(user);
+            }
+            user.Permisje = wybraneRole.Sum();
+
+            _context.SaveChanges();
+            return RedirectToAction("Podglad", new { id = user.ID });
+        }
+
+        public IActionResult UzytkownicyZUprawnieniem(int id)
+        {
+            
+            var uzytkownicy = _context.Uzytkownicy
+                .Where(u => u.Permisje == id && u.CzyAktywny)
+                .ToList();
+
+            ViewBag.Rola = id == 1 ? "Administrator" : id == 2 ? "Pracownik" : "Pacjent";
+
+           
+            if (!uzytkownicy.Any())
+            {
+                 ViewBag.BrakUzytkownikow = "Brak użytkowników z tym uprawnieniem"; 
+    }
+
+            return View(uzytkownicy);
+        }
     }
 
 }
