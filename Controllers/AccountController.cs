@@ -456,6 +456,40 @@ namespace przychodnia.Controllers
             ViewBag.Rola = id == 1 ? "Administrator" : id == 2 ? "Pracownik" : "Pacjent";
             return View(przefiltrowani);
         }
+
+
+        // 1. Wyświetlenie formularza edycji
+        [HttpGet]
+        public IActionResult Edytuj(int id)
+        {
+            var user = _context.Uzytkownicy.FirstOrDefault(u => u.ID == id);
+            if (user == null) return NotFound();
+            return View(user);
+        }
+
+        // 2. Przetworzenie edycji
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edytuj(Uzytkownik model)
+        {
+            // Jeśli email nie ma kropki lub pole jest puste, ModelState będzie niepoprawny
+            if (!ModelState.IsValid)
+            {
+                return View(model); // Powrót do formularza z czerwonymi błędami
+            }
+
+            var uzytkownik = _context.Uzytkownicy.FirstOrDefault(u => u.ID == model.ID);
+            if (uzytkownik == null) return NotFound();
+
+            uzytkownik.Imie = model.Imie;
+            uzytkownik.Nazwisko = model.Nazwisko;
+            uzytkownik.Email = model.Email;
+            uzytkownik.Pesel = model.Pesel;
+
+            _context.SaveChanges();
+            return RedirectToAction("Podglad", new { id = uzytkownik.ID });
+        }
+
     }
 
 }

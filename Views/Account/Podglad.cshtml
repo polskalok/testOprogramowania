@@ -97,14 +97,17 @@
         </div>
     </div>
     
-    <div class="p-3 bg-light text-end">
-    <a href="@Url.Action("AdminPanel")" class="btn btn-secondary">Powrót do listy</a>
+    <div class="d-flex gap-2 justify-content-center mt-4">
+    <a href="@Url.Action("AdminPanel", "Account")" class="btn btn-outline-secondary">
+        Powrót
+    </a>
 
-    @if (Model.CzyAktywny)
-    {
-        <a href="@Url.Action("Uprawnienia", new { id = Model.ID })" class="btn btn-warning" style="font-weight: bold; margin-left: 10px;">
-            Modyfikuj Uprawnienia
-        </a>
-    }
+    <a href="@Url.Action("Edytuj", "Account", new { id = Model.ID })" class="btn btn-warning">
+        Edytuj dane
+    </a>
+
+    <a href="@Url.Action("Uprawnienia", "Account", new { id = Model.ID })" class="btn btn-primary" style="background-color: #1B263B;">
+        Uprawnienia
+    </a>
 </div>
 </div>
