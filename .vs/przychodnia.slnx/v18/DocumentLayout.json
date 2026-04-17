@@ -1,49 +1,49 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Kito\\Desktop\\testowanie\\testOprogramowania-main\\",
+  "WorkspaceRootPath": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\kito\\desktop\\testowanie\\testoprogramowania-main\\views\\account\\adminpanel.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:views\\account\\adminpanel.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\kito\\desktop\\testowanie\\testoprogramowania-main\\views\\account\\listauprawnien.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\kito\\documents\\github\\testoprogramowania\\views\\account\\listauprawnien.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:views\\account\\listauprawnien.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\kito\\desktop\\testowanie\\testoprogramowania-main\\views\\account\\uprawnienia.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\kito\\documents\\github\\testoprogramowania\\views\\account\\uprawnienia.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:views\\account\\uprawnienia.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\kito\\desktop\\testowanie\\testoprogramowania-main\\views\\account\\podglad.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:views\\account\\podglad.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\kito\\desktop\\testowanie\\testoprogramowania-main\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\kito\\documents\\github\\testoprogramowania\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\kito\\desktop\\testowanie\\testoprogramowania-main\\models\\uzytkownik.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\kito\\documents\\github\\testoprogramowania\\models\\uzytkownik.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:models\\uzytkownik.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\kito\\desktop\\testowanie\\testoprogramowania-main\\views\\account\\uzytkownicyzuprawnieniem.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\kito\\documents\\github\\testoprogramowania\\views\\account\\adminpanel.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:views\\account\\adminpanel.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\kito\\documents\\github\\testoprogramowania\\views\\account\\podglad.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:views\\account\\podglad.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\kito\\documents\\github\\testoprogramowania\\views\\account\\uzytkownicyzuprawnieniem.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:views\\account\\uzytkownicyzuprawnieniem.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\kito\\desktop\\testowanie\\testoprogramowania-main\\views\\account\\login.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\kito\\documents\\github\\testoprogramowania\\views\\account\\login.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:views\\account\\login.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\kito\\desktop\\testowanie\\testoprogramowania-main\\views\\account\\dodajuzytkownik.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\kito\\documents\\github\\testoprogramowania\\views\\account\\dodajuzytkownik.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:views\\account\\dodajuzytkownik.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\kito\\desktop\\testowanie\\testoprogramowania-main\\views\\shared\\_layout.cshtml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\kito\\documents\\github\\testoprogramowania\\views\\shared\\_layout.cshtml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
       "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:views\\shared\\_layout.cshtml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\kito\\desktop\\testowanie\\testoprogramowania-main\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\kito\\documents\\github\\testoprogramowania\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
@@ -54,7 +54,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -70,39 +70,39 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "Uprawnienia.cshtml",
-              "DocumentMoniker": "C:\\Users\\Kito\\Desktop\\testowanie\\testOprogramowania-main\\Views\\Account\\Uprawnienia.cshtml",
+              "DocumentMoniker": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\Views\\Account\\Uprawnienia.cshtml",
               "RelativeDocumentMoniker": "Views\\Account\\Uprawnienia.cshtml",
-              "ToolTip": "C:\\Users\\Kito\\Desktop\\testowanie\\testOprogramowania-main\\Views\\Account\\Uprawnienia.cshtml",
+              "ToolTip": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\Views\\Account\\Uprawnienia.cshtml",
               "RelativeToolTip": "Views\\Account\\Uprawnienia.cshtml",
-              "ViewState": "AgIAAAkAAAAAAAAAAABBwBcAAABXAAAAAAAAAA==",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAAC8AAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-04-10T18:41:52.975Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "ListaUprawnien.cshtml",
-              "DocumentMoniker": "C:\\Users\\Kito\\Desktop\\testowanie\\testOprogramowania-main\\Views\\Account\\ListaUprawnien.cshtml",
+              "DocumentMoniker": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\Views\\Account\\ListaUprawnien.cshtml",
               "RelativeDocumentMoniker": "Views\\Account\\ListaUprawnien.cshtml",
-              "ToolTip": "C:\\Users\\Kito\\Desktop\\testowanie\\testOprogramowania-main\\Views\\Account\\ListaUprawnien.cshtml",
+              "ToolTip": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\Views\\Account\\ListaUprawnien.cshtml",
               "RelativeToolTip": "Views\\Account\\ListaUprawnien.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFMAAAAQAAAAAAAAAA==",
+              "ViewState": "AgIAACEAAAAAAAAAAAAAADkAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-04-10T18:24:11.736Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
               "Title": "AdminPanel.cshtml",
-              "DocumentMoniker": "C:\\Users\\Kito\\Desktop\\testowanie\\testOprogramowania-main\\Views\\Account\\AdminPanel.cshtml",
+              "DocumentMoniker": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\Views\\Account\\AdminPanel.cshtml",
               "RelativeDocumentMoniker": "Views\\Account\\AdminPanel.cshtml",
-              "ToolTip": "C:\\Users\\Kito\\Desktop\\testowanie\\testOprogramowania-main\\Views\\Account\\AdminPanel.cshtml",
+              "ToolTip": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\Views\\Account\\AdminPanel.cshtml",
               "RelativeToolTip": "Views\\Account\\AdminPanel.cshtml",
-              "ViewState": "AgIAADMAAAAAAAAAAAAAADgAAAAYAAAAAAAAAA==",
+              "ViewState": "AgIAACoAAAAAAAAAAAAAADgAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-03-16T11:19:57.41Z",
               "EditorCaption": ""
@@ -111,9 +111,9 @@
               "$type": "Document",
               "DocumentIndex": 10,
               "Title": "Index.cshtml",
-              "DocumentMoniker": "C:\\Users\\Kito\\Desktop\\testowanie\\testOprogramowania-main\\Views\\Home\\Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\Views\\Home\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Home\\Index.cshtml",
-              "ToolTip": "C:\\Users\\Kito\\Desktop\\testowanie\\testOprogramowania-main\\Views\\Home\\Index.cshtml",
+              "ToolTip": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\Views\\Home\\Index.cshtml",
               "RelativeToolTip": "Views\\Home\\Index.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAGAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
@@ -121,49 +121,49 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
               "Title": "AccountController.cs",
-              "DocumentMoniker": "C:\\Users\\Kito\\Desktop\\testowanie\\testOprogramowania-main\\Controllers\\AccountController.cs",
+              "DocumentMoniker": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\Controllers\\AccountController.cs",
               "RelativeDocumentMoniker": "Controllers\\AccountController.cs",
-              "ToolTip": "C:\\Users\\Kito\\Desktop\\testowanie\\testOprogramowania-main\\Controllers\\AccountController.cs",
+              "ToolTip": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\Controllers\\AccountController.cs",
               "RelativeToolTip": "Controllers\\AccountController.cs",
-              "ViewState": "AgIAAKEBAAAAAAAAAAAAALcBAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAALQBAAAAAAAAAAAowMkBAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-14T18:19:55.609Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 3,
               "Title": "Uzytkownik.cs",
-              "DocumentMoniker": "C:\\Users\\Kito\\Desktop\\testowanie\\testOprogramowania-main\\Models\\Uzytkownik.cs",
+              "DocumentMoniker": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\Models\\Uzytkownik.cs",
               "RelativeDocumentMoniker": "Models\\Uzytkownik.cs",
-              "ToolTip": "C:\\Users\\Kito\\Desktop\\testowanie\\testOprogramowania-main\\Models\\Uzytkownik.cs",
+              "ToolTip": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\Models\\Uzytkownik.cs",
               "RelativeToolTip": "Models\\Uzytkownik.cs",
               "ViewState": "AgIAABgAAAAAAAAAAAAAACkAAAA0AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-15T19:27:14.545Z"
+              "WhenOpened": "2026-03-15T19:27:14.545Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "Podglad.cshtml",
-              "DocumentMoniker": "C:\\Users\\Kito\\Desktop\\testowanie\\testOprogramowania-main\\Views\\Account\\Podglad.cshtml",
+              "DocumentMoniker": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\Views\\Account\\Podglad.cshtml",
               "RelativeDocumentMoniker": "Views\\Account\\Podglad.cshtml",
-              "ToolTip": "C:\\Users\\Kito\\Desktop\\testowanie\\testOprogramowania-main\\Views\\Account\\Podglad.cshtml",
+              "ToolTip": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\Views\\Account\\Podglad.cshtml",
               "RelativeToolTip": "Views\\Account\\Podglad.cshtml",
               "ViewState": "AgIAAEsAAAAAAAAAAAAAAGwAAAAGAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-10T18:25:22.582Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-10T18:25:22.582Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 6,
               "Title": "UzytkownicyZUprawnieniem.cshtml",
-              "DocumentMoniker": "C:\\Users\\Kito\\Desktop\\testowanie\\testOprogramowania-main\\Views\\Account\\UzytkownicyZUprawnieniem.cshtml",
+              "DocumentMoniker": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\Views\\Account\\UzytkownicyZUprawnieniem.cshtml",
               "RelativeDocumentMoniker": "Views\\Account\\UzytkownicyZUprawnieniem.cshtml",
-              "ToolTip": "C:\\Users\\Kito\\Desktop\\testowanie\\testOprogramowania-main\\Views\\Account\\UzytkownicyZUprawnieniem.cshtml",
+              "ToolTip": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\Views\\Account\\UzytkownicyZUprawnieniem.cshtml",
               "RelativeToolTip": "Views\\Account\\UzytkownicyZUprawnieniem.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
@@ -173,9 +173,9 @@
               "$type": "Document",
               "DocumentIndex": 9,
               "Title": "_Layout.cshtml",
-              "DocumentMoniker": "C:\\Users\\Kito\\Desktop\\testowanie\\testOprogramowania-main\\Views\\Shared\\_Layout.cshtml",
+              "DocumentMoniker": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\Views\\Shared\\_Layout.cshtml",
               "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
-              "ToolTip": "C:\\Users\\Kito\\Desktop\\testowanie\\testOprogramowania-main\\Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\Views\\Shared\\_Layout.cshtml",
               "RelativeToolTip": "Views\\Shared\\_Layout.cshtml",
               "ViewState": "AgIAAEQAAAAAAAAAAAAqwFsAAADuAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
@@ -185,9 +185,9 @@
               "$type": "Document",
               "DocumentIndex": 8,
               "Title": "DodajUzytkownik.cshtml",
-              "DocumentMoniker": "C:\\Users\\Kito\\Desktop\\testowanie\\testOprogramowania-main\\Views\\Account\\DodajUzytkownik.cshtml",
+              "DocumentMoniker": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\Views\\Account\\DodajUzytkownik.cshtml",
               "RelativeDocumentMoniker": "Views\\Account\\DodajUzytkownik.cshtml",
-              "ToolTip": "C:\\Users\\Kito\\Desktop\\testowanie\\testOprogramowania-main\\Views\\Account\\DodajUzytkownik.cshtml",
+              "ToolTip": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\Views\\Account\\DodajUzytkownik.cshtml",
               "RelativeToolTip": "Views\\Account\\DodajUzytkownik.cshtml",
               "ViewState": "AgIAABgAAAAAAAAAAAAAAB0AAABLAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
@@ -197,9 +197,9 @@
               "$type": "Document",
               "DocumentIndex": 7,
               "Title": "Login.cshtml",
-              "DocumentMoniker": "C:\\Users\\Kito\\Desktop\\testowanie\\testOprogramowania-main\\Views\\Account\\Login.cshtml",
+              "DocumentMoniker": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\Views\\Account\\Login.cshtml",
               "RelativeDocumentMoniker": "Views\\Account\\Login.cshtml",
-              "ToolTip": "C:\\Users\\Kito\\Desktop\\testowanie\\testOprogramowania-main\\Views\\Account\\Login.cshtml",
+              "ToolTip": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\Views\\Account\\Login.cshtml",
               "RelativeToolTip": "Views\\Account\\Login.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAABiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",

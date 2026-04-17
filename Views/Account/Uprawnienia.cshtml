@@ -1,46 +1,60 @@
 ﻿@model przychodnia.Models.Uzytkownik
 
-
-<div class="user-card" style="max-width: 650px; margin: 30px auto; border: 1px solid #dee2e6; border-radius: 12px; background-color: white;">
-    <div class="card-header-custom" style="background-color: #B2DAFA; padding: 15px 25px; border-bottom: 4px solid #1B263B;">
+<div class="user-card" style="max-width: 600px; margin: 30px auto; border: 1px solid #dee2e6; border-radius: 10px; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+    <div class="card-header-custom" style="background-color: #B2DAFA; padding: 15px; border-bottom: 4px solid #1B263B;">
         <h4 class="m-0">Okno nadawania uprawnień: <strong>@Model.Imie @Model.Nazwisko</strong></h4>
     </div>
-<div>
 
-        <form asp-action="Uprawnienia" method="post" class="p-4">
-            @Html.AntiForgeryToken()
-            <input type="hidden" name="id" value="@Model.ID" />
+    <form asp-action="Uprawnienia" method="post" class="p-4">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value="@Model.ID" />
 
-            @if (ViewBag.Error != null)
-            {
-                <div class="alert alert-danger">@ViewBag.Error</div> @*  *@
-            }
-
-            <div class="list-group mb-4">
-               
-        
-                <label class="list-group-item d-flex gap-3">
-                    <input class="form-check-input" type="checkbox" name="wybraneRole" value="1"
-                    @( (Model.Permisje == 1 || Model.Permisje == 3) ? "checked" : "" )>
-                    <span><strong>Administrator</strong></span>
-                </label>
-
-                <label class="list-group-item d-flex gap-3">
-                    <input class="form-check-input" type="checkbox" name="wybraneRole" value="2"
-                    @( (Model.Permisje == 2 || Model.Permisje == 3) ? "checked" : "" )>
-                    <span><strong>Pracownik</strong></span>
-                </label>
-
-                
-                <label class="list-group-item d-flex gap-3">
-                    <input class="form-check-input" type="checkbox" name="wybraneRole" value="0"
-                    @(Model.Permisje == 0 ? "checked" : "")>
-                    <span><strong>Pacjent</strong></span>
-                </label>
+        @* Wyświetlanie błędu, gdy nic nie zaznaczono (Alternatywny przepływ 4a) *@
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger mb-3" style="font-weight: bold;">
+                <i class="fas fa-exclamation-triangle"></i> @ViewBag.Error
             </div>
+        }
 
-            <div class="text-end border-top pt-3">
-                <button type="submit" class="btn btn-primary" style="background-color: #1B263B; border: none;">Zatwierdź</button>
-            </div>
-        </form>
+        <p class="text-muted mb-3">Zaznacz odpowiednie uprawnienia dla użytkownika:</p>
+
+        <div class="list-group mb-4">
+            <label class="list-group-item d-flex gap-3 py-3">
+                <input class="form-check-input" type="checkbox" name="wybraneRole" value="1"
+                @( (Model.Permisje & 1) != 0 ? "checked" : "" )>
+                <span>
+                    <strong>Administrator</strong>
+                    <small class="d-block text-muted">Pełny dostęp do zarządzania systemem.</small>
+                </span>
+            </label>
+
+            <label class="list-group-item d-flex gap-3 py-3">
+                <input class="form-check-input" type="checkbox" name="wybraneRole" value="2"
+                @( (Model.Permisje & 2) != 0 ? "checked" : "" )>
+                <span>
+                    <strong>Pracownik</strong>
+                    <small class="d-block text-muted">Dostęp do modułów medycznych i rejestracji.</small>
+                </span>
+            </label>
+
+            <label class="list-group-item d-flex gap-3 py-3">
+                <input class="form-check-input" type="checkbox" name="wybraneRole" value="4"
+                @( (Model.Permisje & 4) != 0 ? "checked" : "" )>
+                <span>
+                    <strong>Pacjent</strong>
+                    <small class="d-block text-muted">Podstawowy profil pacjenta.</small>
+                </span>
+            </label>
+        </div>
+
+        <div class="pt-3 border-top d-flex justify-content-between">
+            <a href="@Url.Action("Podglad", new { id = Model.ID })" class="btn btn-outline-secondary">
+                Anuluj
+            </a>
+            <button type="submit" class="btn btn-primary" style="background-color: #1B263B; border: none; padding: 8px 30px;">
+                Zatwierdź zmiany
+            </button>
+        </div>
+    </form>
 </div>

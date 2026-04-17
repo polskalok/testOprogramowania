@@ -1,95 +1,58 @@
 ﻿@model IEnumerable<dynamic>
 
-
-
-@{
-    ViewData["Title"] = "Lista Uprawnień";
-}
-
-<style>
-    .perm-card {
-        background: white;
-        border-radius: 15px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        max-width: 900px;
-        margin: 20px auto;
-        overflow: hidden;
-        border: 1px solid #dee2e6;
-    }
-
-    .card-header-custom {
-        background-color: #B2DAFA;
-        padding: 20px;
-        border-bottom: 4px solid #1B263B;
-    }
-
-    .perm-table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .perm-table th {
-        background-color: #f8f9fa;
-        color: #1B263B;
-        text-transform: uppercase;
-        font-size: 0.85rem;
-        padding: 15px;
-        border-bottom: 2px solid #dee2e6;
-    }
-
-    .perm-table td {
-        padding: 15px;
-        border-bottom: 1px solid #eee;
-        vertical-align: middle;
-    }
-
-    .perm-id-badge {
-        background-color: #1B263B;
-        color: white;
-        padding: 4px 10px;
-        border-radius: 5px;
-        font-weight: bold;
-    }
-</style>
-
-<div class="perm-card">
-    <div class="card-header-custom">
-        <h3 class="m-0 text-dark">Dostępne Uprawnienia Systemowe</h3>
+<div class="container mt-5">
+    <div class="card-header-custom mb-4" style="background-color: #B2DAFA; padding: 15px; border-bottom: 4px solid #1B263B; border-radius: 5px;">
+        <h3 class="m-0 text-center">Wybierz listę uprawnień do przeglądu</h3>
     </div>
 
-    <div class="p-4">
-        <table class="perm-table">
-            <thead>
-                <tr>
-                    <th style="width: 100px;">Kod (ID)</th>
-                    <th style="width: 200px;">Nazwa uprawnienia</th>
-                    <th>Opis funkcjonalności</th>
-                    <th style="width: 200px;">Akcja</th> </tr>
-                </tr>
-            </thead>
-        <tbody>
-            @foreach (var perm in Model)
-            {
-                <tr>
-                    <td><span class="perm-id-badge">@perm.ID</span></td>
-                    <td><strong>@perm.Nazwa</strong></td>
-                    <td class="text-muted">@perm.Opis</td>
-                    <td>
-                        <a href="@Url.Action("UzytkownicyZUprawnieniem", new { id = perm.ID })" class="text-primary" style="font-weight: bold;">
-                            Pokaż użytkowników
-                        </a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-            
-        </table>
-    
+    <div class="row g-4">
+        <div class="col-md-4">
+            <a href="@Url.Action("UzytkownicyZUprawnieniem", "Account", new { id = 1 })" style="text-decoration: none; color: inherit;">
+                <div class="card h-100 shadow-sm border-0 btn-outline-primary" style="transition: transform 0.2s; cursor: pointer;">
+                    <div class="card-body text-center p-5">
+                        <i class="fas fa-user-shield fa-3x mb-3 text-primary"></i>
+                        <h4 class="card-title">Administratorzy</h4>
+                        <p class="card-text text-muted">Zarządzanie systemem i użytkownikami.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
 
-    <div class="p-3 bg-light text-end">
-       
-        <a href="@Url.Action("AdminPanel")" class="btn btn-primary" style="background-color: #1B263B; border: none;">
+        <div class="col-md-4">
+            <a href="@Url.Action("UzytkownicyZUprawnieniem", "Account", new { id = 2 })" style="text-decoration: none; color: inherit;">
+                <div class="card h-100 shadow-sm border-0 btn-outline-success" style="transition: transform 0.2s; cursor: pointer;">
+                    <div class="card-body text-center p-5">
+                        <i class="fas fa-user-md fa-3x mb-3 text-success"></i>
+                        <h4 class="card-title">Pracownicy</h4>
+                        <p class="card-text text-muted">Personel medyczny i administracyjny.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a href="@Url.Action("UzytkownicyZUprawnieniem", "Account", new { id = 4 })" style="text-decoration: none; color: inherit;">
+                <div class="card h-100 shadow-sm border-0 btn-outline-info" style="transition: transform 0.2s; cursor: pointer;">
+                    <div class="card-body text-center p-5">
+                        <i class="fas fa-user-injured fa-3x mb-3 text-info"></i>
+                        <h4 class="card-title">Pacjenci</h4>
+                        <p class="card-text text-muted">Lista zarejestrowanych pacjentów.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <a href="@Url.Action("AdminPanel", "Account")" class="btn btn-secondary px-5">
             Powrót do panelu
         </a>
     </div>
 </div>
+
+<style>
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+</style>

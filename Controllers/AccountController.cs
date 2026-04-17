@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using przychodnia.Data; 
 using przychodnia.Models;
 using przychodnia.Services;
-using przychodnia.Data; 
 using System.Linq;
 using System.Security.Cryptography;
 
@@ -404,56 +405,56 @@ namespace przychodnia.Controllers
             return View(uprawnienia);
         }
 
-        
+
+        // 1. Ta metoda WYŚWIETLA formularz
         [HttpGet]
         public IActionResult Uprawnienia(int id)
         {
             var user = _context.Uzytkownicy.FirstOrDefault(u => u.ID == id);
-
-
-            if (user == null || !user.CzyAktywny)
-            {
-                return RedirectToAction("AdminPanel");
-            }
-
+            if (user == null) return NotFound();
             return View(user);
         }
 
+        // 2. Ta metoda ZAPISUJE zmiany
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Uprawnienia(int id, int[] wybraneRole)
+        public IActionResult Uprawnienia(int id, int[] wybraneRole) // Dodaliśmy parametr, błąd zniknie
         {
             var user = _context.Uzytkownicy.FirstOrDefault(u => u.ID == id);
-            if (user == null || !user.CzyAktywny) return NotFound();
+            if (user == null) return NotFound();
 
-            
+            // Resetujemy uprawnienia przed przypisaniem nowych
+            user.Permisje = 0;
+
+            // Jeśli nic nie zaznaczono, wyrzucamy błąd (Alternatywny przepływ 4a)
             if (wybraneRole == null || wybraneRole.Length == 0)
             {
-                ViewBag.Error = "nie zaznaczono żadnych uprawnień"; 
+                ViewBag.Error = "nie zaznaczono żadnych uprawnień";
                 return View(user);
             }
+
+            // Sumujemy i nadpisujemy (Pamiętaj: Admin=1, Pracownik=2, Pacjent=4)
             user.Permisje = wybraneRole.Sum();
 
             _context.SaveChanges();
+
+            // Redirect wymusza czyste przeładowanie danych
             return RedirectToAction("Podglad", new { id = user.ID });
         }
 
+
         public IActionResult UzytkownicyZUprawnieniem(int id)
         {
-            
-            var uzytkownicy = _context.Uzytkownicy
-                .Where(u => u.Permisje == id && u.CzyAktywny)
-                .ToList();
+            var wszyscyAktywni = _context.Uzytkownicy.AsNoTracking().Where(u => u.CzyAktywny).ToList();
+
+            var przefiltrowani = wszyscyAktywni.Where(u =>
+            {
+                // Sprawdzamy czy dany BIT uprawnienia (1, 2 lub 4) jest włączony w sumie
+                return (u.Permisje & id) != 0;
+            }).ToList();
 
             ViewBag.Rola = id == 1 ? "Administrator" : id == 2 ? "Pracownik" : "Pacjent";
-
-           
-            if (!uzytkownicy.Any())
-            {
-                 ViewBag.BrakUzytkownikow = "Brak użytkowników z tym uprawnieniem"; 
-    }
-
-            return View(uzytkownicy);
+            return View(przefiltrowani);
         }
     }
 
