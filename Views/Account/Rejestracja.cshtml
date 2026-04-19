@@ -1,0 +1,74 @@
+@model przychodnia.Models.Uzytkownik
+
+@{
+    ViewData["Title"] = "Rejestracja";
+}
+
+<div style="max-width: 600px; margin: auto; background: white; padding: 25px; border-radius: 10px; border: 1px solid #dee2e6;">
+    <h2 style="border-bottom: 3px solid #1B263B; padding-bottom: 10px;">Rejestracja</h2>
+
+    <form asp-action="Rejestracja" method="post">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label>Login</label>
+                <input asp-for="Login" class="form-control" />
+                <span asp-validation-for="Login" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label>Hasło</label>
+                <input asp-for="Haslo" type="password" class="form-control" minlength="8" maxlength="15" pattern="^(?=.{8,15}$)(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[-_!\*\$#&]).+$" title="Hasło musi mieć 8-15 znaków, zawierać wielką i małą literę, cyfrę oraz znak specjalny (- _ ! * $ # &)." />
+                <span asp-validation-for="Haslo" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label>Imię</label>
+                <input asp-for="Imie" class="form-control" />
+                <span asp-validation-for="Imie" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label>Nazwisko</label>
+                <input asp-for="Nazwisko" class="form-control" />
+                <span asp-validation-for="Nazwisko" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label>Adres</label>
+            <input asp-for="Adres" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>PESEL</label>
+            <input asp-for="Pesel" class="form-control" maxlength="11" />
+            <span asp-validation-for="Pesel" class="text-danger"></span>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label>Email</label>
+                <input asp-for="Email" type="email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label>Telefon</label>
+                <input asp-for="Telefon" class="form-control" />
+                <span asp-validation-for="Telefon" class="text-danger"></span>
+            </div>
+        </div>
+
+        <hr />
+        <div class="text-end">
+            <a href="@Url.Action("Login")" class="btn btn-outline-secondary">Anuluj</a>
+            <button type="submit" class="btn btn-primary" style="background-color: #1B263B;">Zarejestruj się</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

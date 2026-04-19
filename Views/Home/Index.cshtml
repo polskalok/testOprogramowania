@@ -7,8 +7,13 @@
     <p class="lead">Zadbaj o swoje zdrowie z naszym profesjonalnym personelem.</p>
     
     <div class="mt-5">
-        <a href="@Url.Action("Login", "Account")" class="btn btn-primary btn-lg" style="background-color: #1B263B; padding: 15px 40px;">
-            Zaloguj się do systemu
-        </a>
+        @if (Context.Request.Cookies["AuthUser"] != null)
+        {
+            <a href="@Url.Action("Continue", "Account")" class="btn btn-success btn-lg" style="background-color: #1B263B; padding: 15px 40px;">Przejdź dalej</a>
+        }
+        else
+        {
+            <a href="@Url.Action("Login", "Account")" class="btn btn-primary btn-lg" style="background-color: #1B263B; padding: 15px 40px;">Zaloguj się do systemu</a>
+        }
     </div>
 </div>

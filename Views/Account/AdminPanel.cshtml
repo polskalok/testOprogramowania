@@ -121,20 +121,14 @@
                 <td>@user.Login</td>
                 <td>@user.Imie @user.Nazwisko</td>
                 <td>
-                    @if (user.Permisje == 1)
-                    {
-                        <span>Admin</span>
+                    @{ 
+                        var roles = new List<string>();
+                        if ((user.Permisje & 1) != 0) roles.Add("Admin");
+                        if ((user.Permisje & 2) != 0) roles.Add("Pracownik");
+                        if ((user.Permisje & 4) != 0) roles.Add("Pacjent");
+                        if (!roles.Any()) roles.Add("Brak");
                     }
-                    else if (user.Permisje == 2)
-                    {
-
-                        <span>Pracownik</span>
-                    }
-                    else
-                    {
-
-                        <span>Pacjent</span>
-                    }
+                    @string.Join(", ", roles)
                 </td>
                 <td>
                     <span class="badge @(user.CzyAktywny ? "bg-success" : "bg-danger")">

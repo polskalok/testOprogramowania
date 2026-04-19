@@ -26,9 +26,8 @@ namespace przychodnia.Models
         [StringLength(11, MinimumLength = 11, ErrorMessage = "PESEL musi mieć 11 cyfr")]
         public string Pesel { get; set; } = string.Empty;
 
-        public DateTime DataUrodzenia { get; set; }
-
-        public string Plec { get; set; } = string.Empty;
+        public DateTime? DataUrodzenia { get; set; } // [cite: 139]
+        public string? Plec { get; set; } = string.Empty; //
 
         [Required(ErrorMessage = "E-mail jest wymagany")]
         [StringLength(255, ErrorMessage = "E-mail nie może przekroczyć 255 znaków")]
@@ -38,7 +37,8 @@ namespace przychodnia.Models
         [RegularExpression("^\\d{9}$", ErrorMessage = "Numer telefonu musi zawierać dokładnie 9 cyfr")]
         public string Telefon { get; set; } = string.Empty;
 
-        public int Permisje { get; set; } // 0-User, 1-Admin, 2-Pracownik
+        // Permisje przechowywane jako maska bitowa: Admin=1, Pracownik=2, Pacjent=4
+        public int Permisje { get; set; }
         public bool CzyAktywny { get; set; } = true;
     }
 }

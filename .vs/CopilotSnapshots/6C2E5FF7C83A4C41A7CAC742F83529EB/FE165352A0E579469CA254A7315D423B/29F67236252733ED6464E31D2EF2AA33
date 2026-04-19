@@ -1,0 +1,157 @@
+﻿@model List<przychodnia.Models.Uzytkownik>
+
+@{
+    ViewData["Title"] = "Panel Administratora";
+}
+
+<style>
+    .admin-actions {
+        margin-bottom: 20px;
+        display: flex;
+        gap: 10px;
+    }
+
+    .table-custom {
+        width: 100%;
+        background-color: white;
+        border-collapse: collapse;
+        margin-top: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+        .table-custom th {
+            background-color: #B2DAFA;
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid #1B263B;
+        }
+
+        .table-custom td {
+            padding: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+    .btn-action {
+        padding: 5px 12px;
+        text-decoration: none;
+        font-size: 0.85rem;
+        border: 1px solid #1B263B;
+        color: #1B263B;
+        border-radius: 4px;
+        transition: 0.2s;
+    }
+
+        .btn-action:hover {
+            background-color: #1B263B;
+            color: white;
+        }
+
+    .nav-btn {
+        padding: 10px 20px;
+        background-color: #1B263B;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+    
+        .nav-btn:hover {
+            background-color: #2c3e50;
+            color: white;
+        }
+</style>
+
+<h2>Panel Administratora</h2>
+
+<div class="admin-actions">
+    <a href="@Url.Action("DodajUzytkownik", "Account")" class="nav-btn">Dodaj Nowego Użytkownika</a>
+    <a href="@Url.Action("AdminPanel", "Account")" class="btn btn-outline-secondary">Odśwież Listę</a>
+    <a href="@Url.Action("ListaUprawnien", "Account")" class="btn btn-outline-primary shadow-sm" style="border-radius: 8px; font-weight: 500;">
+        <i class="fas fa-shield-alt"></i> Lista Uprawnień
+    </a>
+    @{ 
+        var showForgotten = (ViewBag.ShowForgotten as bool?) ?? false;
+        var toggleText = showForgotten ? "Pokaż aktywnych" : "Wyświetl użytkowników zapomnianych";
+        var toggleAction = Url.Action("AdminPanel", "Account", new { searchString = ViewBag.CurrentFilter, showForgotten = !showForgotten });
+    }
+    <a href="@toggleAction" class="btn-action">@toggleText</a>
+</div>
+
+@{
+    var showForgottenForm = (ViewBag.ShowForgotten as bool?) ?? false;
+    var placeholder = showForgottenForm ? "Wyszukaj zapomnianych po nazwisku lub PESEL..." : "Wyszukaj aktywnych po nazwisku lub PESEL...";
+}
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <form asp-action="AdminPanel" method="get" class="row g-3">
+            <div class="col-md-9">
+                <input type="text" name="searchString" value="@ViewBag.CurrentFilter"
+                       class="form-control" placeholder="@placeholder" />
+                <input type="hidden" name="showForgotten" value="@showForgottenForm" />
+            </div>
+            <div class="col-md-3 d-grid gap-2 d-md-block">
+                <button type="submit" class="btn btn-primary" style="background-color: #1B263B;">Szukaj</button>
+                <a href="@Url.Action("AdminPanel", "Account", new { showForgotten = showForgottenForm })" class="btn btn-outline-secondary">Wyczyść</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(ViewBag.CurrentFilter))
+{
+    <p class="text-muted">Wyniki wyszukiwania dla: <strong>@ViewBag.CurrentFilter</strong></p>
+}
+
+<table class="table-custom">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Login</th>
+            <th>Imię i Nazwisko</th>
+            <th>Rola</th>
+            <th>Status</th>
+            <th>Akcje</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.ID</td>
+                <td>@user.Login</td>
+                <td>@user.Imie @user.Nazwisko</td>
+                <td>
+                    @if (user.Permisje == 1)
+                    {
+                        <span>Admin</span>
+                    }
+                    else if (user.Permisje == 2)
+                    {
+
+                        <span>Pracownik</span>
+                    }
+                    else
+                    {
+
+                        <span>Pacjent</span>
+                    }
+                </td>
+                <td>
+                    <span class="badge @(user.CzyAktywny ? "bg-success" : "bg-danger")">
+                        @(user.CzyAktywny ? "Aktywny" : "Zapomniany")
+                    </span>
+                </td>
+                <td>
+                    <a href="@Url.Action("Podglad", "Account", new { id = user.ID })" class="btn-action">Podgląd</a>
+                    
+                    @if (user.CzyAktywny)
+                    {
+                        <a href="@Url.Action("Zapomnij", "Account", new { id = user.ID })"
+                           class="btn-action"
+                           onclick="return confirm('Czy na pewno chcesz zmienić status na Zapomniany?')">Zapomnij</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

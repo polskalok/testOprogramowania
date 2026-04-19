@@ -81,7 +81,17 @@
 
     <nav class="main-nav">
         <a asp-controller="Home" asp-action="Index" class="nav-btn">Strona Główna</a>
-        <a href="#" class="nav-btn">Przycisk 2</a>
+        @if (Context.Request.Cookies["AuthUser"] != null)
+        {
+            <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline; margin:0;">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="nav-btn" onclick="return confirm('Czy na pewno chcesz się wylogować?');">Wyloguj (@Context.Request.Cookies["AuthUser"])</button>
+            </form>
+        }
+        else
+        {
+            <a asp-controller="Account" asp-action="Login" class="nav-btn">Zaloguj</a>
+        }
         <a href="#" class="nav-btn">Przycisk 3</a>
         <a href="#" class="nav-btn">Przycisk 4</a>
         <a href="#" class="nav-btn">Przycisk 5</a>

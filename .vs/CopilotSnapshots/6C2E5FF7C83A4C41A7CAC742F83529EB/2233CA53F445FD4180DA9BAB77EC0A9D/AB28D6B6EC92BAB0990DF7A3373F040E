@@ -1,0 +1,45 @@
+﻿@model IEnumerable<przychodnia.Models.Uzytkownik>
+
+<div class="user-card" style="max-width: 800px; margin: 20px auto; border: 1px solid #dee2e6; border-radius: 10px; background: #fff;">
+    <div class="card-header-custom" style="background-color: #B2DAFA; padding: 15px; border-bottom: 4px solid #1B263B;">
+        <h4 class="m-0">Użytkownicy z uprawnieniem: @ViewBag.Rola</h4>
+    </div>
+
+    <div class="p-4">
+        @if (ViewBag.BrakUzytkownikow != null)
+        {
+            
+            <div class="alert alert-info text-center">
+                <strong>@ViewBag.BrakUzytkownikow</strong>
+            </div>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Login</th>
+                        <th>Imię i Nazwisko</th>
+                        <th>Akcje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model)
+                    {
+                        <tr>
+                            <td>@user.Login</td>
+                            <td>@user.Imie @user.Nazwisko</td>
+                            <td>
+                                <a href="@Url.Action("Podglad", new { id = user.ID })" class="btn btn-sm btn-outline-dark">Podgląd</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+
+    <div class="p-3 bg-light text-end">
+        <a href="@Url.Action("ListaUprawnien")" class="btn btn-secondary">Powrót do uprawnień</a>
+    </div>
+</div>

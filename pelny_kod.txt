@@ -1,0 +1,2486 @@
+﻿--- FILE: C:\users\polskalok\documents\github\testOprogramowania\Controllers\AccountController.cs ---
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using przychodnia.Data; 
+using przychodnia.Models;
+using przychodnia.Services;
+using System.Linq;
+using System.Security.Cryptography;
+
+namespace przychodnia.Controllers
+{
+    public class AccountController : Controller
+    {
+        private readonly ApplicationDbContext _context;
+
+
+        public AccountController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        [HttpGet]
+        public IActionResult Login() => View();
+
+        [HttpPost]
+        public IActionResult Login(string login, string password)
+        {
+            var hashed = PasswordHasher.HashPassword(password);
+            var userCheck = _context.Uzytkownicy.FirstOrDefault(user => user.Login == login);
+
+            if (userCheck == null || userCheck.Haslo != hashed || !userCheck.CzyAktywny)
+            {
+                ViewBag.Error = "Błędny login, hasło lub konto nieaktywne.";
+                return View();
+            }
+
+
+            // Przyznaj ciasteczka sesyjne po poprawnym zalogowaniu
+            var cookieOptions = new Microsoft.AspNetCore.Http.CookieOptions
+            {
+                HttpOnly = true,
+                Secure = false, // jeżeli używasz HTTPS w środowisku produkcyjnym ustaw na true
+                SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Lax,
+                Expires = System.DateTimeOffset.UtcNow.AddHours(8),
+                IsEssential = true
+            };
+
+            Response.Cookies.Append("AuthUser", userCheck.Login, cookieOptions);
+            Response.Cookies.Append("AuthUserId", userCheck.ID.ToString(), cookieOptions);
+
+            // Uprawnienia są przechowywane jako maska bitowa: Admin=1, Pracownik=2, Pacjent=4
+            if ((userCheck.Permisje & 1) != 0) // Administrator
+                return RedirectToAction("AdminPanel");
+
+            if ((userCheck.Permisje & 2) != 0) // Pracownik
+                return RedirectToAction("PracownikPanel");
+
+            if ((userCheck.Permisje & 4) != 0) // Pacjent
+                return RedirectToAction("PacjentPanel");
+
+            return RedirectToAction("Index", "Home");
+        }
+
+
+        public IActionResult PracownikPanel()
+        {
+            return View();
+        }
+
+
+        public IActionResult PacjentPanel()
+        {
+            return View();
+        }
+
+        public IActionResult AdminPanel(string searchString, bool showForgotten = false)
+        {
+            var uzytkownicy = _context.Uzytkownicy.AsQueryable();
+
+            if (showForgotten)
+            {
+                uzytkownicy = uzytkownicy.Where(uzytkownik => !uzytkownik.CzyAktywny);
+            }
+            else
+            {
+                uzytkownicy = uzytkownicy.Where(uzytkownik => uzytkownik.CzyAktywny);
+            }
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                uzytkownicy = uzytkownicy.Where(search => search.Nazwisko.Contains(searchString)
+                                                  || search.Pesel.Contains(searchString));
+            }
+
+            ViewBag.ShowForgotten = showForgotten;
+            ViewBag.CurrentFilter = searchString;
+
+            return View(uzytkownicy.ToList());
+        }
+
+        public IActionResult Podglad(int id)
+        {
+            var user = _context.Uzytkownicy.FirstOrDefault(user => user.ID == id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return View(user);
+        }
+
+        [HttpGet]
+        public IActionResult DodajUzytkownik() => View();
+
+        
+        [HttpGet]
+        public IActionResult Rejestracja() => View();
+
+        [HttpGet]
+        public IActionResult Continue()
+        {
+            // Sprawdź ciasteczko sesyjne i przekieruj użytkownika do odpowiedniego panelu
+            var idCookie = Request.Cookies["AuthUserId"];
+            if (string.IsNullOrEmpty(idCookie))
+                return RedirectToAction("Login");
+
+            if (!int.TryParse(idCookie, out int userId))
+            {
+                Response.Cookies.Delete("AuthUser");
+                Response.Cookies.Delete("AuthUserId");
+                return RedirectToAction("Login");
+            }
+
+            var user = _context.Uzytkownicy.FirstOrDefault(u => u.ID == userId);
+            if (user == null || !user.CzyAktywny)
+            {
+                // usuń ciasteczka i poproś o ponowne zalogowanie
+                Response.Cookies.Delete("AuthUser");
+                Response.Cookies.Delete("AuthUserId");
+                return RedirectToAction("Login");
+            }
+
+            // Kieruj wg maski uprawnień
+            if ((user.Permisje & 1) != 0) // Administrator
+                return RedirectToAction("AdminPanel");
+
+            if ((user.Permisje & 2) != 0) // Pracownik
+                return RedirectToAction("PracownikPanel");
+
+            if ((user.Permisje & 4) != 0) // Pacjent
+                return RedirectToAction("PacjentPanel");
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Logout()
+        {
+            // Usuń ciasteczka i przekieruj na stronę główną
+            Response.Cookies.Delete("AuthUser");
+            Response.Cookies.Delete("AuthUserId");
+            return RedirectToAction("Index", "Home");
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DodajUzytkownik(Uzytkownik nowyUzytkownik)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(nowyUzytkownik);
+            }
+
+            if (string.IsNullOrWhiteSpace(nowyUzytkownik.Haslo))
+            {
+                ModelState.AddModelError("Haslo", "Hasło jest wymagane");
+                return View(nowyUzytkownik);
+            }
+
+            if (_context.Uzytkownicy.Any(uzytkownik => uzytkownik.Login == nowyUzytkownik.Login))
+            {
+                ModelState.AddModelError("Login", "Login już istnieje");
+            }
+
+            if (_context.Uzytkownicy.Any(uzytkownik => uzytkownik.Pesel == nowyUzytkownik.Pesel))
+            {
+                ModelState.AddModelError("Pesel", "PESEL już istnieje w systemie");
+            }
+
+            if (_context.Uzytkownicy.Any(uzytkownik => uzytkownik.Email == nowyUzytkownik.Email))
+            {
+                ModelState.AddModelError("Email", "E-mail już istnieje w systemie");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(nowyUzytkownik);
+            }
+
+            if (!TryValidatePesel(nowyUzytkownik.Pesel, nowyUzytkownik.Plec, out DateTime dob, out string peselError))
+            {
+                ModelState.AddModelError("Pesel", peselError);
+                return View(nowyUzytkownik);
+            }
+
+            nowyUzytkownik.DataUrodzenia = dob;
+
+            nowyUzytkownik.Haslo = PasswordHasher.HashPassword(nowyUzytkownik.Haslo);
+
+            _context.Uzytkownicy.Add(nowyUzytkownik);
+            _context.SaveChanges();
+            return RedirectToAction("AdminPanel");
+        }
+
+        private bool TryValidatePesel(string pesel, string plec, out DateTime dateOfBirth, out string error)
+        {
+            dateOfBirth = default;
+            error = string.Empty;
+
+            if (string.IsNullOrEmpty(pesel) || pesel.Length != 11 || !pesel.All(char.IsDigit))
+            {
+                error = "PESEL nieprawidłowy – niepoprawna data";
+                return false;
+            }
+
+            int year = int.Parse(pesel.Substring(0, 2));
+            int month = int.Parse(pesel.Substring(2, 2));
+            int day = int.Parse(pesel.Substring(4, 2));
+
+            int fullYear;
+            int realMonth = month;
+
+            if (month >= 1 && month <= 12)
+                fullYear = 1900 + year;
+            else if (month >= 21 && month <= 32)
+            {
+                fullYear = 2000 + year;
+                realMonth = month - 20;
+            }
+            else if (month >= 41 && month <= 52)
+            {
+                fullYear = 2100 + year;
+                realMonth = month - 40;
+            }
+            else if (month >= 61 && month <= 72)
+            {
+                fullYear = 2200 + year;
+                realMonth = month - 60;
+            }
+            else if (month >= 81 && month <= 92)
+            {
+                fullYear = 1800 + year;
+                realMonth = month - 80;
+            }
+            else
+            {
+                error = "PESEL nieprawidłowy – niepoprawna data";
+                return false;
+            }
+
+            try
+            {
+                dateOfBirth = new DateTime(fullYear, realMonth, day);
+            }
+            catch
+            {
+                error = "PESEL nieprawidłowy – niepoprawna data";
+                return false;
+            }
+
+
+            int genderDigit = int.Parse(pesel.Substring(9, 1));
+            bool isMale = (genderDigit % 2) == 1;
+            bool modelSaysMale = (plec ?? string.Empty).ToLower().Contains("m");
+
+            if (modelSaysMale != isMale)
+            {
+                error = "PESEL nieprawidłowy – niepoprawna płeć";
+                return false;
+            }
+
+
+            int[] weights = new[] { 1, 3, 7, 9, 1, 3, 7, 9, 1, 3 };
+            int sum = 0;
+            for (int i = 0; i < 10; i++)
+            {
+                sum += weights[i] * (pesel[i] - '0');
+            }
+            int control = (10 - (sum % 10)) % 10;
+            int lastDigit = pesel[10] - '0';
+            if (control != lastDigit)
+            {
+                error = "PESEL nieprawidłowy – niepoprawna cyfra kontrolna";
+                return false;
+            }
+
+            return true;
+        }
+        public IActionResult Zapomnij(int id)
+        {
+            var user = _context.Uzytkownicy.FirstOrDefault(u => u.ID == id);
+
+            if (user == null)
+                return RedirectToAction("AdminPanel");
+
+            if (!user.CzyAktywny)
+                return RedirectToAction("AdminPanel");
+
+
+            user.Login = GenerateUniqueLogin();
+
+
+            user.Email = GenerateUniqueEmail();
+
+
+            user.Telefon = GenerateRandomDigits(9);
+
+
+            var genderIsMale = RandomNumberGenerator.GetInt32(0, 2) == 1;
+            user.Plec = genderIsMale ? "Mężczyzna" : "Kobieta";
+
+
+            var dob = GenerateRandomDateOfBirth(18, 90);
+            user.DataUrodzenia = dob;
+
+
+            string pesel;
+            int attempts = 0;
+            do
+            {
+                pesel = GeneratePeselFor(dob, genderIsMale);
+                attempts++;
+            } while (_context.Uzytkownicy.Any(uzytkownik => uzytkownik.Pesel == pesel) && attempts < 10);
+            user.Pesel = pesel;
+
+
+            user.Imie = "Anonim" + RandomString(6);
+            user.Nazwisko = "Uzytkownik" + RandomString(6);
+
+
+            user.Permisje = 0;
+            user.CzyAktywny = false;
+
+
+            user.Haslo = PasswordHasher.HashPassword(Guid.NewGuid().ToString());
+
+            _context.SaveChanges();
+
+            // Usuń ciasteczka gdy użytkownik zostanie 'zapomniany'
+            Response.Cookies.Delete("AuthUser");
+            Response.Cookies.Delete("AuthUserId");
+
+            return RedirectToAction("AdminPanel");
+        }
+
+        private static string GenerateRandomDigits(int length)
+        {
+            var sb = new System.Text.StringBuilder(length);
+            for (int i = 0; i < length; i++)
+            {
+                sb.Append(RandomNumberGenerator.GetInt32(0, 10).ToString());
+            }
+            return sb.ToString();
+        }
+
+        private static string RandomString(int length)
+        {
+            const string chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+            var sb = new System.Text.StringBuilder(length);
+            for (int i = 0; i < length; i++)
+            {
+                sb.Append(chars[RandomNumberGenerator.GetInt32(0, chars.Length)]);
+            }
+            return sb.ToString();
+        }
+
+        private string GenerateUniqueLogin()
+        {
+            string login;
+            int attempts = 0;
+            do
+            {
+                login = "deleted_" + Guid.NewGuid().ToString("N").Substring(0, 10);
+                attempts++;
+            } while (_context.Uzytkownicy.Any(u => u.Login == login) && attempts < 10);
+            return login;
+        }
+
+        private string GenerateUniqueEmail()
+        {
+            string email;
+            int attempts = 0;
+            do
+            {
+                email = $"deleted_{Guid.NewGuid():N}@example.invalid";
+                attempts++;
+            } while (_context.Uzytkownicy.Any(uzytkownik => uzytkownik.Email == email) && attempts < 10);
+            return email;
+        }
+
+        private DateTime GenerateRandomDateOfBirth(int minAge, int maxAge)
+        {
+            var today = DateTime.Today;
+            int age = RandomNumberGenerator.GetInt32(minAge, maxAge + 1);
+            int year = today.Year - age;
+            int month = RandomNumberGenerator.GetInt32(1, 13);
+            int day = RandomNumberGenerator.GetInt32(1, DateTime.DaysInMonth(year, month) + 1);
+            return new DateTime(year, month, day);
+        }
+
+        private string GeneratePeselFor(DateTime dob, bool isMale)
+        {
+            // losowy pesel
+            int year = dob.Year;
+            int month = dob.Month;
+            int day = dob.Day;
+
+            int monthCode = month;
+            int yearTwo = year % 100;
+
+            if (year >= 2000 && year <= 2099) monthCode = month + 20;
+            else if (year >= 2100 && year <= 2199) monthCode = month + 40;
+            else if (year >= 2200 && year <= 2299) monthCode = month + 60;
+            else if (year >= 1800 && year <= 1899) monthCode = month + 80;
+
+
+            string part = yearTwo.ToString("D2") + monthCode.ToString("D2") + day.ToString("D2");
+
+
+            var digits = new int[11];
+            digits[0] = part[0] - '0';
+            digits[1] = part[1] - '0';
+            digits[2] = part[2] - '0';
+            digits[3] = part[3] - '0';
+            digits[4] = part[4] - '0';
+            digits[5] = part[5] - '0';
+
+            for (int i = 6; i <= 8; i++)
+            {
+                digits[i] = RandomNumberGenerator.GetInt32(0, 10);
+            }
+
+
+            int genderDigit = RandomNumberGenerator.GetInt32(0, 10);
+            if (isMale && genderDigit % 2 == 0) genderDigit = (genderDigit + 1) % 10;
+            if (!isMale && genderDigit % 2 == 1) genderDigit = (genderDigit + 1) % 10;
+            digits[9] = genderDigit;
+
+            // cyfra kontrolna
+            int[] weights = { 1, 3, 7, 9, 1, 3, 7, 9, 1, 3 };
+            int sum = 0;
+            for (int i = 0; i < 10; i++) sum += weights[i] * digits[i];
+            int control = (10 - (sum % 10)) % 10;
+            digits[10] = control;
+
+            var sb = new System.Text.StringBuilder(11);
+            for (int i = 0; i < 11; i++) sb.Append(digits[i]);
+            return sb.ToString();
+        }
+
+
+        
+        public IActionResult ListaUprawnien()
+        {
+            var uprawnienia = new List<dynamic>
+            {
+                new { ID = 1, Nazwa = "Administrator", Opis = "Pełny dostęp do zarządzania użytkownikami i systemem." },
+                new { ID = 2, Nazwa = "Pracownik", Opis = "Dostęp do modułów operacyjnych przychodni." },
+                new { ID = 4, Nazwa = "Użytkownik", Opis = "Podstawowe uprawnienia dla pacjentów." }
+            };
+
+            return View(uprawnienia);
+        }
+
+
+        // 1. Ta metoda WYŚWIETLA formularz
+        [HttpGet]
+        public IActionResult Uprawnienia(int id)
+        {
+            var user = _context.Uzytkownicy.FirstOrDefault(u => u.ID == id);
+            if (user == null) return NotFound();
+            return View(user);
+        }
+
+        // 2. Ta metoda ZAPISUJE zmiany
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Uprawnienia(int id, int[] wybraneRole) // Dodaliśmy parametr, błąd zniknie
+        {
+            var user = _context.Uzytkownicy.FirstOrDefault(u => u.ID == id);
+            if (user == null) return NotFound();
+
+            // Resetujemy uprawnienia przed przypisaniem nowych
+            user.Permisje = 0;
+
+            // Jeśli nic nie zaznaczono, wyrzucamy błąd (Alternatywny przepływ 4a)
+            if (wybraneRole == null || wybraneRole.Length == 0)
+            {
+                ViewBag.Error = "nie zaznaczono żadnych uprawnień";
+                return View(user);
+            }
+
+            // Sumujemy i nadpisujemy (Pamiętaj: Admin=1, Pracownik=2, Pacjent=4)
+            user.Permisje = wybraneRole.Sum();
+
+            _context.SaveChanges();
+
+            // Redirect wymusza czyste przeładowanie danych
+            return RedirectToAction("Podglad", new { id = user.ID });
+        }
+
+
+        public IActionResult UzytkownicyZUprawnieniem(int id)
+        {
+            var wszyscyAktywni = _context.Uzytkownicy.AsNoTracking().Where(u => u.CzyAktywny).ToList();
+
+            var przefiltrowani = wszyscyAktywni.Where(u =>
+            {
+                // Sprawdzamy czy dany BIT uprawnienia (1, 2 lub 4) jest włączony w sumie
+                return (u.Permisje & id) != 0;
+            }).ToList();
+
+            ViewBag.Rola = id == 1 ? "Administrator" : id == 2 ? "Pracownik" : "Pacjent";
+            return View(przefiltrowani);
+        }
+
+
+        // 1. Wyświetlenie formularza edycji
+        [HttpGet]
+        public IActionResult Edytuj(int id)
+        {
+            var user = _context.Uzytkownicy.FirstOrDefault(u => u.ID == id);
+            if (user == null) return NotFound();
+            return View(user);
+        }
+
+        // 2. Przetworzenie edycji
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edytuj(Uzytkownik model)
+        {
+            // Jeśli email nie ma kropki lub pole jest puste, ModelState będzie niepoprawny
+            if (!ModelState.IsValid)
+            {
+                return View(model); // Powrót do formularza z czerwonymi błędami
+            }
+
+            var uzytkownik = _context.Uzytkownicy.FirstOrDefault(u => u.ID == model.ID);
+            if (uzytkownik == null) return NotFound();
+
+            uzytkownik.Imie = model.Imie;
+            uzytkownik.Nazwisko = model.Nazwisko;
+            uzytkownik.Email = model.Email;
+            uzytkownik.Pesel = model.Pesel;
+
+            _context.SaveChanges();
+            // Jeśli edytowany jest aktualnie zalogowany użytkownik, odśwież ciasteczko z loginem
+            var currentLogin = Request.Cookies["AuthUser"];
+            if (!string.IsNullOrEmpty(currentLogin) && currentLogin == uzytkownik.Login)
+            {
+                Response.Cookies.Append("AuthUser", uzytkownik.Login, new Microsoft.AspNetCore.Http.CookieOptions { HttpOnly = true, SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Lax });
+            }
+            return RedirectToAction("Podglad", new { id = uzytkownik.ID });
+        }
+
+    }
+
+}
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\Controllers\HomeController.cs ---
+using Microsoft.AspNetCore.Mvc;
+using przychodnia.Models;
+using System.Diagnostics;
+
+namespace przychodnia.Controllers
+{
+    public class HomeController : Controller
+    {
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+    }
+}
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\Data\ApplicationDbContext.cs ---
+using Microsoft.EntityFrameworkCore;
+using przychodnia.Models;
+using System.Reflection.Emit;
+
+namespace przychodnia.Data
+{
+    public class ApplicationDbContext : DbContext
+    {
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
+        {
+        }
+
+        
+        public DbSet<Uzytkownik> Uzytkownicy { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Jeśli Twoja tabela w projekt.db nazywa się inaczej niż "Uzytkownicy" (np. "Users"), 
+            // odkomentuj linię poniżej i wpisz właściwą nazwę:
+            // modelBuilder.Entity<Uzytkownik>().ToTable("Uzytkownicy");
+        }
+    }
+}
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\Models\ErrorViewModel.cs ---
+namespace przychodnia.Models
+{
+    public class ErrorViewModel
+    {
+        public string? RequestId { get; set; }
+
+        public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+    }
+}
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\Models\Uzytkownik.cs ---
+using System;
+using System.ComponentModel.DataAnnotations;
+
+namespace przychodnia.Models
+{
+    public class Uzytkownik
+    {
+        [Key]
+        public int ID { get; set; }
+
+        [Required(ErrorMessage = "Login jest wymagany")]
+        public string Login { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Hasło jest wymagane")]
+        public string Haslo { get; set; } = string.Empty; // SHA256
+
+        [Required(ErrorMessage = "Imię jest wymagane")]
+        public string Imie{ get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Nazwisko jest wymagane")]
+        public string Nazwisko { get; set; } = string.Empty;
+
+        public string Adres { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "PESEL jest wymagany")]
+        [StringLength(11, MinimumLength = 11, ErrorMessage = "PESEL musi mieć 11 cyfr")]
+        public string Pesel { get; set; } = string.Empty;
+
+        public DateTime DataUrodzenia { get; set; }
+
+        public string Plec { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "E-mail jest wymagany")]
+        [StringLength(255, ErrorMessage = "E-mail nie może przekroczyć 255 znaków")]
+        [EmailAddress(ErrorMessage = "Niepoprawny format e-mailu")]
+        public string Email { get; set; } = string.Empty;
+
+        [RegularExpression("^\\d{9}$", ErrorMessage = "Numer telefonu musi zawierać dokładnie 9 cyfr")]
+        public string Telefon { get; set; } = string.Empty;
+
+        // Permisje przechowywane jako maska bitowa: Admin=1, Pracownik=2, Pacjent=4
+        public int Permisje { get; set; }
+        public bool CzyAktywny { get; set; } = true;
+    }
+}
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\obj\Debug\net10.0\.NETCoreApp,Version=v10.0.AssemblyAttributes.cs ---
+// <autogenerated />
+using System;
+using System.Reflection;
+[assembly: global::System.Runtime.Versioning.TargetFrameworkAttribute(".NETCoreApp,Version=v10.0", FrameworkDisplayName = ".NET 10.0")]
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\obj\Debug\net10.0\poprawne.AssemblyInfo.cs ---
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     This code was generated by a tool.
+//     Runtime Version:4.0.30319.42000
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Reflection;
+
+[assembly: System.Reflection.AssemblyCompanyAttribute("poprawne")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyProductAttribute("poprawne")]
+[assembly: System.Reflection.AssemblyTitleAttribute("poprawne")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
+
+// Generated by the MSBuild WriteCodeFragment class.
+
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\obj\Debug\net10.0\poprawne.GlobalUsings.g.cs ---
+// <auto-generated/>
+global using Microsoft.AspNetCore.Builder;
+global using Microsoft.AspNetCore.Hosting;
+global using Microsoft.AspNetCore.Http;
+global using Microsoft.AspNetCore.Routing;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Hosting;
+global using Microsoft.Extensions.Logging;
+global using System;
+global using System.Collections.Generic;
+global using System.IO;
+global using System.Linq;
+global using System.Net.Http;
+global using System.Net.Http.Json;
+global using System.Threading;
+global using System.Threading.Tasks;
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\obj\Debug\net10.0\poprawne.RazorAssemblyInfo.cs ---
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     This code was generated by a tool.
+//     Runtime Version:4.0.30319.42000
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Reflection;
+
+[assembly: Microsoft.AspNetCore.Mvc.ApplicationParts.ProvideApplicationPartFactoryAttribute("Microsoft.AspNetCore.Mvc.ApplicationParts.ConsolidatedAssemblyApplicationPartFact" +
+    "ory, Microsoft.AspNetCore.Mvc.Razor")]
+
+// Generated by the MSBuild WriteCodeFragment class.
+
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\obj\Debug\net10.0\przychodnia.AssemblyInfo.cs ---
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     This code was generated by a tool.
+//     Runtime Version:4.0.30319.42000
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Reflection;
+
+[assembly: System.Reflection.AssemblyCompanyAttribute("przychodnia")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f5d2f3fc0c1d3a67e3b9e1b6f1d5adaab419a9f0")]
+[assembly: System.Reflection.AssemblyProductAttribute("przychodnia")]
+[assembly: System.Reflection.AssemblyTitleAttribute("przychodnia")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
+
+// Generated by the MSBuild WriteCodeFragment class.
+
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\obj\Debug\net10.0\przychodnia.GlobalUsings.g.cs ---
+// <auto-generated/>
+global using Microsoft.AspNetCore.Builder;
+global using Microsoft.AspNetCore.Hosting;
+global using Microsoft.AspNetCore.Http;
+global using Microsoft.AspNetCore.Routing;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Hosting;
+global using Microsoft.Extensions.Logging;
+global using System;
+global using System.Collections.Generic;
+global using System.IO;
+global using System.Linq;
+global using System.Net.Http;
+global using System.Net.Http.Json;
+global using System.Threading;
+global using System.Threading.Tasks;
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\obj\Debug\net10.0\przychodnia.RazorAssemblyInfo.cs ---
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     This code was generated by a tool.
+//     Runtime Version:4.0.30319.42000
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Reflection;
+
+[assembly: Microsoft.AspNetCore.Mvc.ApplicationParts.ProvideApplicationPartFactoryAttribute("Microsoft.AspNetCore.Mvc.ApplicationParts.ConsolidatedAssemblyApplicationPartFact" +
+    "ory, Microsoft.AspNetCore.Mvc.Razor")]
+
+// Generated by the MSBuild WriteCodeFragment class.
+
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\obj\Release\net10.0\.NETCoreApp,Version=v10.0.AssemblyAttributes.cs ---
+// <autogenerated />
+using System;
+using System.Reflection;
+[assembly: global::System.Runtime.Versioning.TargetFrameworkAttribute(".NETCoreApp,Version=v10.0", FrameworkDisplayName = ".NET 10.0")]
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\obj\Release\net10.0\przychodnia.AssemblyInfo.cs ---
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     Ten kod zostaĹ‚ wygenerowany przez narzÄ™dzie.
+//     Wersja wykonawcza:4.0.30319.42000
+//
+//     Zmiany w tym pliku mogÄ… spowodowaÄ‡ nieprawidĹ‚owe zachowanie i zostanÄ… utracone, jeĹ›li
+//     kod zostanie ponownie wygenerowany.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Reflection;
+
+[assembly: System.Reflection.AssemblyCompanyAttribute("przychodnia")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+63e46bb594f44e4ff2ed528b5567bc84e858cbcb")]
+[assembly: System.Reflection.AssemblyProductAttribute("przychodnia")]
+[assembly: System.Reflection.AssemblyTitleAttribute("przychodnia")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
+
+// Wygenerowane przez klasÄ™ WriteCodeFragment programu MSBuild.
+
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\obj\Release\net10.0\przychodnia.GlobalUsings.g.cs ---
+// <auto-generated/>
+global using Microsoft.AspNetCore.Builder;
+global using Microsoft.AspNetCore.Hosting;
+global using Microsoft.AspNetCore.Http;
+global using Microsoft.AspNetCore.Routing;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Hosting;
+global using Microsoft.Extensions.Logging;
+global using System;
+global using System.Collections.Generic;
+global using System.IO;
+global using System.Linq;
+global using System.Net.Http;
+global using System.Net.Http.Json;
+global using System.Threading;
+global using System.Threading.Tasks;
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\obj\Release\net10.0\przychodnia.RazorAssemblyInfo.cs ---
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     This code was generated by a tool.
+//     Runtime Version:4.0.30319.42000
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Reflection;
+
+[assembly: Microsoft.AspNetCore.Mvc.ApplicationParts.ProvideApplicationPartFactoryAttribute("Microsoft.AspNetCore.Mvc.ApplicationParts.ConsolidatedAssemblyApplicationPartFact" +
+    "ory, Microsoft.AspNetCore.Mvc.Razor")]
+
+// Generated by the MSBuild WriteCodeFragment class.
+
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\przychodnia.Tests\DodawanieUzytkownikaTests.cs ---
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using Xunit;
+using przychodnia.Models;
+
+namespace przychodnia.Tests.Scenariusze
+{
+    public class DodanieUzytkownikaTests
+    {
+        [Fact]
+        public void TC_1_PrzechodziWalidacje()
+        {
+            
+            var uzytkownik = new Uzytkownik
+            {
+                Login = "jan.kowalski",
+                Haslo = "TestoweHaslo123!",
+                Imie = "Jan",
+                Nazwisko = "Kowalski",
+                Adres = "ul. Testowa 12, 00-000 Warszawa",
+                Pesel = "85010112345",
+                Plec = "M",
+                Email = "jan.kowalski@test.pl",
+                Telefon = "123456789"
+            };
+            var kontekstWalidacji = new ValidationContext(uzytkownik);
+            var wyniki = new List<ValidationResult>();
+
+            
+            bool czyPoprawne = Validator.TryValidateObject(uzytkownik, kontekstWalidacji, wyniki, true);
+
+            
+            Assert.True(czyPoprawne); 
+            Assert.Empty(wyniki); 
+        }
+
+        [Fact]
+        public void TC_2_BrakWymaganegoPolaNazwisko_ZwracaBlad()
+        {
+            
+            var uzytkownik = new Uzytkownik
+            {
+                Login = "jan.kowalski",
+                Haslo = "TestoweHaslo123!",
+                Imie = "Jan",
+                Nazwisko = "", 
+                Adres = "ul. Testowa 12, 00-000 Warszawa",
+                Pesel = "85010112345",
+                Plec = "M",
+                Email = "jan.kowalski@test.pl",
+                Telefon = "123456789"
+            };
+            var kontekstWalidacji = new ValidationContext(uzytkownik);
+            var wyniki = new List<ValidationResult>();
+
+            
+            bool czyPoprawne = Validator.TryValidateObject(uzytkownik, kontekstWalidacji, wyniki, true);
+
+            
+            Assert.False(czyPoprawne); 
+            Assert.Contains(wyniki, w => w.MemberNames.Contains("Nazwisko")); 
+        }
+
+        [Fact]
+        public void TC_9_ZlyFormatEmail_ZwracaBlad()
+        {
+            
+            var uzytkownik = new Uzytkownik
+            {
+                Login = "jan.kowalski",
+                Haslo = "TestoweHaslo123!",
+                Imie = "Jan",
+                Nazwisko = "Kowalski",
+                Pesel = "85010112345",
+                Plec = "M",
+                Email = "jan.kowalski@test", 
+                Telefon = "123456789"
+            };
+            var kontekstWalidacji = new ValidationContext(uzytkownik);
+            var wyniki = new List<ValidationResult>();
+
+            
+            bool czyPoprawne = Validator.TryValidateObject(uzytkownik, kontekstWalidacji, wyniki, true);
+
+            
+            Assert.False(czyPoprawne);
+            Assert.Contains(wyniki, w => w.MemberNames.Contains("Email"));
+        }
+
+        [Fact]
+        public void TC_10_EmailZaDlugi_ZwracaBlad()
+        {
+            
+            string zaDlugiEmail = new string('a', 250) + "@test.pl";
+
+            var uzytkownik = new Uzytkownik
+            {
+                Login = "jan.kowalski",
+                Haslo = "TestoweHaslo123!",
+                Imie = "Jan",
+                Nazwisko = "Kowalski",
+                Pesel = "85010112345",
+                Plec = "M",
+                Email = zaDlugiEmail,
+                Telefon = "123456789"
+            };
+            var kontekstWalidacji = new ValidationContext(uzytkownik);
+            var wyniki = new List<ValidationResult>();
+
+            
+            bool czyPoprawne = Validator.TryValidateObject(uzytkownik, kontekstWalidacji, wyniki, true);
+
+            
+            Assert.False(czyPoprawne);
+            Assert.Contains(wyniki, w => w.MemberNames.Contains("Email"));
+        }
+
+        [Fact]
+        public void TC_11_NiepoprawnyTelefon_ZwracaBlad()
+        {
+            
+            var uzytkownik = new Uzytkownik
+            {
+                Login = "jan.kowalski",
+                Haslo = "Haslo1!",
+                Imie = "Jan",
+                Nazwisko = "Kowalski",
+                Pesel = "85010112345",
+                Plec = "M",
+                Email = "jan.kowalski@test.pl",
+                Telefon = "12345678" 
+            };
+            var kontekst = new ValidationContext(uzytkownik);
+            var wyniki = new List<ValidationResult>();
+
+           
+            bool czyPoprawne = Validator.TryValidateObject(uzytkownik, kontekst, wyniki, true);
+
+            
+            Assert.False(czyPoprawne);
+            Assert.Contains(wyniki, w => w.MemberNames.Contains("Telefon"));
+        }
+    }
+}
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\przychodnia.Tests\KontrolerUzytkownikaTests.cs ---
+using System;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using przychodnia.Controllers;
+using przychodnia.Data;
+using przychodnia.Models;
+using Xunit;
+
+namespace przychodnia.Tests.Scenariusze
+{
+    public class KontrolerUzytkownikaTests
+    {
+        
+        private ApplicationDbContext PrzygotujSztucznaBaze()
+        {
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+                .Options;
+
+            return new ApplicationDbContext(options);
+        }
+
+        [Fact]
+        public void TC_3_DodanieUzytkownika_DuplikatLoginu_ZwracaBlad()
+        {
+            
+            var db = PrzygotujSztucznaBaze();
+            db.Uzytkownicy.Add(new Uzytkownik { Login = "admin123", Haslo = "Haslo1!", Email = "stary@test.pl", Pesel = "11111111111" });
+            db.SaveChanges();
+
+            var controller = new AccountController(db);
+
+            
+            var nowyUzytkownik = new Uzytkownik { Login = "admin123", Haslo = "Haslo2!", Email = "nowy@test.pl", Pesel = "22222222222", Plec = "M" };
+
+            
+            controller.DodajUzytkownik(nowyUzytkownik);
+
+            
+            Assert.False(controller.ModelState.IsValid);
+            Assert.True(controller.ModelState.ContainsKey("Login"));
+            Assert.Equal("Login już istnieje", controller.ModelState["Login"].Errors[0].ErrorMessage);
+        }
+
+        [Fact]
+        public void TC_4_DodanieUzytkownika_DuplikatPesel_ZwracaBlad()
+        {
+           
+            var db = PrzygotujSztucznaBaze();
+            db.Uzytkownicy.Add(new Uzytkownik { Login = "staryLogin", Haslo = "Haslo1!", Email = "stary@test.pl", Pesel = "85010112345" });
+            db.SaveChanges();
+
+            var controller = new AccountController(db);
+
+            
+            var nowyUzytkownik = new Uzytkownik { Login = "nowyLogin", Haslo = "Haslo2!", Email = "nowy@test.pl", Pesel = "85010112345", Plec = "M" };
+
+            
+            controller.DodajUzytkownik(nowyUzytkownik);
+
+            
+            Assert.False(controller.ModelState.IsValid);
+            Assert.True(controller.ModelState.ContainsKey("Pesel"));
+            Assert.Equal("PESEL już istnieje w systemie", controller.ModelState["Pesel"].Errors[0].ErrorMessage);
+        }
+
+        [Fact]
+        public void TC_5_DodanieUzytkownika_DuplikatEmail_ZwracaBlad()
+        {
+            
+            var db = PrzygotujSztucznaBaze();
+            db.Uzytkownicy.Add(new Uzytkownik { Login = "staryLogin", Haslo = "Haslo1!", Email = "jan.kowalski@test.pl", Pesel = "11111111111" });
+            db.SaveChanges();
+
+            var controller = new AccountController(db);
+
+            
+            var nowyUzytkownik = new Uzytkownik { Login = "nowyLogin", Haslo = "Haslo2!", Email = "jan.kowalski@test.pl", Pesel = "22222222222", Plec = "M" };
+
+            
+            controller.DodajUzytkownik(nowyUzytkownik);
+
+            
+            Assert.False(controller.ModelState.IsValid);
+            Assert.True(controller.ModelState.ContainsKey("Email"));
+            Assert.Equal("E-mail już istnieje w systemie", controller.ModelState["Email"].Errors[0].ErrorMessage);
+        }
+
+        [Fact]
+        public void TC_6_DodanieUzytkownika_NiepoprawnyPeselData_ZwracaBlad()
+        {
+            
+            var db = PrzygotujSztucznaBaze();
+            var controller = new AccountController(db);
+            
+            var nowyUzytkownik = new Uzytkownik { Login = "test1", Haslo = "Haslo1!", Email = "test@test.pl", Pesel = "85013212345", Plec = "M" };
+
+            
+            controller.DodajUzytkownik(nowyUzytkownik);
+
+            
+            Assert.False(controller.ModelState.IsValid);
+            Assert.True(controller.ModelState.ContainsKey("Pesel"));
+            Assert.Equal("PESEL nieprawidłowy – niepoprawna data", controller.ModelState["Pesel"].Errors[0].ErrorMessage);
+        }
+
+        [Fact]
+        public void TC_7_DodanieUzytkownika_NiepoprawnyPeselPlec_ZwracaBlad()
+        {
+            
+            var db = PrzygotujSztucznaBaze();
+            var controller = new AccountController(db);
+            
+            var nowyUzytkownik = new Uzytkownik { Login = "test2", Haslo = "Haslo1!", Email = "test@test.pl", Pesel = "85010112346", Plec = "M" };
+
+            
+            controller.DodajUzytkownik(nowyUzytkownik);
+
+           
+            Assert.False(controller.ModelState.IsValid);
+            Assert.True(controller.ModelState.ContainsKey("Pesel"));
+            Assert.Equal("PESEL nieprawidłowy – niepoprawna płeć", controller.ModelState["Pesel"].Errors[0].ErrorMessage);
+        }
+
+        [Fact]
+        public void TC_8_DodanieUzytkownika_NiepoprawnyPeselCyfraKontrolna_ZwracaBlad()
+        {
+            
+            var db = PrzygotujSztucznaBaze();
+            var controller = new AccountController(db);
+            
+            var nowyUzytkownik = new Uzytkownik { Login = "test3", Haslo = "Haslo1!", Email = "test@test.pl", Pesel = "85010112344", Plec = "K" };
+
+            
+            controller.DodajUzytkownik(nowyUzytkownik);
+
+            
+            Assert.False(controller.ModelState.IsValid);
+            Assert.True(controller.ModelState.ContainsKey("Pesel"));
+            Assert.Equal("PESEL nieprawidłowy – niepoprawna cyfra kontrolna", controller.ModelState["Pesel"]!.Errors[0].ErrorMessage);
+        }
+
+        [Fact]
+        public void TC_14_ZapomnienieUzytkownika_AnonimizujeDaneZgodnieZRODO()
+        {
+            
+            var db = PrzygotujSztucznaBaze();
+            var uzytkownik = new Uzytkownik
+            {
+                Login = "jan.kowalski",
+                Haslo = "Tajne123!",
+                Imie = "Jan",
+                Nazwisko = "Kowalski",
+                Email = "jan@test.pl",
+                Pesel = "85010112345",
+                CzyAktywny = true,
+                Permisje = 1
+            };
+            db.Uzytkownicy.Add(uzytkownik);
+            db.SaveChanges();
+
+            var controller = new AccountController(db);
+
+            
+            controller.Zapomnij(uzytkownik.ID);
+
+            
+            var zapomniany = db.Uzytkownicy.First();
+            Assert.False(zapomniany.CzyAktywny); 
+            Assert.Equal(0, zapomniany.Permisje); 
+            Assert.NotEqual("jan.kowalski", zapomniany.Login);
+            Assert.NotEqual("Jan", zapomniany.Imie); 
+            Assert.NotEqual("jan@test.pl", zapomniany.Email); 
+        }
+        [Fact]
+        public void TC_16_WyswietlanieListy_PokazujeTylkoAktywnych()
+        {
+            
+            var db = PrzygotujSztucznaBaze();
+            db.Uzytkownicy.Add(new Uzytkownik { Login = "aktywny123", CzyAktywny = true, Nazwisko = "Kowalski", Email = "a@test.pl", Pesel = "11111111111" });
+            db.Uzytkownicy.Add(new Uzytkownik { Login = "zapomniany123", CzyAktywny = false, Nazwisko = "Zamazany", Email = "z@test.pl", Pesel = "22222222222" });
+            db.SaveChanges();
+
+            var controller = new AccountController(db);
+
+            
+            var result = controller.AdminPanel(searchString: null, showForgotten: false) as ViewResult;
+            var model = result?.Model as List<Uzytkownik>;
+
+            
+            Assert.NotNull(model);
+            Assert.Single(model);
+            Assert.True(model[0].CzyAktywny);
+            Assert.Equal("aktywny123", model[0].Login);
+        }
+
+        [Fact]
+        public void TC_17_Wyszukiwanie_PoLoginie()
+        {
+           
+            var db = PrzygotujSztucznaBaze();
+            db.Uzytkownicy.Add(new Uzytkownik { Login = "jan.kowalski", CzyAktywny = true, Nazwisko = "Kowalski", Email = "j@test.pl", Pesel = "11111111111" });
+            db.Uzytkownicy.Add(new Uzytkownik { Login = "inny.login", CzyAktywny = true, Nazwisko = "Nowak", Email = "i@test.pl", Pesel = "22222222222" });
+            db.SaveChanges();
+
+            var controller = new AccountController(db);
+
+            
+            var result = controller.AdminPanel(searchString: "jan.kowalski", showForgotten: false) as ViewResult;
+            var model = result?.Model as List<Uzytkownik>;
+
+            
+            Assert.NotNull(model);
+            Assert.Single(model); 
+            Assert.Equal("jan.kowalski", model[0].Login);
+        }
+        [Fact]
+        public void TC_18_Wyszukiwanie_BrakWynikow_ZwracaPustaListe()
+        {
+            
+            var db = PrzygotujSztucznaBaze();
+            db.Uzytkownicy.Add(new Uzytkownik { Login = "jan", CzyAktywny = true, Nazwisko = "Kowalski", Pesel = "11111111111" });
+            db.SaveChanges();
+            var controller = new AccountController(db);
+
+            
+            var result = controller.AdminPanel(searchString: "nieistniejacyuserxyz123", showForgotten: false) as ViewResult;
+            var model = result?.Model as List<Uzytkownik>;
+
+            
+            Assert.NotNull(model);
+            Assert.Empty(model);
+        }
+
+        [Fact]
+        public void TC_19_Wyswietlanie_ListaZapomnianych_PokazujeTylkoZanonimizowanych()
+        {
+            
+            var db = PrzygotujSztucznaBaze();
+            db.Uzytkownicy.Add(new Uzytkownik { Login = "aktywny", CzyAktywny = true, Nazwisko = "Kowalski", Pesel = "11111111111" });
+            db.Uzytkownicy.Add(new Uzytkownik { Login = "zapomniany", CzyAktywny = false, Nazwisko = "Zamazany", Pesel = "22222222222" });
+            db.SaveChanges();
+            var controller = new AccountController(db);
+
+            
+            var result = controller.AdminPanel(searchString: null, showForgotten: true) as ViewResult;
+            var model = result?.Model as List<Uzytkownik>;
+
+            
+            Assert.NotNull(model);
+            Assert.Single(model);
+            Assert.False(model[0].CzyAktywny);
+        }
+
+        [Fact]
+        public void TC_20_PodgladDanych_NiedostepnyDlaUzytkownikowZapomnianych()
+        {
+            
+            var db = PrzygotujSztucznaBaze();
+            var zapomniany = new Uzytkownik { Login = "zamazany", CzyAktywny = false, Nazwisko = "Anonim", Pesel = "00000000000" };
+            db.Uzytkownicy.Add(zapomniany);
+            db.SaveChanges();
+            var controller = new AccountController(db);
+
+            
+            var result = controller.Podglad(zapomniany.ID);
+
+            
+            Assert.IsNotType<ViewResult>(result);
+        }
+    }
+}
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\Services\PasswordHasher.cs ---
+using System.Security.Cryptography;
+using System.Text;
+
+namespace przychodnia.Services 
+{
+    public static class PasswordHasher
+    {
+       
+        public static string HashPassword(string password)
+        {
+            if (string.IsNullOrEmpty(password)) return string.Empty;
+
+            using (SHA256 sha256Hash = SHA256.Create())
+            {
+                // Zamiana hasła na tablicę bajtów
+                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(password));
+
+                // Konwersja bajtów na tekst w formacie szesnastkowym (hex)
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    builder.Append(bytes[i].ToString("x2"));
+                }
+                return builder.ToString();
+            }
+        }
+    }
+}
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\Views\Account\AdminPanel.cshtml ---
+@model List<przychodnia.Models.Uzytkownik>
+
+@{
+    ViewData["Title"] = "Panel Administratora";
+}
+
+<style>
+    .admin-actions {
+        margin-bottom: 20px;
+        display: flex;
+        gap: 10px;
+    }
+
+    .table-custom {
+        width: 100%;
+        background-color: white;
+        border-collapse: collapse;
+        margin-top: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+        .table-custom th {
+            background-color: #B2DAFA;
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid #1B263B;
+        }
+
+        .table-custom td {
+            padding: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+    .btn-action {
+        padding: 5px 12px;
+        text-decoration: none;
+        font-size: 0.85rem;
+        border: 1px solid #1B263B;
+        color: #1B263B;
+        border-radius: 4px;
+        transition: 0.2s;
+    }
+
+        .btn-action:hover {
+            background-color: #1B263B;
+            color: white;
+        }
+
+    .nav-btn {
+        padding: 10px 20px;
+        background-color: #1B263B;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+    
+        .nav-btn:hover {
+            background-color: #2c3e50;
+            color: white;
+        }
+</style>
+
+<h2>Panel Administratora</h2>
+
+<div class="admin-actions">
+    <a href="@Url.Action("DodajUzytkownik", "Account")" class="nav-btn">Dodaj Nowego Użytkownika</a>
+    <a href="@Url.Action("AdminPanel", "Account")" class="btn btn-outline-secondary">Odśwież Listę</a>
+    <a href="@Url.Action("ListaUprawnien", "Account")" class="btn btn-outline-primary shadow-sm" style="border-radius: 8px; font-weight: 500;">
+        <i class="fas fa-shield-alt"></i> Lista Uprawnień
+    </a>
+    @{ 
+        var showForgotten = (ViewBag.ShowForgotten as bool?) ?? false;
+        var toggleText = showForgotten ? "Pokaż aktywnych" : "Wyświetl użytkowników zapomnianych";
+        var toggleAction = Url.Action("AdminPanel", "Account", new { searchString = ViewBag.CurrentFilter, showForgotten = !showForgotten });
+    }
+    <a href="@toggleAction" class="btn-action">@toggleText</a>
+</div>
+
+@{
+    var showForgottenForm = (ViewBag.ShowForgotten as bool?) ?? false;
+    var placeholder = showForgottenForm ? "Wyszukaj zapomnianych po nazwisku lub PESEL..." : "Wyszukaj aktywnych po nazwisku lub PESEL...";
+}
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <form asp-action="AdminPanel" method="get" class="row g-3">
+            <div class="col-md-9">
+                <input type="text" name="searchString" value="@ViewBag.CurrentFilter"
+                       class="form-control" placeholder="@placeholder" />
+                <input type="hidden" name="showForgotten" value="@showForgottenForm" />
+            </div>
+            <div class="col-md-3 d-grid gap-2 d-md-block">
+                <button type="submit" class="btn btn-primary" style="background-color: #1B263B;">Szukaj</button>
+                <a href="@Url.Action("AdminPanel", "Account", new { showForgotten = showForgottenForm })" class="btn btn-outline-secondary">Wyczyść</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(ViewBag.CurrentFilter))
+{
+    <p class="text-muted">Wyniki wyszukiwania dla: <strong>@ViewBag.CurrentFilter</strong></p>
+}
+
+<table class="table-custom">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Login</th>
+            <th>Imię i Nazwisko</th>
+            <th>Rola</th>
+            <th>Status</th>
+            <th>Akcje</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.ID</td>
+                <td>@user.Login</td>
+                <td>@user.Imie @user.Nazwisko</td>
+                <td>
+                    @{ 
+                        var roles = new List<string>();
+                        if ((user.Permisje & 1) != 0) roles.Add("Admin");
+                        if ((user.Permisje & 2) != 0) roles.Add("Pracownik");
+                        if ((user.Permisje & 4) != 0) roles.Add("Pacjent");
+                        if (!roles.Any()) roles.Add("Brak");
+                    }
+                    @string.Join(", ", roles)
+                </td>
+                <td>
+                    <span class="badge @(user.CzyAktywny ? "bg-success" : "bg-danger")">
+                        @(user.CzyAktywny ? "Aktywny" : "Zapomniany")
+                    </span>
+                </td>
+                <td>
+                    <a href="@Url.Action("Podglad", "Account", new { id = user.ID })" class="btn-action">Podgląd</a>
+                    
+                    @if (user.CzyAktywny)
+                    {
+                        <a href="@Url.Action("Zapomnij", "Account", new { id = user.ID })"
+                           class="btn-action"
+                           onclick="return confirm('Czy na pewno chcesz zmienić status na Zapomniany?')">Zapomnij</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\Views\Account\DodajUzytkownik.cshtml ---
+@model przychodnia.Models.Uzytkownik
+
+@{
+    ViewData["Title"] = "Dodaj Nowego Użytkownika";
+}
+
+<div style="max-width: 600px; margin: auto; background: white; padding: 25px; border-radius: 10px; border: 1px solid #dee2e6;">
+    <h2 style="border-bottom: 3px solid #1B263B; padding-bottom: 10px;">Nowy Użytkownik</h2>
+
+    <form asp-action="DodajUzytkownik" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label>Login</label>
+                <input asp-for="Login" class="form-control" />
+                <span asp-validation-for="Login" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label>Hasło</label>
+                <input asp-for="Haslo" type="password" class="form-control" />
+                <span asp-validation-for="Haslo" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label>Imię</label>
+                <input asp-for="Imie" class="form-control" />
+                <span asp-validation-for="Imie" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label>Nazwisko</label>
+                <input asp-for="Nazwisko" class="form-control" />
+                <span asp-validation-for="Nazwisko" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label>Adres</label>
+            <input asp-for="Adres" class="form-control" />
+        </div>
+
+        <div class="row">
+        <div class="col-md-6 mb-3">
+            <label>PESEL</label>
+            <input asp-for="Pesel" class="form-control" maxlength="11" />
+            <span asp-validation-for="Pesel" class="text-danger"></span>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label>Płeć</label>
+            <select asp-for="Plec" class="form-control">
+                <option value="Mężczyzna">Mężczyzna</option>
+                <option value="Kobieta">Kobieta</option>
+            </select>
+        </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label>Email</label>
+                <input asp-for="Email" type="email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label>Telefon</label>
+                <input asp-for="Telefon" class="form-control" />
+                <span asp-validation-for="Telefon" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label>Uprawnienia</label>
+            <select asp-for="Permisje" class="form-control">
+                <option value="4">Użytkownik (Pacjent)</option>
+                <option value="1">Administrator</option>
+                <option value="2">Pracownik</option>
+            </select>
+        </div>
+
+        <hr />
+        <div class="text-end">
+            <a href="@Url.Action("AdminPanel")" class="btn btn-outline-secondary">Anuluj</a>
+            <button type="submit" class="btn btn-primary" style="background-color: #1B263B;">Zapisz Użytkownika</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\Views\Account\DodajUzytkownik.cshtml.cs ---
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
+namespace poprawne.Views.Account
+{
+    public class DodajUzytkownikaModel : PageModel
+    {
+        public void OnGet()
+        {
+        }
+    }
+}
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\Views\Account\Edytuj.cshtml ---
+@model przychodnia.Models.Uzytkownik
+
+<div class="container mt-4">
+    <div class="card shadow-sm" style="max-width: 600px; margin: auto; border-radius: 10px;">
+        <div class="card-header text-white" style="background-color: #1B263B;">
+            <h4 class="mb-0">Edycja profilu: @Model.Imie @Model.Nazwisko</h4>
+        </div>
+        <div class="card-body p-4">
+            <form asp-action="Edytuj" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="ID" />
+
+                <div class="mb-3">
+                    <label class="form-label font-weight-bold">Imię</label>
+                    <input asp-for="Imie" class="form-control" />
+                    <span asp-validation-for="Imie" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label font-weight-bold">Nazwisko</label>
+                    <input asp-for="Nazwisko" class="form-control" />
+                    <span asp-validation-for="Nazwisko" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label font-weight-bold">Adres E-mail</label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label font-weight-bold">Numer PESEL</label>
+                    <input asp-for="Pesel" class="form-control" />
+                    <span asp-validation-for="Pesel" class="text-danger small"></span>
+                </div>
+
+                <hr />
+
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <a href="@Url.Action("Podglad", new { id = Model.ID })" class="btn btn-outline-secondary">
+                        Anuluj
+                    </a>
+                    <button type="submit" class="btn btn-primary px-4" style="background-color: #1B263B; border: none;">
+                        Zapisz zmiany
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @* Skrypty do walidacji po stronie przeglądarki (bez przeładowania strony) *@
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\Views\Account\Edytuj.cshtml.cs ---
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
+namespace przychodnia.Views.Account
+{
+    public class EdytujModel : PageModel
+    {
+        public void OnGet()
+        {
+        }
+    }
+}
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\Views\Account\ListaUprawnien.cshtml ---
+@model IEnumerable<dynamic>
+
+<div class="container mt-5">
+    <div class="card-header-custom mb-4" style="background-color: #B2DAFA; padding: 15px; border-bottom: 4px solid #1B263B; border-radius: 5px;">
+        <h3 class="m-0 text-center">Wybierz listę uprawnień do przeglądu</h3>
+    </div>
+
+    <div class="mb-4">
+        <p><strong>Administrator:</strong> tworzenie i edycja użytkowników, zmiana uprawnień, dezaktywacja kont, dostęp do panelu administracyjnego.</p>
+        <p><strong>Pracownik:</strong> dostęp do strony pracownika (PracownikPanel).</p>
+        <p><strong>Pacjent:</strong> rejestracja konta, logowanie i dostęp do strony pacjenta (PacjentPanel).</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <a href="@Url.Action("UzytkownicyZUprawnieniem", "Account", new { id = 1 })" style="text-decoration: none; color: inherit;">
+                <div class="card h-100 shadow-sm border-0 btn-outline-primary" style="transition: transform 0.2s; cursor: pointer;">
+                    <div class="card-body text-center p-5">
+                        <i class="fas fa-user-shield fa-3x mb-3 text-primary"></i>
+                        <h4 class="card-title">Administratorzy</h4>
+                        <p class="card-text text-muted">Zarządzanie systemem i użytkownikami.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a href="@Url.Action("UzytkownicyZUprawnieniem", "Account", new { id = 2 })" style="text-decoration: none; color: inherit;">
+                <div class="card h-100 shadow-sm border-0 btn-outline-success" style="transition: transform 0.2s; cursor: pointer;">
+                    <div class="card-body text-center p-5">
+                        <i class="fas fa-user-md fa-3x mb-3 text-success"></i>
+                        <h4 class="card-title">Pracownicy</h4>
+                        <p class="card-text text-muted">Personel medyczny i administracyjny.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a href="@Url.Action("UzytkownicyZUprawnieniem", "Account", new { id = 4 })" style="text-decoration: none; color: inherit;">
+                <div class="card h-100 shadow-sm border-0 btn-outline-info" style="transition: transform 0.2s; cursor: pointer;">
+                    <div class="card-body text-center p-5">
+                        <i class="fas fa-user-injured fa-3x mb-3 text-info"></i>
+                        <h4 class="card-title">Pacjenci</h4>
+                        <p class="card-text text-muted">Lista zarejestrowanych pacjentów.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <a href="@Url.Action("AdminPanel", "Account")" class="btn btn-secondary px-5">
+            Powrót do panelu
+        </a>
+    </div>
+</div>
+
+<style>
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+</style>
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\Views\Account\ListaUprawnien.cshtml.cs ---
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
+namespace przychodnia.Views.Account
+{
+    public class ListaUprawnienModel : PageModel
+    {
+        public void OnGet()
+        {
+        }
+    }
+}
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\Views\Account\Login.cshtml ---
+@{
+    ViewData["Title"] = "Logowanie";
+}
+
+<div style="max-width: 400px; margin: auto; text-align: center;">
+    <h3>LOGOWANIE</h3>
+    <hr />
+    <form method="post">
+        <input type="text" name="login" placeholder="Login" class="form-control mb-2" required />
+        <input type="password" name="password" placeholder="Hasło" class="form-control mb-2" required />
+        
+        <button type="submit" class="btn btn-primary w-100">Zaloguj się</button>
+        <a asp-controller="Account" asp-action="Rejestracja" class="btn btn-secondary w-100 mt-2">Rejestracja</a>
+    </form>
+    
+    @if(ViewBag.Error != null) {
+        <p class="text-danger mt-2">@ViewBag.Error</p>
+    }
+</div>
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\Views\Account\Login.cshtml.cs ---
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
+namespace poprawne.Views.Account
+{
+    public class LoginModel : PageModel
+    {
+        public void OnGet()
+        {
+        }
+    }
+}
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\Views\Account\PacjentPanel.cshtml ---
+@{
+    ViewData["Title"] = "Panel Pacjenta";
+}
+
+<div class="container text-center" style="margin-top: 50px;">
+    <div class="card shadow" style="padding: 40px; border-radius: 15px; border-left: 5px solid #28a745;">
+        <h1 class="display-4" style="color: #28a745;">Jesteś pacjentem</h1>
+        <hr />
+        <p class="lead">Witaj w Twoim internetowym koncie pacjenta.</p>
+        <p>Tutaj będziesz mógł wkrótce sprawdzać swoje wizyty i wyniki badań.</p>
+        <div class="mt-4">
+            <a href="@Url.Action("Index", "Home")" class="btn btn-success">Wróć do strony głównej</a>
+        </div>
+    </div>
+</div>
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\Views\Account\PacjentPanel.cshtml.cs ---
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
+namespace przychodnia.Views.Account
+{
+    public class PacjentPanelModel : PageModel
+    {
+        public void OnGet()
+        {
+        }
+    }
+}
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\Views\Account\Podglad.cshtml ---
+@model przychodnia.Models.Uzytkownik
+
+@{
+    ViewData["Title"] = "Podgląd Użytkownika";
+}
+
+<style>
+    .user-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        max-width: 800px;
+        margin: 20px auto;
+        overflow: hidden;
+        border: 1px solid #dee2e6;
+    }
+
+    .card-header-custom {
+        background-color: #B2DAFA;
+        padding: 20px;
+        border-bottom: 4px solid #1B263B;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .card-body-custom {
+        padding: 30px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .info-group {
+        border-bottom: 1px dashed #B2DAFA;
+        padding-bottom: 10px;
+    }
+
+    .info-label {
+        font-weight: bold;
+        color: #1B263B;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+    }
+
+    .info-value {
+        font-size: 1.1rem;
+        color: #333;
+    }
+
+    .status-active { color: #28a745; font-weight: bold; }
+    .status-inactive { color: #dc3545; font-weight: bold; }
+</style>
+
+<div class="user-card">
+    <div class="card-header-custom">
+        <h3 class="m-0">Karta Użytkownika: @Model.Imie @Model.Nazwisko</h3>
+        <span class="@(Model.CzyAktywny ? "status-active" : "status-inactive")">
+            @(Model.CzyAktywny ? "● AKTYWNY" : "● ZAPOMNIANY")
+        </span>
+    </div>
+
+    <div class="card-body-custom">
+        <div class="info-group">
+            <div class="info-label">Login systemowy</div>
+            <div class="info-value">@Model.Login</div>
+        </div>
+        <div class="info-group">
+            <div class="info-label">PESEL</div>
+            <div class="info-value">@Model.Pesel</div>
+        </div>
+        <div class="info-group">
+            <div class="info-label">Data urodzenia</div>
+            <div class="info-value">@Model.DataUrodzenia.ToString("dd.MM.yyyy")</div>
+        </div>
+        <div class="info-group">
+            <div class="info-label">Płeć</div>
+            <div class="info-value">@Model.Plec</div>
+        </div>
+        <div class="info-group">
+            <div class="info-label">Adres zamieszkania</div>
+            <div class="info-value">@Model.Adres</div>
+        </div>
+        <div class="info-group">
+            <div class="info-label">Email</div>
+            <div class="info-value">@Model.Email</div>
+        </div>
+        <div class="info-group">
+            <div class="info-label">Telefon</div>
+            <div class="info-value">@Model.Telefon</div>
+        </div>
+        <div class="info-group">
+            <div class="info-label">Uprawnienia</div>
+            <div class="info-value">
+                @(Model.Permisje == 1 ? "Administrator" : Model.Permisje == 2 ? "Pracownik" : "Użytkownik")
+            </div>
+        </div>
+    </div>
+    
+    <div class="d-flex gap-2 justify-content-center mt-4">
+    <a href="@Url.Action("AdminPanel", "Account")" class="btn btn-outline-secondary">
+        Powrót
+    </a>
+
+    <a href="@Url.Action("Edytuj", "Account", new { id = Model.ID })" class="btn btn-warning">
+        Edytuj dane
+    </a>
+
+    <a href="@Url.Action("Uprawnienia", "Account", new { id = Model.ID })" class="btn btn-primary" style="background-color: #1B263B;">
+        Uprawnienia
+    </a>
+</div>
+</div>
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\Views\Account\Podglad.cshtml.cs ---
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
+namespace poprawne.Views.Account
+{
+    public class PodgladModel : PageModel
+    {
+        public void OnGet()
+        {
+        }
+    }
+}
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\Views\Account\PracownikPanel.cshtml ---
+@{
+    ViewData["Title"] = "Panel Pracownika";
+}
+
+<div class="container text-center" style="margin-top: 50px;">
+    <div class="card shadow" style="padding: 40px; border-radius: 15px;">
+        <h1 class="display-4" style="color: #1B263B;">Jesteś pracownikiem</h1>
+        <hr />
+        <p class="lead">Witaj w systemie zarządzania przychodnią.</p>
+        <div class="mt-4">
+            <a href="@Url.Action("Index", "Home")" class="btn btn-outline-primary">Wróć do strony głównej</a>
+        </div>
+    </div>
+</div>
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\Views\Account\PracownikPanel.cshtml.cs ---
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
+namespace przychodnia.Views.Account
+{
+    public class PracownikPanelModel : PageModel
+    {
+        public void OnGet()
+        {
+        }
+    }
+}
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\Views\Account\Rejestracja.cshtml ---
+@model przychodnia.Models.Uzytkownik
+
+@{
+    ViewData["Title"] = "Rejestracja";
+}
+
+<div style="max-width: 600px; margin: auto; background: white; padding: 25px; border-radius: 10px; border: 1px solid #dee2e6;">
+    <h2 style="border-bottom: 3px solid #1B263B; padding-bottom: 10px;">Rejestracja</h2>
+
+    <form asp-action="DodajUzytkownik" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label>Login</label>
+                <input asp-for="Login" class="form-control" />
+                <span asp-validation-for="Login" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label>HasĹ‚o</label>
+                <input asp-for="Haslo" type="password" class="form-control" minlength="8" maxlength="15" pattern="^(?=.{8,15}$)(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[-_!\*\$#&]).+$" title="HasĹ‚o musi mieÄ‡ 8-15 znakĂłw, zawieraÄ‡ wielkÄ… i maĹ‚Ä… literÄ™, cyfrÄ™ oraz znak specjalny (- _ ! * $ # &)." />
+                <span asp-validation-for="Haslo" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label>ImiÄ™</label>
+                <input asp-for="Imie" class="form-control" />
+                <span asp-validation-for="Imie" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label>Nazwisko</label>
+                <input asp-for="Nazwisko" class="form-control" />
+                <span asp-validation-for="Nazwisko" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label>Adres</label>
+            <input asp-for="Adres" class="form-control" />
+        </div>
+
+        <div class="row">
+        <div class="col-md-6 mb-3">
+            <label>PESEL</label>
+            <input asp-for="Pesel" class="form-control" maxlength="11" />
+            <span asp-validation-for="Pesel" class="text-danger"></span>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label>PĹ‚eÄ‡</label>
+            <select asp-for="Plec" class="form-control">
+                <option value="MÄ™ĹĽczyzna">MÄ™ĹĽczyzna</option>
+                <option value="Kobieta">Kobieta</option>
+            </select>
+        </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label>Email</label>
+                <input asp-for="Email" type="email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label>Telefon</label>
+                <input asp-for="Telefon" class="form-control" />
+                <span asp-validation-for="Telefon" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label>Uprawnienia</label>
+            <select asp-for="Permisje" class="form-control">
+                <option value="4">UĹĽytkownik (Pacjent)</option>
+                <option value="1">Administrator</option>
+                <option value="2">Pracownik</option>
+            </select>
+        </div>
+
+        <hr />
+        <div class="text-end">
+            <a href="@Url.Action("AdminPanel")" class="btn btn-outline-secondary">Anuluj</a>
+            <button type="submit" class="btn btn-primary" style="background-color: #1B263B;">Zapisz UĹĽytkownika</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\Views\Account\Uprawnienia.cshtml ---
+@model przychodnia.Models.Uzytkownik
+
+<div class="user-card" style="max-width: 600px; margin: 30px auto; border: 1px solid #dee2e6; border-radius: 10px; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+    <div class="card-header-custom" style="background-color: #B2DAFA; padding: 15px; border-bottom: 4px solid #1B263B;">
+        <h4 class="m-0">Okno nadawania uprawnień: <strong>@Model.Imie @Model.Nazwisko</strong></h4>
+    </div>
+
+    <form asp-action="Uprawnienia" method="post" class="p-4">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value="@Model.ID" />
+
+        
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger mb-3" style="font-weight: bold;">
+                <i class="fas fa-exclamation-triangle"></i> @ViewBag.Error
+            </div>
+        }
+
+        <p class="text-muted mb-3">Zaznacz odpowiednie uprawnienia dla użytkownika:</p>
+
+        <div class="list-group mb-4">
+            <label class="list-group-item d-flex gap-3 py-3">
+                <input class="form-check-input" type="checkbox" name="wybraneRole" value="1"
+                @( (Model.Permisje & 1) != 0 ? "checked" : "" )>
+                <span>
+                    <strong>Administrator</strong>
+                    <small class="d-block text-muted">Pełny dostęp do zarządzania systemem.</small>
+                </span>
+            </label>
+
+            <label class="list-group-item d-flex gap-3 py-3">
+                <input class="form-check-input" type="checkbox" name="wybraneRole" value="2"
+                @( (Model.Permisje & 2) != 0 ? "checked" : "" )>
+                <span>
+                    <strong>Pracownik</strong>
+                    <small class="d-block text-muted">Dostęp do modułów medycznych i rejestracji.</small>
+                </span>
+            </label>
+
+            <label class="list-group-item d-flex gap-3 py-3">
+                <input class="form-check-input" type="checkbox" name="wybraneRole" value="4"
+                @( (Model.Permisje & 4) != 0 ? "checked" : "" )>
+                <span>
+                    <strong>Pacjent</strong>
+                    <small class="d-block text-muted">Podstawowy profil pacjenta.</small>
+                </span>
+            </label>
+        </div>
+
+        <div class="pt-3 border-top d-flex justify-content-between">
+            <a href="@Url.Action("Podglad", new { id = Model.ID })" class="btn btn-outline-secondary">
+                Anuluj
+            </a>
+            <button type="submit" class="btn btn-primary" style="background-color: #1B263B; border: none; padding: 8px 30px;">
+                Zatwierdź zmiany
+            </button>
+        </div>
+    </form>
+</div>
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\Views\Account\Uprawnienia.cshtml.cs ---
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
+namespace przychodnia.Views.Account
+{
+    public class UprawnieniaModel : PageModel
+    {
+        public void OnGet()
+        {
+        }
+    }
+}
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\Views\Account\UzytkownicyZUprawnieniem.cshtml ---
+@model IEnumerable<przychodnia.Models.Uzytkownik>
+
+<div class="user-card" style="max-width: 800px; margin: 20px auto; border: 1px solid #dee2e6; border-radius: 10px; background: #fff;">
+    <div class="card-header-custom" style="background-color: #B2DAFA; padding: 15px; border-bottom: 4px solid #1B263B;">
+        <h4 class="m-0">Użytkownicy z uprawnieniem: @ViewBag.Rola</h4>
+    </div>
+
+    <div class="p-4">
+        <div class="mb-3">
+            @* Informacyjny tekst opisujący co dany typ uprawnienia pozwala robić (wyświetlany nad listą) *@
+            @if (ViewBag.Rola == "Administrator")
+            {
+                <div><strong>Administrator:</strong> tworzenie i edycja użytkowników, zmiana uprawnień, dezaktywacja kont, dostęp do panelu administracyjnego.</div>
+            }
+            else if (ViewBag.Rola == "Pracownik")
+            {
+                <div><strong>Pracownik:</strong> dostęp do strony pracownika (PracownikPanel).</div>
+            }
+            else if (ViewBag.Rola == "Pacjent")
+            {
+                <div><strong>Pacjent:</strong> rejestracja konta, logowanie i dostęp do strony pacjenta (PacjentPanel).</div>
+            }
+            else
+            {
+                <div><strong>Dla tej roli:</strong> brak szczegółowego opisu.</div>
+            }
+        </div>
+
+        @if (ViewBag.BrakUzytkownikow != null)
+        {
+            
+            <div class="alert alert-info text-center">
+                <strong>@ViewBag.BrakUzytkownikow</strong>
+            </div>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Login</th>
+                        <th>Imię i Nazwisko</th>
+                        <th>Akcje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model)
+                    {
+                        <tr>
+                            <td>@user.Login</td>
+                            <td>@user.Imie @user.Nazwisko</td>
+                            <td>
+                                <a href="@Url.Action("Podglad", new { id = user.ID })" class="btn btn-sm btn-outline-dark">Podgląd</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+
+    <div class="p-3 bg-light text-end">
+        <a href="@Url.Action("ListaUprawnien")" class="btn btn-secondary">Powrót do uprawnień</a>
+    </div>
+</div>
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\Views\Account\UzytkownicyZUprawnieniem.cshtml.cs ---
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
+namespace przychodnia.Views.Account
+{
+    public class UzytkownicyZUprawnieniemModel : PageModel
+    {
+        public void OnGet()
+        {
+        }
+    }
+}
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\Views\Home\Index.cshtml ---
+@{
+    ViewData["Title"] = "Strona Główna";
+}
+
+<div class="text-center" style="margin-top: 100px;">
+    <h1 class="display-4" style="font-weight: bold; color: #1B263B;">Witaj w systemie Przychodni</h1>
+    <p class="lead">Zadbaj o swoje zdrowie z naszym profesjonalnym personelem.</p>
+    
+    <div class="mt-5">
+        @if (Context.Request.Cookies["AuthUser"] != null)
+        {
+            <a href="@Url.Action("Continue", "Account")" class="btn btn-success btn-lg" style="background-color: #1B263B; padding: 15px 40px;">Przejdź dalej</a>
+        }
+        else
+        {
+            <a href="@Url.Action("Login", "Account")" class="btn btn-primary btn-lg" style="background-color: #1B263B; padding: 15px 40px;">Zaloguj się do systemu</a>
+        }
+    </div>
+</div>
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\Views\Home\Privacy.cshtml ---
+@{
+    ViewData["Title"] = "Privacy Policy";
+}
+<h1>@ViewData["Title"]</h1>
+
+<p>Use this page to detail your site's privacy policy.</p>
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\Views\Shared\Error.cshtml ---
+@model ErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<h1 class="text-danger">Error.</h1>
+<h2 class="text-danger">An error occurred while processing your request.</h2>
+
+@if (Model.ShowRequestId)
+{
+    <p>
+        <strong>Request ID:</strong> <code>@Model.RequestId</code>
+    </p>
+}
+
+<h3>Development Mode</h3>
+<p>
+    Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.
+</p>
+<p>
+    <strong>The Development environment shouldn't be enabled for deployed applications.</strong>
+    It can result in displaying sensitive information from exceptions to end users.
+    For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>
+    and restarting the app.
+</p>
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\Views\Shared\_Layout.cshtml ---
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Przychodnia</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <style>
+            :root {
+                --dark-navy: #1B263B; /* Trzeci kolor - mocny granat */
+                --light-blue: #B2DAFA; /* Jasny niebieski */
+                --soft-gray: #F0F2F5; /* Jasny szary */
+            }
+
+            body {
+                /* Gradient idący w biały kolor w tle */
+                background: linear-gradient(180deg, var(--soft-gray) 0%, #FFFFFF 100%);
+                background-attachment: fixed;
+                min-height: 100vh;
+                margin: 0;
+                font-family: 'Segoe UI', Arial, sans-serif;
+            }
+
+            /* Nagłówek - 3 bloki mocno oddzielone */
+            .header-container {
+                display: flex;
+                gap: 15px;
+                padding: 15px;
+            }
+
+            .header-block {
+                background-color: var(--light-blue);
+                border: 5px solid var(--dark-navy); /* Mocne pogrubienie */
+                padding: 20px;
+                flex: 1;
+                text-align: center;
+                font-weight: 900;
+                font-size: 1.5rem;
+                color: var(--dark-navy);
+            }
+
+            /* Nawigacja - mocno pogrubiona */
+            nav.main-nav {
+                background-color: white;
+                border: 5px solid var(--dark-navy);
+                margin: 0 15px 20px 15px;
+                padding: 10px;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .nav-btn {
+                border: 3px solid var(--dark-navy);
+                padding: 8px 15px;
+                text-decoration: none;
+                color: var(--dark-navy);
+                font-weight: bold;
+                text-transform: uppercase;
+                transition: 0.2s;
+            }
+
+                .nav-btn:hover {
+                    background-color: var(--dark-navy);
+                    color: white;
+                }
+
+            /* Główna sekcja - bez pogrubień */
+            .main-content {
+                padding: 0 20px 20px 20px;
+            }
+    </style>
+</head>
+<body>
+
+    <header class="header-container">
+        <div class="header-block">PRZYCHODNIA</div>
+        <div class="header-block">SYSTEM MEDYCZNY</div>
+        <div class="header-block">V1.0</div>
+    </header>
+
+    <nav class="main-nav">
+        <a asp-controller="Home" asp-action="Index" class="nav-btn">Strona Główna</a>
+        @if (Context.Request.Cookies["AuthUser"] != null)
+        {
+            <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline; margin:0;">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="nav-btn" onclick="return confirm('Czy na pewno chcesz się wylogować?');">Wyloguj (@Context.Request.Cookies["AuthUser"])</button>
+            </form>
+        }
+        else
+        {
+            <a asp-controller="Account" asp-action="Login" class="nav-btn">Zaloguj</a>
+        }
+        <a href="#" class="nav-btn">Przycisk 3</a>
+        <a href="#" class="nav-btn">Przycisk 4</a>
+        <a href="#" class="nav-btn">Przycisk 5</a>
+    </nav>
+
+    <main class="main-content">
+        @RenderBody()
+    </main>    <link rel="stylesheet" href="css/site.css" /> <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>    @RenderSection("Scripts", required: false)</body></html>
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\Views\Shared\_ValidationScriptsPartial.cshtml ---
+<div>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+</div>
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\Views\_ViewImports.cshtml ---
+@using przychodnia
+@using przychodnia.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\Views\_ViewStart.cshtml ---
+@{
+    Layout = "_Layout";
+}
+
+
+--- FILE: C:\users\polskalok\documents\github\testOprogramowania\Program.cs ---
+using Microsoft.EntityFrameworkCore;
+using przychodnia.Data;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlite("Data Source=projekt.db"));
+
+builder.Services.AddControllersWithViews();
+
+
+builder.Services.AddControllersWithViews();
+
+var app = builder.Build();
+
+
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
+app.UseRouting();
+
+app.UseAuthorization();
+
+app.MapStaticAssets();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}")
+    .WithStaticAssets();
+
+
+app.Run();
+
+

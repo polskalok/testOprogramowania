@@ -1,0 +1,14 @@
+﻿@{
+    ViewData["Title"] = "Strona Główna";
+}
+
+<div class="text-center" style="margin-top: 100px;">
+    <h1 class="display-4" style="font-weight: bold; color: #1B263B;">Witaj w systemie Przychodni</h1>
+    <p class="lead">Zadbaj o swoje zdrowie z naszym profesjonalnym personelem.</p>
+    
+    <div class="mt-5">
+        <a href="@Url.Action("Login", "Account")" class="btn btn-primary btn-lg" style="background-color: #1B263B; padding: 15px 40px;">
+            Zaloguj się do systemu
+        </a>
+    </div>
+</div>

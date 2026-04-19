@@ -6,6 +6,26 @@
     </div>
 
     <div class="p-4">
+        <div class="mb-3">
+            
+            @if (ViewBag.Rola == "Administrator")
+            {
+                <div><strong>Administrator:</strong> tworzenie i edycja użytkowników, zmiana uprawnień, dezaktywacja kont, dostęp do panelu administracyjnego.</div>
+            }
+            else if (ViewBag.Rola == "Pracownik")
+            {
+                <div><strong>Pracownik:</strong> dostęp do strony pracownika (PracownikPanel).</div>
+            }
+            else if (ViewBag.Rola == "Pacjent")
+            {
+                <div><strong>Pacjent:</strong> rejestracja konta, logowanie i dostęp do strony pacjenta (PacjentPanel).</div>
+            }
+            else
+            {
+                <div><strong>Dla tej roli:</strong> brak szczegółowego opisu.</div>
+            }
+        </div>
+
         @if (ViewBag.BrakUzytkownikow != null)
         {
             

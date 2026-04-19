@@ -1,0 +1,58 @@
+﻿@model IEnumerable<dynamic>
+
+<div class="container mt-5">
+    <div class="card-header-custom mb-4" style="background-color: #B2DAFA; padding: 15px; border-bottom: 4px solid #1B263B; border-radius: 5px;">
+        <h3 class="m-0 text-center">Wybierz listę uprawnień do przeglądu</h3>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <a href="@Url.Action("UzytkownicyZUprawnieniem", "Account", new { id = 1 })" style="text-decoration: none; color: inherit;">
+                <div class="card h-100 shadow-sm border-0 btn-outline-primary" style="transition: transform 0.2s; cursor: pointer;">
+                    <div class="card-body text-center p-5">
+                        <i class="fas fa-user-shield fa-3x mb-3 text-primary"></i>
+                        <h4 class="card-title">Administratorzy</h4>
+                        <p class="card-text text-muted">Zarządzanie systemem i użytkownikami.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a href="@Url.Action("UzytkownicyZUprawnieniem", "Account", new { id = 2 })" style="text-decoration: none; color: inherit;">
+                <div class="card h-100 shadow-sm border-0 btn-outline-success" style="transition: transform 0.2s; cursor: pointer;">
+                    <div class="card-body text-center p-5">
+                        <i class="fas fa-user-md fa-3x mb-3 text-success"></i>
+                        <h4 class="card-title">Pracownicy</h4>
+                        <p class="card-text text-muted">Personel medyczny i administracyjny.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a href="@Url.Action("UzytkownicyZUprawnieniem", "Account", new { id = 4 })" style="text-decoration: none; color: inherit;">
+                <div class="card h-100 shadow-sm border-0 btn-outline-info" style="transition: transform 0.2s; cursor: pointer;">
+                    <div class="card-body text-center p-5">
+                        <i class="fas fa-user-injured fa-3x mb-3 text-info"></i>
+                        <h4 class="card-title">Pacjenci</h4>
+                        <p class="card-text text-muted">Lista zarejestrowanych pacjentów.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <a href="@Url.Action("AdminPanel", "Account")" class="btn btn-secondary px-5">
+            Powrót do panelu
+        </a>
+    </div>
+</div>
+
+<style>
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+</style>

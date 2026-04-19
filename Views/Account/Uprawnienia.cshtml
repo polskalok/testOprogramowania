@@ -9,7 +9,7 @@
         @Html.AntiForgeryToken()
         <input type="hidden" name="id" value="@Model.ID" />
 
-        @* Wyświetlanie błędu, gdy nic nie zaznaczono (Alternatywny przepływ 4a) *@
+        
         @if (ViewBag.Error != null)
         {
             <div class="alert alert-danger mb-3" style="font-weight: bold;">
