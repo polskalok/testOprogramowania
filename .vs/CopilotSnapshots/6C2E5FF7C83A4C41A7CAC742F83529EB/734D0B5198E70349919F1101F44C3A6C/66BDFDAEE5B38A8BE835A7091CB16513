@@ -32,6 +32,7 @@ namespace przychodnia.Controllers
                 return View();
             }
 
+            // logowanie uzytkownika (brak przechowywania sesji w ciasteczkach)
 
             // przekierowanie po roli
             if ((userCheck.Permisje & 1) != 0)
@@ -104,6 +105,7 @@ namespace przychodnia.Controllers
         [HttpGet]
         public IActionResult Continue()
         {
+            // Brak mechanizmu sesji opartego na ciasteczkach — przekieruj do logowania
             return RedirectToAction("Login");
         }
 
@@ -111,6 +113,7 @@ namespace przychodnia.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Logout()
         {
+            // wylogowanie (brak ciasteczek do usunięcia)
             return RedirectToAction("Index", "Home");
         }
 
@@ -284,6 +287,9 @@ namespace przychodnia.Controllers
 
             _context.SaveChanges();
 
+            // czyszczenie ciasteczek
+            Response.Cookies.Delete("AuthUser");
+            Response.Cookies.Delete("AuthUserId");
 
             return RedirectToAction("AdminPanel");
         }
@@ -460,6 +466,9 @@ namespace przychodnia.Controllers
 
             _context.SaveChanges();
 
+            var currentLogin = Request.Cookies["AuthUser"];
+            if (!string.IsNullOrEmpty(currentLogin) && currentLogin == uzytkownik.Login)
+                Response.Cookies.Append("AuthUser", uzytkownik.Login, new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.Lax });
 
             return RedirectToAction("Podglad", new { id = uzytkownik.ID });
         }

@@ -10,7 +10,7 @@
         <input type="password" name="password" placeholder="Hasło" class="form-control mb-2" required />
         
         <button type="submit" class="btn btn-primary w-100">Zaloguj się</button>
-        <button type="button" class="btn btn-secondary w-100 mt-2" disabled title="Rejestracja tymczasowo wyłączona">Rejestracja</button>
+        <a asp-controller="Account" asp-action="Rejestracja" class="btn btn-secondary w-100 mt-2">Rejestracja</a>
     </form>
     
     @if(ViewBag.Error != null) {
