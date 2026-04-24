@@ -32,6 +32,19 @@ namespace przychodnia.Controllers
                 return View();
             }
 
+            // ustawienia ciasteczek
+            var cookieOptions = new Microsoft.AspNetCore.Http.CookieOptions
+            {
+                HttpOnly = true,
+                Secure = false,
+                SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Lax,
+                Expires = System.DateTimeOffset.UtcNow.AddHours(8),
+                IsEssential = true
+            };
+
+            // logowanie uzytkownika
+            Response.Cookies.Append("AuthUser", userCheck.Login, cookieOptions);
+            Response.Cookies.Append("AuthUserId", userCheck.ID.ToString(), cookieOptions);
 
             // przekierowanie po roli
             if ((userCheck.Permisje & 1) != 0)
@@ -104,13 +117,46 @@ namespace przychodnia.Controllers
         [HttpGet]
         public IActionResult Continue()
         {
-            return RedirectToAction("Login");
+            // sprawdzenie sesji
+            var idCookie = Request.Cookies["AuthUserId"];
+            if (string.IsNullOrEmpty(idCookie))
+                return RedirectToAction("Login");
+
+            if (!int.TryParse(idCookie, out int userId))
+            {
+                Response.Cookies.Delete("AuthUser");
+                Response.Cookies.Delete("AuthUserId");
+                return RedirectToAction("Login");
+            }
+
+            var user = _context.Uzytkownicy.FirstOrDefault(u => u.ID == userId);
+            if (user == null || !user.CzyAktywny)
+            {
+                Response.Cookies.Delete("AuthUser");
+                Response.Cookies.Delete("AuthUserId");
+                return RedirectToAction("Login");
+            }
+
+            // powrot do panelu
+            if ((user.Permisje & 1) != 0)
+                return RedirectToAction("AdminPanel");
+
+            if ((user.Permisje & 2) != 0)
+                return RedirectToAction("PracownikPanel");
+
+            if ((user.Permisje & 4) != 0)
+                return RedirectToAction("PacjentPanel");
+
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Logout()
         {
+            // wylogowanie
+            Response.Cookies.Delete("AuthUser");
+            Response.Cookies.Delete("AuthUserId");
             return RedirectToAction("Index", "Home");
         }
 
@@ -284,6 +330,9 @@ namespace przychodnia.Controllers
 
             _context.SaveChanges();
 
+            // czyszczenie ciasteczek
+            Response.Cookies.Delete("AuthUser");
+            Response.Cookies.Delete("AuthUserId");
 
             return RedirectToAction("AdminPanel");
         }
@@ -460,6 +509,9 @@ namespace przychodnia.Controllers
 
             _context.SaveChanges();
 
+            var currentLogin = Request.Cookies["AuthUser"];
+            if (!string.IsNullOrEmpty(currentLogin) && currentLogin == uzytkownik.Login)
+                Response.Cookies.Append("AuthUser", uzytkownik.Login, new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.Lax });
 
             return RedirectToAction("Podglad", new { id = uzytkownik.ID });
         }
