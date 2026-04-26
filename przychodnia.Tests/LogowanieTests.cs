@@ -175,6 +175,40 @@ namespace przychodnia.Tests
             Assert.Equal("Login", result.ActionName);
         }
 
+
+        [Fact]
+        public void TC_07_Modul3_ZmianaHaslaPrzezAdministratora()
+        {
+            var db = PrzygotujSztucznaBaze();
+
+            
+            var uzytkownik = new Uzytkownik
+            {
+                Login = "admin_zmiana",
+                Haslo = PasswordHasher.HashPassword("StareHaslo1!"),
+                CzyAktywny = true,
+                Imie = "Adam",
+                Nazwisko = "Nowak",
+                Email = "adam@test.pl",
+                Pesel = "11111111111"
+            };
+            db.Uzytkownicy.Add(uzytkownik);
+            db.SaveChanges();
+
+            var controller = new AccountController(db);
+
+            
+            var result = controller.ZmieniHaslo(uzytkownik.ID, "Krotkie123!", "Krotkie123!") as RedirectToActionResult;
+
+            
+            Assert.NotNull(result); 
+            Assert.Equal("Podglad", result.ActionName);
+
+            
+            var zaktualizowany = db.Uzytkownicy.First(u => u.ID == uzytkownik.ID);
+            Assert.Equal(PasswordHasher.HashPassword("Krotkie123!"), zaktualizowany.Haslo);
+        }
+
         [Fact]
         public void TC_08_Modul3_WalidacjaKryteriowHasla()
         {
@@ -332,6 +366,33 @@ namespace przychodnia.Tests
             var result = await controller.OdzyskajHaslo("nieznany", "zlymail@test.pl") as ViewResult;
 
             Assert.NotNull(result);
+            Assert.Equal("Podane dane nie pasują do żadnego konta w systemie.", controller.ViewBag.Error);
+        }
+
+        [Fact]
+        public async Task TC_15_Modul3_OdzyskiwanieHasla_BlednyEmail()
+        {
+            var db = PrzygotujSztucznaBaze();
+
+            
+            var uzytkownik = new Uzytkownik
+            {
+                Login = "prawdziwy_login",
+                Email = "prawdziwy@test.pl",
+                CzyAktywny = true,
+                Haslo = PasswordHasher.HashPassword("Haslo123!")
+            };
+            db.Uzytkownicy.Add(uzytkownik);
+            await db.SaveChangesAsync();
+
+            var controller = new AccountController(db);
+
+            
+            var result = await controller.OdzyskajHaslo("prawdziwy_login", "zly_email@test.pl") as ViewResult;
+
+            
+            Assert.NotNull(result);
+           
             Assert.Equal("Podane dane nie pasują do żadnego konta w systemie.", controller.ViewBag.Error);
         }
 
