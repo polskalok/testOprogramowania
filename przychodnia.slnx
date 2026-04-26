@@ -1,4 +1,4 @@
 <Solution>
-  <Project Path="../przychodnia.Tests/przychodnia.Tests.csproj" Id="fc3f5dc8-14c1-43c5-904e-780e98b44079" />
   <Project Path="przychodnia.csproj" />
+  <Project Path="przychodnia.Tests/przychodnia.Tests.csproj" />
 </Solution>

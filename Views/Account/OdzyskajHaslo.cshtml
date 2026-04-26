@@ -1,0 +1,239 @@
+@{
+    ViewData["Title"] = "Odzyskaj Hasło";
+}
+
+<style>
+    .recovery-container {
+        max-width: 500px;
+        margin: 40px auto;
+        text-align: center;
+    }
+
+    .recovery-card {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        border-top: 6px solid #1B263B;
+    }
+
+    .recovery-card h2 {
+        color: #1B263B;
+        margin-bottom: 10px;
+        font-weight: bold;
+    }
+
+    .recovery-card .subtitle {
+        color: #666;
+        margin-bottom: 30px;
+        font-size: 0.95rem;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+        text-align: left;
+    }
+
+    .form-group label {
+        display: block;
+        color: #1B263B;
+        font-weight: 600;
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #B2DAFA;
+        border-radius: 5px;
+        font-size: 1rem;
+        box-sizing: border-box;
+        transition: all 0.3s;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: #1B263B;
+        background-color: #f9f9f9;
+        box-shadow: 0 0 5px rgba(27, 38, 59, 0.1);
+    }
+
+    .info-box {
+        background-color: #B2DAFA;
+        border-left: 4px solid #1B263B;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 25px;
+        text-align: left;
+        color: #1B263B;
+        font-size: 0.9rem;
+    }
+
+    .info-box strong {
+        color: #1B263B;
+    }
+
+    .alert {
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        border-left: 4px solid;
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        border-color: #dc3545;
+        color: #721c24;
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 10px;
+        margin-top: 25px;
+    }
+
+    .btn-submit {
+        flex: 1;
+        background-color: #1B263B;
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 1rem;
+        transition: all 0.3s;
+    }
+
+    .btn-submit:hover {
+        background-color: #0f1824;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .btn-cancel {
+        flex: 1;
+        background-color: #e9ecef;
+        color: #333;
+        padding: 12px;
+        border: 2px solid #dee2e6;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+    }
+
+    .btn-cancel:hover {
+        background-color: #dee2e6;
+        text-decoration: none;
+    }
+
+    .process-steps {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 5px;
+        margin-top: 25px;
+        text-align: left;
+        border: 1px dashed #B2DAFA;
+    }
+
+    .process-steps h4 {
+        color: #1B263B;
+        margin-top: 0;
+        margin-bottom: 15px;
+        font-size: 0.95rem;
+    }
+
+    .step {
+        display: flex;
+        margin-bottom: 10px;
+        align-items: flex-start;
+    }
+
+    .step-number {
+        background-color: #1B263B;
+        color: white;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 10px;
+        font-weight: bold;
+        font-size: 0.85rem;
+        flex-shrink: 0;
+    }
+
+    .step-text {
+        color: #555;
+        font-size: 0.9rem;
+        padding-top: 2px;
+    }
+</style>
+
+<div class="recovery-container">
+    <div class="recovery-card">
+        <h2>🔑 Odzyskaj Hasło</h2>
+        <p class="subtitle">Wprowadź swój login i adres e-mail, aby otrzymać nowe tymczasowe hasło</p>
+
+        @if (!string.IsNullOrEmpty(ViewBag.Error))
+        {
+            <div class="alert alert-danger">
+                @ViewBag.Error
+            </div>
+        }
+
+        <div class="info-box">
+            <strong>ℹ️ Jak to działa?</strong>
+            <p style="margin: 10px 0 0 0;">Poprosimy Cię o login i adres e-mail. Jeśli konto istnieje, wyślemy na Twój e-mail nowe hasło tymczasowe.</p>
+        </div>
+
+        <form method="post">
+            <div class="form-group">
+                <label for="login">Login</label>
+                <input type="text" id="login" name="login" class="form-control" required placeholder="Wpisz swój login" />
+            </div>
+
+            <div class="form-group">
+                <label for="email">Adres E-mail</label>
+                <input type="email" id="email" name="email" class="form-control" required placeholder="Wpisz swój adres e-mail" />
+            </div>
+
+            <div class="btn-group">
+                <button type="submit" class="btn-submit">Wyślij nowe hasło</button>
+                <a href="@Url.Action("Login", "Account")" class="btn-cancel">Anuluj</a>
+            </div>
+        </form>
+
+        <div class="process-steps">
+            <h4>Co się stanie dalej?</h4>
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-text">Weryfikujemy Twoje dane (login + e-mail)</div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-text">Generujemy nowe tymczasowe hasło</div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-text">Wysyłamy hasło na Twój adres e-mail</div>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-text">Możesz zalogować się nowym hasłem</div>
+            </div>
+            <div class="step">
+                <div class="step-number">5</div>
+                <div class="step-text">Zmień hasło na własne w panelu użytkownika</div>
+            </div>
+        </div>
+    </div>
+</div>

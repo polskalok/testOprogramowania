@@ -1,0 +1,230 @@
+﻿@model przychodnia.Models.Uzytkownik
+
+@{
+    ViewData["Title"] = "Zmiana Hasła";
+}
+
+<style>
+    .password-form-container {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        max-width: 500px;
+        margin: 30px auto;
+        padding: 30px;
+        border: 1px solid #dee2e6;
+    }
+
+    .form-header {
+        border-bottom: 3px solid #1B263B;
+        padding-bottom: 15px;
+        margin-bottom: 25px;
+    }
+
+    .form-header h2 {
+        color: #1B263B;
+        margin: 0;
+    }
+
+    .user-info {
+        background-color: #B2DAFA;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border-left: 4px solid #1B263B;
+    }
+
+    .user-info-label {
+        font-size: 0.85rem;
+        color: #1B263B;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+    .user-info-value {
+        font-size: 1.1rem;
+        color: #333;
+        margin-top: 5px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        font-weight: 600;
+        color: #1B263B;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #B2DAFA;
+        border-radius: 5px;
+        font-size: 1rem;
+        transition: border-color 0.3s;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: #1B263B;
+        background-color: #f9f9f9;
+    }
+
+    .password-requirements {
+        background-color: #f0f0f0;
+        border-left: 4px solid #1B263B;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        font-size: 0.9rem;
+    }
+
+    .password-requirements h4 {
+        color: #1B263B;
+        margin-top: 0;
+        margin-bottom: 10px;
+    }
+
+    .requirement-item {
+        margin: 5px 0;
+        color: #555;
+    }
+
+    .requirement-item strong {
+        color: #1B263B;
+    }
+
+    .alert-error {
+        background-color: #f8d7da;
+        border: 2px solid #dc3545;
+        color: #721c24;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+
+    .alert-success {
+        background-color: #d4edda;
+        border: 2px solid #28a745;
+        color: #155724;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 25px;
+        justify-content: center;
+    }
+
+    .form-actions button,
+    .form-actions a {
+        flex: 1;
+        padding: 12px;
+        font-size: 1rem;
+        border-radius: 5px;
+        text-decoration: none;
+        text-align: center;
+        cursor: pointer;
+        border: none;
+        transition: all 0.3s;
+    }
+
+    .btn-submit {
+        background-color: #1B263B;
+        color: white;
+        font-weight: bold;
+    }
+
+    .btn-submit:hover {
+        background-color: #0f1824;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .btn-cancel {
+        background-color: #e9ecef;
+        color: #333;
+        border: 2px solid #dee2e6;
+        font-weight: bold;
+    }
+
+    .btn-cancel:hover {
+        background-color: #dee2e6;
+    }
+</style>
+
+<div class="password-form-container">
+    <div class="form-header">
+        <h2>Zmiana Hasła</h2>
+    </div>
+
+    <div class="user-info">
+        <div class="user-info-label">Użytkownik</div>
+        <div class="user-info-value">@Model.Imie @Model.Nazwisko (@Model.Login)</div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(ViewBag.Error))
+    {
+        <div class="alert-error">
+            @ViewBag.Error
+        </div>
+    }
+
+    <div class="password-requirements">
+        <h4>Wymagania dotyczące hasła:</h4>
+        <div class="requirement-item">✓ <strong>Od 8 do 15 znaków</strong></div>
+        <div class="requirement-item">✓ <strong>Przynajmniej jedna wielka litera</strong></div>
+        <div class="requirement-item">✓ <strong>Przynajmniej jedna mała litera</strong></div>
+        <div class="requirement-item">✓ <strong>Przynajmniej jedna cyfra</strong></div>
+        <div class="requirement-item">✓ <strong>Jeden ze znaków specjalnych</strong>: - _ ! * $ # &</div>
+        <div class="requirement-item">✓ <strong>Różne od 3 ostatnich haseł</strong></div>
+    </div>
+
+    <form method="post" asp-action="ZmieniHaslo" asp-controller="Account">
+        <input type="hidden" name="id" value="@Model.ID" />
+
+        <div class="form-group">
+            <label for="noweHaslo">Nowe hasło</label>
+            <input type="password" id="noweHaslo" name="noweHaslo" class="form-control" required placeholder="Wprowadź nowe hasło" />
+        </div>
+
+        <div class="form-group">
+            <label for="powtorzHaslo">Powtórz hasło</label>
+            <input type="password" id="powtorzHaslo" name="powtorzHaslo" class="form-control" required placeholder="Powtórz hasło" />
+        </div>
+
+        <div class="form-actions">
+            <a href="@Url.Action("Podglad", "Account", new { id = Model.ID })" class="btn-cancel">
+                Anuluj
+            </a>
+            <button type="submit" class="btn-submit">
+                Zmień hasło
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const password = document.getElementById('noweHaslo').value;
+        const confirm = document.getElementById('powtorzHaslo').value;
+
+        if (password !== confirm) {
+            e.preventDefault();
+            alert('Upewnij się że hasła są identyczne');
+            return false;
+        }
+
+        if (password.length === 0) {
+            e.preventDefault();
+            alert('Hasło nie może być puste!');
+            return false;
+        }
+    });
+</script>

@@ -1,4 +1,4 @@
-﻿@model przychodnia.Models.Uzytkownik
+@model przychodnia.Models.Uzytkownik
 
 @{
     ViewData["Title"] = "Podgląd Użytkownika";
@@ -50,13 +50,19 @@
 
     .status-active { color: #28a745; font-weight: bold; }
     .status-inactive { color: #dc3545; font-weight: bold; }
+
+    .lockout-info {
+        border-color: #dc3545;
+        background-color: #fff5f5;
+        grid-column: 1 / -1;
+    }
 </style>
 
 <div class="user-card">
     <div class="card-header-custom">
         <h3 class="m-0">Karta Użytkownika: @Model.Imie @Model.Nazwisko</h3>
         <span class="@(Model.CzyAktywny ? "status-active" : "status-inactive")">
-            @(Model.CzyAktywny ? "● AKTYWNY" : "● ZAPOMNIANY")
+            @(Model.CzyAktywny ? "✓ AKTYWNY" : "✗ ZAPOMNIANY")
         </span>
     </div>
 
@@ -95,8 +101,17 @@
                 @(Model.Permisje == 1 ? "Administrator" : Model.Permisje == 2 ? "Pracownik" : "Użytkownik")
             </div>
         </div>
+        @if (Model.LockoutEnd != null && Model.LockoutEnd > DateTime.Now)
+        {
+            <div class="info-group lockout-info">
+                <div class="info-label" style="color: #dc3545;">⚠ Status blokady</div>
+                <div class="info-value" style="color: #dc3545;">
+                    Konto zablokowane do: @Model.LockoutEnd.Value.ToString("dd.MM.yyyy HH:mm:ss")
+                </div>
+            </div>
+        }
     </div>
-    
+
     <div class="d-flex gap-2 justify-content-center mt-4">
     <a href="@Url.Action("AdminPanel", "Account")" class="btn btn-outline-secondary">
         Powrót
@@ -106,8 +121,23 @@
         Edytuj dane
     </a>
 
+    <a href="@Url.Action("ZmieniHaslo", "Account", new { id = Model.ID })" class="btn btn-danger">
+        Zmień hasło
+    </a>
+
     <a href="@Url.Action("Uprawnienia", "Account", new { id = Model.ID })" class="btn btn-primary" style="background-color: #1B263B;">
         Uprawnienia
     </a>
+
+    @if (Model.LockoutEnd != null && Model.LockoutEnd > DateTime.Now)
+    {
+        <form asp-action="OdblokujKonto" method="post" style="display: inline;">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" value="@Model.ID" />
+            <button type="submit" class="btn btn-info">
+                🔓 Odblokuj konto
+            </button>
+        </form>
+    }
 </div>
 </div>

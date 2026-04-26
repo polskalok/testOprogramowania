@@ -1,0 +1,48 @@
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace przychodnia.Migrations
+{
+    /// <inheritdoc />
+    public partial class AddLockoutToUzytkownik : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.CreateTable(
+                name: "Uzytkownicy",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Login = table.Column<string>(type: "TEXT", nullable: false),
+                    Haslo = table.Column<string>(type: "TEXT", nullable: false),
+                    Imie = table.Column<string>(type: "TEXT", nullable: false),
+                    Nazwisko = table.Column<string>(type: "TEXT", nullable: false),
+                    Adres = table.Column<string>(type: "TEXT", nullable: false),
+                    Pesel = table.Column<string>(type: "TEXT", maxLength: 11, nullable: false),
+                    DataUrodzenia = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    Plec = table.Column<string>(type: "TEXT", nullable: true),
+                    Email = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
+                    Telefon = table.Column<string>(type: "TEXT", nullable: false),
+                    Permisje = table.Column<int>(type: "INTEGER", nullable: false),
+                    CzyAktywny = table.Column<bool>(type: "INTEGER", nullable: false),
+                    FailedLoginAttempts = table.Column<int>(type: "INTEGER", nullable: false),
+                    LockoutEnd = table.Column<DateTime>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Uzytkownicy", x => x.ID);
+                });
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "Uzytkownicy");
+        }
+    }
+}

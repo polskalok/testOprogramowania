@@ -1,0 +1,111 @@
+﻿using System.Security.Cryptography;
+using System.Text;
+using System.Text.RegularExpressions;
+
+namespace przychodnia.Services 
+{
+    public static class PasswordHasher
+    {
+        private static readonly string SpecialCharsPattern = @"[-_!*$#&]";
+        private static readonly string SpecialChars = "-_!*$#&";
+
+        public static string GenerateRandomPassword()
+        {
+            // Generuj 10-znakowe hasło: dokładnie 3 wielkie, 3 małe, 2 cyfry, 2 specjalne
+            const string uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const string lowercase = "abcdefghijklmnopqrstuvwxyz";
+            const string digits = "0123456789";
+
+            var passwordChars = new List<char>();
+
+            // Dodaj 3 wielkie litery
+            for (int i = 0; i < 3; i++)
+                passwordChars.Add(uppercase[RandomNumberGenerator.GetInt32(uppercase.Length)]);
+
+            // Dodaj 3 małe litery
+            for (int i = 0; i < 3; i++)
+                passwordChars.Add(lowercase[RandomNumberGenerator.GetInt32(lowercase.Length)]);
+
+            // Dodaj 2 cyfry
+            for (int i = 0; i < 2; i++)
+                passwordChars.Add(digits[RandomNumberGenerator.GetInt32(digits.Length)]);
+
+            // Dodaj 2 znaki specjalne
+            for (int i = 0; i < 2; i++)
+                passwordChars.Add(SpecialChars[RandomNumberGenerator.GetInt32(SpecialChars.Length)]);
+
+            // Wymieszaj znaki
+            for (int i = passwordChars.Count - 1; i > 0; i--)
+            {
+                int randomIndex = RandomNumberGenerator.GetInt32(i + 1);
+                var temp = passwordChars[i];
+                passwordChars[i] = passwordChars[randomIndex];
+                passwordChars[randomIndex] = temp;
+            }
+
+            return new string(passwordChars.ToArray());
+        }
+
+        public static string HashPassword(string password)
+        {
+            if (string.IsNullOrEmpty(password)) return string.Empty;
+
+            using (SHA256 sha256Hash = SHA256.Create())
+            {
+                // Zamiana hasła na tablicę bajtów
+                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(password));
+
+                // Konwersja bajtów na tekst w formacie szesnastkowym (hex)
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    builder.Append(bytes[i].ToString("x2"));
+                }
+                return builder.ToString();
+            }
+        }
+
+        public static bool ValidatePassword(string password, out string errorMessage)
+        {
+            errorMessage = string.Empty;
+
+            if (string.IsNullOrEmpty(password))
+            {
+                errorMessage = "Hasło jest wymagane";
+                return false;
+            }
+
+            if (password.Length < 8 || password.Length > 15)
+            {
+                errorMessage = "Neprawidłowe hasło. Upewnij się, że: ma od 8 do 15 znaków zawiera wielką i małą literę zawiera przynajmniej jedną cyfrę zawiera znak specjalny (- _ ! * $ # &)";
+                return false;
+            }
+
+            if (!password.Any(char.IsUpper))
+            {
+                errorMessage = "Neprawidłowe hasło. Upewnij się, że: ma od 8 do 15 znaków zawiera wielką i małą literę zawiera przynajmniej jedną cyfrę zawiera znak specjalny (- _ ! * $ # &)";
+                return false;
+            }
+
+            if (!password.Any(char.IsLower))
+            {
+                errorMessage = "Neprawidłowe hasło. Upewnij się, że: ma od 8 do 15 znaków zawiera wielką i małą literę zawiera przynajmniej jedną cyfrę zawiera znak specjalny (- _ ! * $ # &)";
+                return false;
+            }
+
+            if (!password.Any(char.IsDigit))
+            {
+                errorMessage = "Neprawidłowe hasło. Upewnij się, że: ma od 8 do 15 znaków zawiera wielką i małą literę zawiera przynajmniej jedną cyfrę zawiera znak specjalny (- _ ! * $ # &)";
+                return false;
+            }
+
+            if (!Regex.IsMatch(password, SpecialCharsPattern))
+            {
+                errorMessage = "Neprawidłowe hasło. Upewnij się, że: ma od 8 do 15 znaków zawiera wielką i małą literę zawiera przynajmniej jedną cyfrę zawiera znak specjalny (- _ ! * $ # &)";
+                return false;
+            }
+
+            return true;
+        }
+    }
+}
