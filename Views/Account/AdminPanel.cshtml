@@ -78,7 +78,7 @@
 
 @{
     var showForgottenForm = (ViewBag.ShowForgotten as bool?) ?? false;
-    var placeholder = showForgottenForm ? "Wyszukaj zapomnianych po nazwisku lub PESEL..." : "Wyszukaj aktywnych po nazwisku lub PESEL...";
+    var placeholder = showForgottenForm ? "Wyszukaj zapomnianych..." : "Wyszukaj aktywnych...";
 }
 
 <div class="card shadow-sm mb-4">
@@ -102,50 +102,59 @@
     <p class="text-muted">Wyniki wyszukiwania dla: <strong>@ViewBag.CurrentFilter</strong></p>
 }
 
-<table class="table-custom">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Login</th>
-            <th>Imię i Nazwisko</th>
-            <th>Rola</th>
-            <th>Status</th>
-            <th>Akcje</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in Model)
-        {
+@if (Model.Any())
+{
+    <table class="table-custom">
+        <thead>
             <tr>
-                <td>@user.ID</td>
-                <td>@user.Login</td>
-                <td>@user.Imie @user.Nazwisko</td>
-                <td>
-                    @{ 
-                        var roles = new List<string>();
-                        if ((user.Permisje & 1) != 0) roles.Add("Admin");
-                        if ((user.Permisje & 2) != 0) roles.Add("Pracownik");
-                        if ((user.Permisje & 4) != 0) roles.Add("Pacjent");
-                        if (!roles.Any()) roles.Add("Brak");
-                    }
-                    @string.Join(", ", roles)
-                </td>
-                <td>
-                    <span class="badge @(user.CzyAktywny ? "bg-success" : "bg-danger")">
-                        @(user.CzyAktywny ? "Aktywny" : "Zapomniany")
-                    </span>
-                </td>
-                <td>
-                    <a href="@Url.Action("Podglad", "Account", new { id = user.ID })" class="btn-action">Podgląd</a>
-                    
-                    @if (user.CzyAktywny)
-                    {
-                        <a href="@Url.Action("Zapomnij", "Account", new { id = user.ID })"
-                           class="btn-action"
-                           onclick="return confirm('Czy na pewno chcesz zmienić status na Zapomniany?')">Zapomnij</a>
-                    }
-                </td>
+                <th>ID</th>
+                <th>Login</th>
+                <th>Imię i Nazwisko</th>
+                <th>Rola</th>
+                <th>Status</th>
+                <th>Akcje</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.ID</td>
+                    <td>@user.Login</td>
+                    <td>@user.Imie @user.Nazwisko</td>
+                    <td>
+                        @{
+                            var roles = new List<string>();
+                            if ((user.Permisje & 1) != 0) roles.Add("Admin");
+                            if ((user.Permisje & 2) != 0) roles.Add("Pracownik");
+                            if ((user.Permisje & 4) != 0) roles.Add("Pacjent");
+                            if (!roles.Any()) roles.Add("Brak");
+                        }
+                        @string.Join(", ", roles)
+                    </td>
+                    <td>
+                        <span class="badge @(user.CzyAktywny ? "bg-success" : "bg-danger")">
+                            @(user.CzyAktywny ? "Aktywny" : "Zapomniany")
+                        </span>
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Podglad", "Account", new { id = user.ID })" class="btn-action">Podgląd</a>
+                        
+                        @if (user.CzyAktywny)
+                        {
+                            <a href="@Url.Action("Zapomnij", "Account", new { id = user.ID })"
+                               class="btn-action"
+                               onclick="return confirm('Czy na pewno chcesz zmienić status na Zapomniany?')">Zapomnij</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-info mt-4 text-center" style="border: 1px solid #1B263B; color: #1B263B;">
+        <i class="fas fa-search"></i> Nie znaleziono.
+    </div>
+}

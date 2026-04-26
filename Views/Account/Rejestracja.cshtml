@@ -19,7 +19,7 @@
             </div>
             <div class="col-md-6 mb-3">
                 <label>Hasło</label>
-                <input asp-for="Haslo" type="password" class="form-control" minlength="8" maxlength="15" pattern="^(?=.{8,15}$)(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[-_!\*\$#&]).+$" title="Hasło musi mieć 8-15 znaków, zawierać wielką i małą literę, cyfrę oraz znak specjalny (- _ ! * $ # &)." />
+                <input asp-for="Haslo" type="password" class="form-control" />
                 <span asp-validation-for="Haslo" class="text-danger"></span>
             </div>
         </div>
@@ -68,6 +68,8 @@
         </div>
     </form>
 </div>
+
+
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

@@ -1,60 +1,81 @@
 ﻿@model przychodnia.Models.Uzytkownik
 
 <div class="user-card" style="max-width: 600px; margin: 30px auto; border: 1px solid #dee2e6; border-radius: 10px; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
-    <div class="card-header-custom" style="background-color: #B2DAFA; padding: 15px; border-bottom: 4px solid #1B263B;">
-        <h4 class="m-0">Okno nadawania uprawnień: <strong>@Model.Imie @Model.Nazwisko</strong></h4>
-    </div>
-
-    <form asp-action="Uprawnienia" method="post" class="p-4">
-        @Html.AntiForgeryToken()
-        <input type="hidden" name="id" value="@Model.ID" />
-
-        
-        @if (ViewBag.Error != null)
-        {
-            <div class="alert alert-danger mb-3" style="font-weight: bold;">
-                <i class="fas fa-exclamation-triangle"></i> @ViewBag.Error
+    
+    @if (!Model.CzyAktywny)
+    {
+        @* zapomniany *@
+        <div class="card-header-custom" style="background-color: #f8d7da; padding: 15px; border-bottom: 4px solid #721c24;">
+            <h4 class="m-0" style="color: #721c24;">Błąd: Użytkownik zapomniany</h4>
+        </div>
+        <div class="p-4 text-center">
+            <div class="alert alert-warning mb-4">
+                <i class="fas fa-user-slash fa-2x mb-3"></i>
+                <p style="font-size: 1.1rem;"><strong>Nie można zmienić uprawnień użytkownikowi zapomnianemu.</strong></p>
+                <p class="text-muted small">Dane tego użytkownika zostały zanonimizowane i konto jest nieaktywne.</p>
             </div>
-        }
-
-        <p class="text-muted mb-3">Zaznacz odpowiednie uprawnienia dla użytkownika:</p>
-
-        <div class="list-group mb-4">
-            <label class="list-group-item d-flex gap-3 py-3">
-                <input class="form-check-input" type="checkbox" name="wybraneRole" value="1"
-                @( (Model.Permisje & 1) != 0 ? "checked" : "" )>
-                <span>
-                    <strong>Administrator</strong>
-                    <small class="d-block text-muted">Pełny dostęp do zarządzania systemem.</small>
-                </span>
-            </label>
-
-            <label class="list-group-item d-flex gap-3 py-3">
-                <input class="form-check-input" type="checkbox" name="wybraneRole" value="2"
-                @( (Model.Permisje & 2) != 0 ? "checked" : "" )>
-                <span>
-                    <strong>Pracownik</strong>
-                    <small class="d-block text-muted">Dostęp do modułów medycznych i rejestracji.</small>
-                </span>
-            </label>
-
-            <label class="list-group-item d-flex gap-3 py-3">
-                <input class="form-check-input" type="checkbox" name="wybraneRole" value="4"
-                @( (Model.Permisje & 4) != 0 ? "checked" : "" )>
-                <span>
-                    <strong>Pacjent</strong>
-                    <small class="d-block text-muted">Podstawowy profil pacjenta.</small>
-                </span>
-            </label>
-        </div>
-
-        <div class="pt-3 border-top d-flex justify-content-between">
-            <a href="@Url.Action("Podglad", new { id = Model.ID })" class="btn btn-outline-secondary">
-                Anuluj
+            <a href="@Url.Action("AdminPanel", "Account")" class="btn btn-secondary" style="padding: 8px 30px;">
+                Wróć do listy użytkowników
             </a>
-            <button type="submit" class="btn btn-primary" style="background-color: #1B263B; border: none; padding: 8px 30px;">
-                Zatwierdź zmiany
-            </button>
         </div>
-    </form>
+    }
+    else
+    {
+        @* zwykly *@
+        <div class="card-header-custom" style="background-color: #B2DAFA; padding: 15px; border-bottom: 4px solid #1B263B;">
+            <h4 class="m-0">Okno nadawania uprawnień: <strong>@Model.Imie @Model.Nazwisko</strong></h4>
+        </div>
+
+        <form asp-action="Uprawnienia" method="post" class="p-4">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" value="@Model.ID" />
+
+            @if (ViewBag.Error != null)
+            {
+                <div class="alert alert-danger mb-3" style="font-weight: bold;">
+                    <i class="fas fa-exclamation-triangle"></i> @ViewBag.Error
+                </div>
+            }
+
+            <p class="text-muted mb-3">Zaznacz odpowiednie uprawnienia dla użytkownika:</p>
+
+            <div class="list-group mb-4">
+                <label class="list-group-item d-flex gap-3 py-3">
+                    <input class="form-check-input" type="checkbox" name="wybraneRole" value="1"
+                    @( (Model.Permisje & 1) != 0 ? "checked" : "" )>
+                    <span>
+                        <strong>Administrator</strong>
+                        <small class="d-block text-muted">Pełny dostęp do zarządzania systemem.</small>
+                    </span>
+                </label>
+
+                <label class="list-group-item d-flex gap-3 py-3">
+                    <input class="form-check-input" type="checkbox" name="wybraneRole" value="2"
+                    @( (Model.Permisje & 2) != 0 ? "checked" : "" )>
+                    <span>
+                        <strong>Pracownik</strong>
+                        <small class="d-block text-muted">Dostęp do modułów medycznych i rejestracji.</small>
+                    </span>
+                </label>
+
+                <label class="list-group-item d-flex gap-3 py-3">
+                    <input class="form-check-input" type="checkbox" name="wybraneRole" value="4"
+                    @( (Model.Permisje & 4) != 0 ? "checked" : "" )>
+                    <span>
+                        <strong>Pacjent</strong>
+                        <small class="d-block text-muted">Podstawowy profil pacjenta.</small>
+                    </span>
+                </label>
+            </div>
+
+            <div class="pt-3 border-top d-flex justify-content-between">
+                <a href="@Url.Action("Podglad", new { id = Model.ID })" class="btn btn-outline-secondary">
+                    Anuluj
+                </a>
+                <button type="submit" class="btn btn-primary" style="background-color: #1B263B; border: none; padding: 8px 30px;">
+                    Zatwierdź zmiany
+                </button>
+            </div>
+        </form>
+    }
 </div>

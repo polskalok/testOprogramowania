@@ -163,8 +163,11 @@ namespace przychodnia.Controllers
             // wyszukiwarka
             if (!string.IsNullOrEmpty(searchString))
             {
-                uzytkownicy = uzytkownicy.Where(search => search.Nazwisko.Contains(searchString)
-                                                  || search.Pesel.Contains(searchString));
+                uzytkownicy = uzytkownicy.Where(search => search.Nazwisko.ToLower().Contains(searchString)
+                                                  || search.Pesel.Contains(searchString)
+                                                  || search.Imie.ToLower().Contains(searchString)
+                                                  || search.Login.ToLower().Contains(searchString)
+                                            );
             }
 
             ViewBag.ShowForgotten = showForgotten;
@@ -371,7 +374,7 @@ namespace przychodnia.Controllers
             int lastDigit = pesel[10] - '0';
             if (control != lastDigit)
             {
-                error = $"Błąd! Wyliczona: {control}, w PESEL jest: {lastDigit}";
+                error = $"PESEL nieprawidłowy - niepoprawna cyfra kontrolna";
                 return false;
             }
             
@@ -620,6 +623,8 @@ namespace przychodnia.Controllers
             uzytkownik.Email = model.Email;
             uzytkownik.Pesel = model.Pesel;
 
+            TempData["SuccessMessage"] = "Sukces! Zaktualizowano poprawnie dane.";
+
             _context.SaveChanges();
 
             var currentLogin = Request.Cookies["AuthUser"];
@@ -727,9 +732,13 @@ namespace przychodnia.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Rejestracja(Uzytkownik model)
         {
-            // obsluga rejestracji
             ModelState.Remove("Plec");
             ModelState.Remove("DataUrodzenia");
+
+            if (!PasswordHasher.ValidatePassword(model.Haslo, out string passwordError))
+            {
+                ModelState.AddModelError("Haslo", passwordError);
+            }
 
             if (!string.IsNullOrEmpty(model.Pesel) && model.Pesel.Length == 11)
             {
@@ -737,27 +746,39 @@ namespace przychodnia.Controllers
                 model.Plec = (genderDigit % 2 == 1) ? "Mężczyzna" : "Kobieta";
 
                 if (TryValidatePesel(model.Pesel, model.Plec, out DateTime dob, out string peselError))
+                {
                     model.DataUrodzenia = dob;
+                }
                 else
+                {
                     ModelState.AddModelError("Pesel", peselError);
+                }
             }
+            else if (string.IsNullOrEmpty(model.Pesel))
+            {
+                ModelState.AddModelError("Pesel", "Numer PESEL jest wymagany.");
+            }
+
+            if (_context.Uzytkownicy.Any(u => u.Login == model.Login))
+                ModelState.AddModelError("Login", "Ten login jest już zajęty.");
+
+            if (_context.Uzytkownicy.Any(u => u.Email == model.Email))
+                ModelState.AddModelError("Email", "Ten adres e-mail jest już zarejestrowany.");
+
+            if (_context.Uzytkownicy.Any(u => u.Pesel == model.Pesel))
+                ModelState.AddModelError("Pesel", "Użytkownik z tym numerem PESEL już istnieje.");
 
             if (ModelState.IsValid)
             {
-                if (_context.Uzytkownicy.Any(u => u.Login == model.Login || u.Pesel == model.Pesel || u.Email == model.Email))
-                {
-                    ViewBag.Error = "Użytkownik o podanym loginie, PESEL lub e-mail już istnieje.";
-                    return View(model);
-                }
-
                 model.Haslo = PasswordHasher.HashPassword(model.Haslo);
                 model.Permisje = 4;
                 model.CzyAktywny = true;
 
                 _context.Uzytkownicy.Add(model);
                 _context.SaveChanges();
-                return RedirectToAction("Login");
+                return RedirectToAction("Login", new { success = true });
             }
+
             return View(model);
         }
     }

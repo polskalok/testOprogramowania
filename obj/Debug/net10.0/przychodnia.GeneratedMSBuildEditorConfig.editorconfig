@@ -19,97 +19,97 @@ build_property.TargetFrameworkIdentifier = .NETCoreApp
 build_property.TargetFrameworkVersion = v10.0
 build_property.RootNamespace = przychodnia
 build_property.RootNamespace = przychodnia
-build_property.ProjectDir = C:\Users\ukran\Desktop\testOprogramowania-main — kopia\
+build_property.ProjectDir = C:\Users\polskalok\Documents\GitHub\testOprogramowania\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 9.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\ukran\Desktop\testOprogramowania-main — kopia
+build_property.MSBuildProjectDirectory = C:\Users\polskalok\Documents\GitHub\testOprogramowania
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 10.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/ukran/Desktop/testOprogramowania-main — kopia/Views/Account/AdminPanel.cshtml]
+[C:/Users/polskalok/Documents/GitHub/testOprogramowania/Views/Account/AdminPanel.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxBZG1pblBhbmVsLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ukran/Desktop/testOprogramowania-main — kopia/Views/Account/DodajUzytkownik.cshtml]
+[C:/Users/polskalok/Documents/GitHub/testOprogramowania/Views/Account/DodajUzytkownik.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxEb2RhalV6eXRrb3duaWsuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ukran/Desktop/testOprogramowania-main — kopia/Views/Account/Edytuj.cshtml]
+[C:/Users/polskalok/Documents/GitHub/testOprogramowania/Views/Account/Edytuj.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxFZHl0dWouY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ukran/Desktop/testOprogramowania-main — kopia/Views/Account/ListaUprawnien.cshtml]
+[C:/Users/polskalok/Documents/GitHub/testOprogramowania/Views/Account/ListaUprawnien.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMaXN0YVVwcmF3bmllbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ukran/Desktop/testOprogramowania-main — kopia/Views/Account/Login.cshtml]
+[C:/Users/polskalok/Documents/GitHub/testOprogramowania/Views/Account/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ukran/Desktop/testOprogramowania-main — kopia/Views/Account/MuszZmieniHaslo.cshtml]
+[C:/Users/polskalok/Documents/GitHub/testOprogramowania/Views/Account/MuszZmieniHaslo.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxNdXN6Wm1pZW5pSGFzbG8uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ukran/Desktop/testOprogramowania-main — kopia/Views/Account/OdzyskajHaslo.cshtml]
+[C:/Users/polskalok/Documents/GitHub/testOprogramowania/Views/Account/OdzyskajHaslo.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxPZHp5c2thakhhc2xvLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ukran/Desktop/testOprogramowania-main — kopia/Views/Account/PacjentPanel.cshtml]
+[C:/Users/polskalok/Documents/GitHub/testOprogramowania/Views/Account/PacjentPanel.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxQYWNqZW50UGFuZWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ukran/Desktop/testOprogramowania-main — kopia/Views/Account/Podglad.cshtml]
+[C:/Users/polskalok/Documents/GitHub/testOprogramowania/Views/Account/Podglad.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxQb2RnbGFkLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ukran/Desktop/testOprogramowania-main — kopia/Views/Account/PracownikPanel.cshtml]
+[C:/Users/polskalok/Documents/GitHub/testOprogramowania/Views/Account/PracownikPanel.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxQcmFjb3duaWtQYW5lbC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ukran/Desktop/testOprogramowania-main — kopia/Views/Account/Rejestracja.cshtml]
+[C:/Users/polskalok/Documents/GitHub/testOprogramowania/Views/Account/Rejestracja.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZWplc3RyYWNqYS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ukran/Desktop/testOprogramowania-main — kopia/Views/Account/Uprawnienia.cshtml]
+[C:/Users/polskalok/Documents/GitHub/testOprogramowania/Views/Account/Uprawnienia.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxVcHJhd25pZW5pYS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ukran/Desktop/testOprogramowania-main — kopia/Views/Account/UzytkownicyZUprawnieniem.cshtml]
+[C:/Users/polskalok/Documents/GitHub/testOprogramowania/Views/Account/UzytkownicyZUprawnieniem.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxVenl0a293bmljeVpVcHJhd25pZW5pZW0uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ukran/Desktop/testOprogramowania-main — kopia/Views/Account/ZmieniHaslo.cshtml]
+[C:/Users/polskalok/Documents/GitHub/testOprogramowania/Views/Account/ZmieniHaslo.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxabWllbmlIYXNsby5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ukran/Desktop/testOprogramowania-main — kopia/Views/Home/Index.cshtml]
+[C:/Users/polskalok/Documents/GitHub/testOprogramowania/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ukran/Desktop/testOprogramowania-main — kopia/Views/Home/Privacy.cshtml]
+[C:/Users/polskalok/Documents/GitHub/testOprogramowania/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ukran/Desktop/testOprogramowania-main — kopia/Views/Shared/Error.cshtml]
+[C:/Users/polskalok/Documents/GitHub/testOprogramowania/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ukran/Desktop/testOprogramowania-main — kopia/Views/Shared/_ValidationScriptsPartial.cshtml]
+[C:/Users/polskalok/Documents/GitHub/testOprogramowania/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ukran/Desktop/testOprogramowania-main — kopia/Views/_ViewImports.cshtml]
+[C:/Users/polskalok/Documents/GitHub/testOprogramowania/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ukran/Desktop/testOprogramowania-main — kopia/Views/_ViewStart.cshtml]
+[C:/Users/polskalok/Documents/GitHub/testOprogramowania/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ukran/Desktop/testOprogramowania-main — kopia/Views/Shared/_Layout.cshtml]
+[C:/Users/polskalok/Documents/GitHub/testOprogramowania/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-m3n973myt9

@@ -32,6 +32,7 @@ namespace przychodnia.Models
         [Required(ErrorMessage = "E-mail jest wymagany")]
         [StringLength(255, ErrorMessage = "E-mail nie może przekroczyć 255 znaków")]
         [EmailAddress(ErrorMessage = "Niepoprawny format e-mailu")]
+        [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]{2,}$", ErrorMessage = "Niepoprawny format e-mailu")]
         public string Email { get; set; } = string.Empty;
 
         [RegularExpression("^\\d{9}$", ErrorMessage = "Numer telefonu musi zawierać dokładnie 9 cyfr")]
