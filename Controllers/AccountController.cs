@@ -639,48 +639,16 @@ namespace przychodnia.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult ZmieniHaslo(int id, string noweHaslo, string powtorzHaslo)
+        public IActionResult ZmieniHaslo(int id, string noweHaslo)
         {
             var user = _context.Uzytkownicy.FirstOrDefault(u => u.ID == id);
             if (user == null) return NotFound();
-
-            // sprawdzenie czy hasła są identyczne
-            if (noweHaslo != powtorzHaslo)
-            {
-                ViewBag.Error = "Upewnij się że hasła są identyczne";
-                return View(user);
-            }
 
             if (!PasswordHasher.ValidatePassword(noweHaslo, out string errorMessage))
             {
                 ViewBag.Error = errorMessage;
                 return View(user);
             }
-
-            // sprawdzenie czy nowe hasło różni się od ostatnich 3 haseł
-            if (!string.IsNullOrEmpty(user.OstatniaHasla))
-            {
-                var ostatniaHasla = user.OstatniaHasla.Split('|');
-                string newHashedPassword = PasswordHasher.HashPassword(noweHaslo);
-
-                foreach (var stareHaslo in ostatniaHasla)
-                {
-                    if (stareHaslo == newHashedPassword)
-                    {
-                        ViewBag.Error = "Nowe hasło musi różnić się od 3 ostatnich używanych haseł.";
-                        return View(user);
-                    }
-                }
-            }
-
-            // aktualizacja historii haseł - przechowujemy ostatnie 3
-            string nowszaHistoria = PasswordHasher.HashPassword(noweHaslo);
-            if (!string.IsNullOrEmpty(user.OstatniaHasla))
-            {
-                var ostatnie = user.OstatniaHasla.Split('|').Take(2).ToList();
-                nowszaHistoria = nowszaHistoria + "|" + string.Join("|", ostatnie);
-            }
-            user.OstatniaHasla = nowszaHistoria;
 
             user.Haslo = PasswordHasher.HashPassword(noweHaslo);
             _context.SaveChanges();

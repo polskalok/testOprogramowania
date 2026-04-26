@@ -183,7 +183,6 @@
         <div class="requirement-item">✓ <strong>Przynajmniej jedna mała litera</strong></div>
         <div class="requirement-item">✓ <strong>Przynajmniej jedna cyfra</strong></div>
         <div class="requirement-item">✓ <strong>Jeden ze znaków specjalnych</strong>: - _ ! * $ # &</div>
-        <div class="requirement-item">✓ <strong>Różne od 3 ostatnich haseł</strong></div>
     </div>
 
     <form method="post" asp-action="ZmieniHaslo" asp-controller="Account">
@@ -195,8 +194,8 @@
         </div>
 
         <div class="form-group">
-            <label for="powtorzHaslo">Powtórz hasło</label>
-            <input type="password" id="powtorzHaslo" name="powtorzHaslo" class="form-control" required placeholder="Powtórz hasło" />
+            <label for="potwierdzenie">Potwierdź hasło</label>
+            <input type="password" id="potwierdzenie" name="potwierdzenie" class="form-control" required placeholder="Powtórz hasło" />
         </div>
 
         <div class="form-actions">
@@ -213,11 +212,11 @@
 <script>
     document.querySelector('form').addEventListener('submit', function(e) {
         const password = document.getElementById('noweHaslo').value;
-        const confirm = document.getElementById('powtorzHaslo').value;
+        const confirm = document.getElementById('potwierdzenie').value;
 
         if (password !== confirm) {
             e.preventDefault();
-            alert('Upewnij się że hasła są identyczne');
+            alert('Hasła się nie zgadzają!');
             return false;
         }
 

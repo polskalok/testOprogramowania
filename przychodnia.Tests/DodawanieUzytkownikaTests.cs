@@ -8,8 +8,9 @@ namespace przychodnia.Tests.Scenariusze
     public class DodanieUzytkownikaTests
     {
         [Fact]
-        public void TC_1_DodanieUzytkownika_PoprawnyScenariusz()
+        public void TC_1_PrzechodziWalidacje()
         {
+            
             var uzytkownik = new Uzytkownik
             {
                 Login = "jan.kowalski",
@@ -25,21 +26,24 @@ namespace przychodnia.Tests.Scenariusze
             var kontekstWalidacji = new ValidationContext(uzytkownik);
             var wyniki = new List<ValidationResult>();
 
+            
             bool czyPoprawne = Validator.TryValidateObject(uzytkownik, kontekstWalidacji, wyniki, true);
 
-            Assert.True(czyPoprawne);
-            Assert.Empty(wyniki);
+            
+            Assert.True(czyPoprawne); 
+            Assert.Empty(wyniki); 
         }
 
         [Fact]
-        public void TC_2_DodanieUzytkownika_BrakWymaganegoPolaNazwisko()
+        public void TC_2_BrakWymaganegoPolaNazwisko_ZwracaBlad()
         {
+            
             var uzytkownik = new Uzytkownik
             {
                 Login = "jan.kowalski",
                 Haslo = "TestoweHaslo123!",
                 Imie = "Jan",
-                Nazwisko = "",
+                Nazwisko = "", 
                 Adres = "ul. Testowa 12, 00-000 Warszawa",
                 Pesel = "85010112345",
                 Plec = "M",
@@ -49,95 +53,52 @@ namespace przychodnia.Tests.Scenariusze
             var kontekstWalidacji = new ValidationContext(uzytkownik);
             var wyniki = new List<ValidationResult>();
 
+            
             bool czyPoprawne = Validator.TryValidateObject(uzytkownik, kontekstWalidacji, wyniki, true);
 
-            Assert.False(czyPoprawne);
-            Assert.Contains(wyniki, w => w.MemberNames.Contains("Nazwisko"));
+            
+            Assert.False(czyPoprawne); 
+            Assert.Contains(wyniki, w => w.MemberNames.Contains("Nazwisko")); 
         }
 
         [Fact]
-        public void TC_9_DodanieUzytkownika_NiepoprawnyFormatEmail_BrakDomeny()
+        public void TC_9_ZlyFormatEmail_ZwracaBlad()
         {
+            
             var uzytkownik = new Uzytkownik
             {
                 Login = "jan.kowalski",
                 Haslo = "TestoweHaslo123!",
                 Imie = "Jan",
                 Nazwisko = "Kowalski",
-                Adres = "ul. Testowa 12, 00-000 Warszawa",
                 Pesel = "85010112345",
                 Plec = "M",
-                Email = "jan.kowalski@test",
+                Email = "jan.kowalski@test", 
                 Telefon = "123456789"
             };
             var kontekstWalidacji = new ValidationContext(uzytkownik);
             var wyniki = new List<ValidationResult>();
 
+            
             bool czyPoprawne = Validator.TryValidateObject(uzytkownik, kontekstWalidacji, wyniki, true);
 
+            
             Assert.False(czyPoprawne);
             Assert.Contains(wyniki, w => w.MemberNames.Contains("Email"));
         }
 
         [Fact]
-        public void TC_10_DodanieUzytkownika_NiepoprawnyFormatEmail_BrakMalpki()
+        public void TC_10_EmailZaDlugi_ZwracaBlad()
         {
-            var uzytkownik = new Uzytkownik
-            {
-                Login = "jan.kowalski",
-                Haslo = "TestoweHaslo123!",
-                Imie = "Jan",
-                Nazwisko = "Kowalski",
-                Adres = "ul. Testowa 12, 00-000 Warszawa",
-                Pesel = "85010112345",
-                Plec = "M",
-                Email = "jan.kowalski.test.pl",
-                Telefon = "123456789"
-            };
-            var kontekstWalidacji = new ValidationContext(uzytkownik);
-            var wyniki = new List<ValidationResult>();
-
-            bool czyPoprawne = Validator.TryValidateObject(uzytkownik, kontekstWalidacji, wyniki, true);
-
-            Assert.False(czyPoprawne);
-            Assert.Contains(wyniki, w => w.MemberNames.Contains("Email"));
-        }
-
-        [Fact]
-        public void TC_11_DodanieUzytkownika_NiepoprawnyFormatEmail_DwieMalpki()
-        {
-            var uzytkownik = new Uzytkownik
-            {
-                Login = "jan.kowalski",
-                Haslo = "TestoweHaslo123!",
-                Imie = "Jan",
-                Nazwisko = "Kowalski",
-                Adres = "ul. Testowa 12, 00-000 Warszawa",
-                Pesel = "85010112345",
-                Plec = "M",
-                Email = "jan.kowalski@@test.pl",
-                Telefon = "123456789"
-            };
-            var kontekstWalidacji = new ValidationContext(uzytkownik);
-            var wyniki = new List<ValidationResult>();
-
-            bool czyPoprawne = Validator.TryValidateObject(uzytkownik, kontekstWalidacji, wyniki, true);
-
-            Assert.False(czyPoprawne);
-            Assert.Contains(wyniki, w => w.MemberNames.Contains("Email"));
-        }
-
-        [Fact]
-        public void TC_12_DodanieUzytkownika_EmailZaDlugi()
-        {
+            
             string zaDlugiEmail = new string('a', 250) + "@test.pl";
+
             var uzytkownik = new Uzytkownik
             {
                 Login = "jan.kowalski",
                 Haslo = "TestoweHaslo123!",
                 Imie = "Jan",
                 Nazwisko = "Kowalski",
-                Adres = "ul. Testowa 12, 00-000 Warszawa",
                 Pesel = "85010112345",
                 Plec = "M",
                 Email = zaDlugiEmail,
@@ -146,56 +107,36 @@ namespace przychodnia.Tests.Scenariusze
             var kontekstWalidacji = new ValidationContext(uzytkownik);
             var wyniki = new List<ValidationResult>();
 
+            
             bool czyPoprawne = Validator.TryValidateObject(uzytkownik, kontekstWalidacji, wyniki, true);
 
+            
             Assert.False(czyPoprawne);
             Assert.Contains(wyniki, w => w.MemberNames.Contains("Email"));
         }
 
         [Fact]
-        public void TC_13_DodanieUzytkownika_NiepoprawnyTelefon_ZbytKrotki()
+        public void TC_11_NiepoprawnyTelefon_ZwracaBlad()
         {
+            
             var uzytkownik = new Uzytkownik
             {
                 Login = "jan.kowalski",
-                Haslo = "TestoweHaslo123!",
+                Haslo = "Haslo1!",
                 Imie = "Jan",
                 Nazwisko = "Kowalski",
-                Adres = "ul. Testowa 12, 00-000 Warszawa",
                 Pesel = "85010112345",
                 Plec = "M",
                 Email = "jan.kowalski@test.pl",
-                Telefon = "12345678"
+                Telefon = "12345678" 
             };
-            var kontekstWalidacji = new ValidationContext(uzytkownik);
+            var kontekst = new ValidationContext(uzytkownik);
             var wyniki = new List<ValidationResult>();
 
-            bool czyPoprawne = Validator.TryValidateObject(uzytkownik, kontekstWalidacji, wyniki, true);
+           
+            bool czyPoprawne = Validator.TryValidateObject(uzytkownik, kontekst, wyniki, true);
 
-            Assert.False(czyPoprawne);
-            Assert.Contains(wyniki, w => w.MemberNames.Contains("Telefon"));
-        }
-
-        [Fact]
-        public void TC_14_DodanieUzytkownika_NiepoprawnyTelefon_ZbytDlugi()
-        {
-            var uzytkownik = new Uzytkownik
-            {
-                Login = "jan.kowalski",
-                Haslo = "TestoweHaslo123!",
-                Imie = "Jan",
-                Nazwisko = "Kowalski",
-                Adres = "ul. Testowa 12, 00-000 Warszawa",
-                Pesel = "85010112345",
-                Plec = "M",
-                Email = "jan.kowalski@test.pl",
-                Telefon = "1234567890"
-            };
-            var kontekstWalidacji = new ValidationContext(uzytkownik);
-            var wyniki = new List<ValidationResult>();
-
-            bool czyPoprawne = Validator.TryValidateObject(uzytkownik, kontekstWalidacji, wyniki, true);
-
+            
             Assert.False(czyPoprawne);
             Assert.Contains(wyniki, w => w.MemberNames.Contains("Telefon"));
         }

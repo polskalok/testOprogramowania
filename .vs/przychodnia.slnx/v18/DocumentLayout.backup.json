@@ -3,60 +3,24 @@
   "WorkspaceRootPath": "C:\\Users\\ukran\\Desktop\\testOprogramowania-main \u2014 kopia\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\ukran\\desktop\\testoprogramowania-main \u2014 kopia\\views\\account\\podglad.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:views\\account\\podglad.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\ukran\\desktop\\testoprogramowania-main \u2014 kopia\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\ukran\\desktop\\testoprogramowania-main \u2014 kopia\\views\\account\\odzyskajhaslo.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:views\\account\\odzyskajhaslo.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\ukran\\desktop\\testoprogramowania-main \u2014 kopia\\services\\emailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:services\\emailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\ukran\\desktop\\testoprogramowania-main \u2014 kopia\\views\\account\\dodajuzytkownik.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:views\\account\\dodajuzytkownik.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\ukran\\desktop\\testoprogramowania-main \u2014 kopia\\migrations\\20260425005638_addlockouttouzytkownik.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:migrations\\20260425005638_addlockouttouzytkownik.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\ukran\\desktop\\testoprogramowania-main \u2014 kopia\\views\\account\\login.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:views\\account\\login.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\ukran\\desktop\\testoprogramowania-main \u2014 kopia\\views\\shared\\_layout.cshtml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:views\\shared\\_layout.cshtml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\ukran\\desktop\\testoprogramowania-main \u2014 kopia\\models\\uzytkownik.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:models\\uzytkownik.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\ukran\\desktop\\testoprogramowania-main \u2014 kopia\\services\\passwordhasher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:services\\passwordhasher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\ukran\\desktop\\testoprogramowania-main \u2014 kopia\\views\\account\\podglad.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:views\\account\\podglad.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\ukran\\desktop\\testoprogramowania-main \u2014 kopia\\views\\account\\zmienihaslo.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:views\\account\\zmienihaslo.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}"
+      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\ukran\\desktop\\testoprogramowania-main \u2014 kopia\\views\\account\\muszzmienihaslo.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:views\\account\\muszzmienihaslo.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\ukran\\desktop\\testoprogramowania-main \u2014 kopia\\views\\account\\edytuj.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:views\\account\\edytuj.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\ukran\\desktop\\testoprogramowania-main \u2014 kopia\\views\\account\\muszzmienihaslo.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:views\\account\\muszzmienihaslo.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}"
+      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\ukran\\desktop\\testoprogramowania-main \u2014 kopia\\views\\account\\login.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:views\\account\\login.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\ukran\\desktop\\testoprogramowania-main \u2014 kopia\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\ukran\\desktop\\testoprogramowania-main \u2014 kopia\\views\\account\\zmienihaslo.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:views\\account\\zmienihaslo.cshtml||{8B382828-6202-11D1-8870-0000F87579D2}"
     }
   ],
   "DocumentGroupContainers": [
@@ -66,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 9,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Bookmark",
@@ -82,20 +46,59 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 4,
+              "Title": "ZmieniHaslo.cshtml",
+              "DocumentMoniker": "C:\\Users\\ukran\\Desktop\\testOprogramowania-main \u2014 kopia\\Views\\Account\\ZmieniHaslo.cshtml",
+              "RelativeDocumentMoniker": "Views\\Account\\ZmieniHaslo.cshtml",
+              "ToolTip": "C:\\Users\\ukran\\Desktop\\testOprogramowania-main \u2014 kopia\\Views\\Account\\ZmieniHaslo.cshtml",
+              "RelativeToolTip": "Views\\Account\\ZmieniHaslo.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-26T11:33:44.088Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AccountController.cs",
+              "DocumentMoniker": "C:\\Users\\ukran\\Desktop\\testOprogramowania-main \u2014 kopia\\Controllers\\AccountController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AccountController.cs",
+              "ToolTip": "C:\\Users\\ukran\\Desktop\\testOprogramowania-main \u2014 kopia\\Controllers\\AccountController.cs",
+              "RelativeToolTip": "Controllers\\AccountController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-26T11:33:43.485Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Login.cshtml",
+              "DocumentMoniker": "C:\\Users\\ukran\\Desktop\\testOprogramowania-main \u2014 kopia\\Views\\Account\\Login.cshtml",
+              "RelativeDocumentMoniker": "Views\\Account\\Login.cshtml",
+              "ToolTip": "C:\\Users\\ukran\\Desktop\\testOprogramowania-main \u2014 kopia\\Views\\Account\\Login.cshtml",
+              "RelativeToolTip": "Views\\Account\\Login.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-26T11:33:43.373Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
               "Title": "MuszZmieniHaslo.cshtml",
               "DocumentMoniker": "C:\\Users\\ukran\\Desktop\\testOprogramowania-main \u2014 kopia\\Views\\Account\\MuszZmieniHaslo.cshtml",
               "RelativeDocumentMoniker": "Views\\Account\\MuszZmieniHaslo.cshtml",
               "ToolTip": "C:\\Users\\ukran\\Desktop\\testOprogramowania-main \u2014 kopia\\Views\\Account\\MuszZmieniHaslo.cshtml",
               "RelativeToolTip": "Views\\Account\\MuszZmieniHaslo.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsBAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABsAAAAAAAAAAAAAAAsBAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-04-25T23:14:21.894Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 1,
               "Title": "Edytuj.cshtml",
               "DocumentMoniker": "C:\\Users\\ukran\\Desktop\\testOprogramowania-main \u2014 kopia\\Views\\Account\\Edytuj.cshtml",
               "RelativeDocumentMoniker": "Views\\Account\\Edytuj.cshtml",
@@ -103,157 +106,7 @@
               "RelativeToolTip": "Views\\Account\\Edytuj.cshtml",
               "ViewState": "AgIAABUAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-25T18:16:52.352Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "EmailService.cs",
-              "DocumentMoniker": "C:\\Users\\ukran\\Desktop\\testOprogramowania-main \u2014 kopia\\Services\\EmailService.cs",
-              "RelativeDocumentMoniker": "Services\\EmailService.cs",
-              "ToolTip": "C:\\Users\\ukran\\Desktop\\testOprogramowania-main \u2014 kopia\\Services\\EmailService.cs",
-              "RelativeToolTip": "Services\\EmailService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAtAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-25T15:33:02.197Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "Uzytkownik.cs",
-              "DocumentMoniker": "C:\\Users\\ukran\\Desktop\\testOprogramowania-main \u2014 kopia\\Models\\Uzytkownik.cs",
-              "RelativeDocumentMoniker": "Models\\Uzytkownik.cs",
-              "ToolTip": "C:\\Users\\ukran\\Desktop\\testOprogramowania-main \u2014 kopia\\Models\\Uzytkownik.cs",
-              "RelativeToolTip": "Models\\Uzytkownik.cs",
-              "ViewState": "AgIAADEAAAAAAAAAAMBUwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-25T00:48:48.156Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "_Layout.cshtml",
-              "DocumentMoniker": "C:\\Users\\ukran\\Desktop\\testOprogramowania-main \u2014 kopia\\Views\\Shared\\_Layout.cshtml",
-              "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
-              "ToolTip": "C:\\Users\\ukran\\Desktop\\testOprogramowania-main \u2014 kopia\\Views\\Shared\\_Layout.cshtml",
-              "RelativeToolTip": "Views\\Shared\\_Layout.cshtml",
-              "ViewState": "AgIAADsAAAAAAAAAAAAiwGUAAADuAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-03-23T03:28:53.337Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "DodajUzytkownik.cshtml",
-              "DocumentMoniker": "C:\\Users\\ukran\\Desktop\\testOprogramowania-main \u2014 kopia\\Views\\Account\\DodajUzytkownik.cshtml",
-              "RelativeDocumentMoniker": "Views\\Account\\DodajUzytkownik.cshtml",
-              "ToolTip": "C:\\Users\\ukran\\Desktop\\testOprogramowania-main \u2014 kopia\\Views\\Account\\DodajUzytkownik.cshtml",
-              "RelativeToolTip": "Views\\Account\\DodajUzytkownik.cshtml",
-              "ViewState": "AgIAADAAAAAAAAAAAAAAwFsAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-03-23T04:25:35.182Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Podglad.cshtml",
-              "DocumentMoniker": "C:\\Users\\ukran\\Desktop\\testOprogramowania-main \u2014 kopia\\Views\\Account\\Podglad.cshtml",
-              "RelativeDocumentMoniker": "Views\\Account\\Podglad.cshtml",
-              "ToolTip": "C:\\Users\\ukran\\Desktop\\testOprogramowania-main \u2014 kopia\\Views\\Account\\Podglad.cshtml",
-              "RelativeToolTip": "Views\\Account\\Podglad.cshtml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-10T18:25:22.582Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "AccountController.cs",
-              "DocumentMoniker": "C:\\Users\\ukran\\Desktop\\testOprogramowania-main \u2014 kopia\\Controllers\\AccountController.cs",
-              "RelativeDocumentMoniker": "Controllers\\AccountController.cs",
-              "ToolTip": "C:\\Users\\ukran\\Desktop\\testOprogramowania-main \u2014 kopia\\Controllers\\AccountController.cs",
-              "RelativeToolTip": "Controllers\\AccountController.cs",
-              "ViewState": "AgIAAHYCAAAAAAAAAAArwBQBAAA4AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-14T18:19:55.609Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "OdzyskajHaslo.cshtml",
-              "DocumentMoniker": "C:\\Users\\ukran\\Desktop\\testOprogramowania-main \u2014 kopia\\Views\\Account\\OdzyskajHaslo.cshtml",
-              "RelativeDocumentMoniker": "Views\\Account\\OdzyskajHaslo.cshtml",
-              "ToolTip": "C:\\Users\\ukran\\Desktop\\testOprogramowania-main \u2014 kopia\\Views\\Account\\OdzyskajHaslo.cshtml",
-              "RelativeToolTip": "Views\\Account\\OdzyskajHaslo.cshtml",
-              "ViewState": "AgIAAO0AAAAAAAAAAAAAAO8AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-25T15:33:37.134Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "PasswordHasher.cs",
-              "DocumentMoniker": "C:\\Users\\ukran\\Desktop\\testOprogramowania-main \u2014 kopia\\Services\\PasswordHasher.cs",
-              "RelativeDocumentMoniker": "Services\\PasswordHasher.cs",
-              "ToolTip": "C:\\Users\\ukran\\Desktop\\testOprogramowania-main \u2014 kopia\\Services\\PasswordHasher.cs",
-              "RelativeToolTip": "Services\\PasswordHasher.cs",
-              "ViewState": "AgIAAAgAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-25T13:25:56.926Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "Podglad.cshtml",
-              "DocumentMoniker": "C:\\Users\\ukran\\Desktop\\testOprogramowania-main \u2014 kopia\\Views\\Account\\Podglad.cshtml",
-              "RelativeDocumentMoniker": "Views\\Account\\Podglad.cshtml",
-              "ToolTip": "C:\\Users\\ukran\\Desktop\\testOprogramowania-main \u2014 kopia\\Views\\Account\\Podglad.cshtml",
-              "RelativeToolTip": "Views\\Account\\Podglad.cshtml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-25T13:26:27.718Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "ZmieniHaslo.cshtml",
-              "DocumentMoniker": "C:\\Users\\ukran\\Desktop\\testOprogramowania-main \u2014 kopia\\Views\\Account\\ZmieniHaslo.cshtml",
-              "RelativeDocumentMoniker": "Views\\Account\\ZmieniHaslo.cshtml",
-              "ToolTip": "C:\\Users\\ukran\\Desktop\\testOprogramowania-main \u2014 kopia\\Views\\Account\\ZmieniHaslo.cshtml",
-              "RelativeToolTip": "Views\\Account\\ZmieniHaslo.cshtml",
-              "ViewState": "AgIAANcAAAAAAAAAAABBwOYAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-25T13:28:00.136Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Login.cshtml",
-              "DocumentMoniker": "C:\\Users\\ukran\\Desktop\\testOprogramowania-main \u2014 kopia\\Views\\Account\\Login.cshtml",
-              "RelativeDocumentMoniker": "Views\\Account\\Login.cshtml",
-              "ToolTip": "C:\\Users\\ukran\\Desktop\\testOprogramowania-main \u2014 kopia\\Views\\Account\\Login.cshtml",
-              "RelativeToolTip": "Views\\Account\\Login.cshtml",
-              "ViewState": "AgIAAIAAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-25T00:28:24.99Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "20260425005638_AddLockoutToUzytkownik.cs",
-              "DocumentMoniker": "C:\\Users\\ukran\\Desktop\\testOprogramowania-main \u2014 kopia\\Migrations\\20260425005638_AddLockoutToUzytkownik.cs",
-              "RelativeDocumentMoniker": "Migrations\\20260425005638_AddLockoutToUzytkownik.cs",
-              "ToolTip": "C:\\Users\\ukran\\Desktop\\testOprogramowania-main \u2014 kopia\\Migrations\\20260425005638_AddLockoutToUzytkownik.cs",
-              "RelativeToolTip": "Migrations\\20260425005638_AddLockoutToUzytkownik.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-25T00:57:28.903Z"
+              "WhenOpened": "2026-04-25T18:16:52.352Z"
             }
           ]
         }
