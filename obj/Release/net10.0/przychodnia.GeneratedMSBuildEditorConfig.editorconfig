@@ -38,8 +38,24 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxEb2RhalV6eXRrb3duaWsuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/ukran/Documents/GitHub/testOprogramowania/Views/Account/Edytuj.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxFZHl0dWouY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/ukran/Documents/GitHub/testOprogramowania/Views/Account/ListaUprawnien.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMaXN0YVVwcmF3bmllbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/ukran/Documents/GitHub/testOprogramowania/Views/Account/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMb2dpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/ukran/Documents/GitHub/testOprogramowania/Views/Account/MuszZmieniHaslo.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxNdXN6Wm1pZW5pSGFzbG8uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/ukran/Documents/GitHub/testOprogramowania/Views/Account/OdzyskajHaslo.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxPZHp5c2thakhhc2xvLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/ukran/Documents/GitHub/testOprogramowania/Views/Account/PacjentPanel.cshtml]
@@ -52,6 +68,22 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/ukran/Documents/GitHub/testOprogramowania/Views/Account/PracownikPanel.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxQcmFjb3duaWtQYW5lbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/ukran/Documents/GitHub/testOprogramowania/Views/Account/Rejestracja.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZWplc3RyYWNqYS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/ukran/Documents/GitHub/testOprogramowania/Views/Account/Uprawnienia.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxVcHJhd25pZW5pYS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/ukran/Documents/GitHub/testOprogramowania/Views/Account/UzytkownicyZUprawnieniem.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxVenl0a293bmljeVpVcHJhd25pZW5pZW0uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/ukran/Documents/GitHub/testOprogramowania/Views/Account/ZmieniHaslo.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxabWllbmlIYXNsby5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/ukran/Documents/GitHub/testOprogramowania/Views/Home/Index.cshtml]

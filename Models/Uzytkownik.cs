@@ -42,14 +42,14 @@ namespace przychodnia.Models
         public int Permisje { get; set; }
         public bool CzyAktywny { get; set; } = true;
 
-        // Obsługa blokady konta po nieudanych próbach logowania
+        
         public int FailedLoginAttempts { get; set; } = 0;
         public DateTime? LockoutEnd { get; set; }
 
-        // Flaga do wymuszenia zmiany hasła po resecie
+        
         public bool MuszZmieniHaslo { get; set; } = false;
 
-        // Historia haseł - przechowywanie ostatnich 3 haseł
+       
         public string? OstatniaHasla { get; set; } = string.Empty;
     }
 }

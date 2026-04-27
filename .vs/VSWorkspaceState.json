@@ -4,13 +4,12 @@
     "\\Controllers",
     "\\Data",
     "\\Models",
-    "\\obj\\Debug",
     "\\Services",
     "\\Views",
     "\\Views\\Account",
     "\\Views\\Home",
     "\\Views\\Shared"
   ],
-  "SelectedNode": "\\Views\\Account\\Login.cshtml",
+  "SelectedNode": "\\Views\\Account\\Rejestracja.cshtml",
   "PreviewInSolutionExplorer": false
 }
