@@ -1,0 +1,115 @@
+﻿@model przychodnia.Models.Uzytkownik
+
+@{
+    ViewData["Title"] = "Podgląd Pacjenta";
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert" style="border-left: 5px solid #155724; margin: 20px auto; max-width: 800px;">
+        <i class="fas fa-check-circle me-2"></i> @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<style>
+    .user-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        max-width: 800px;
+        margin: 20px auto;
+        overflow: hidden;
+        border: 1px solid #dee2e6;
+    }
+
+    .card-header-custom {
+        background-color: #B2DAFA;
+        padding: 20px;
+        border-bottom: 4px solid #1B263B;
+    }
+
+    .card-body-custom {
+        padding: 30px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .info-group {
+        border-bottom: 1px dashed #B2DAFA;
+        padding-bottom: 10px;
+    }
+
+    .info-label {
+        font-weight: bold;
+        color: #1B263B;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+    }
+
+    .info-value {
+        font-size: 1.1rem;
+        color: #333;
+    }
+
+    .card-footer-custom {
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-top: 1px solid #dee2e6;
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+    }
+</style>
+
+<div class="user-card">
+    <div class="card-header-custom">
+        <h3 class="m-0 text-center">Karta Pacjenta: @Model.Imie @Model.Nazwisko</h3>
+    </div>
+
+    <div class="card-body-custom">
+        <div class="info-group">
+            <div class="info-label">Login</div>
+            <div class="info-value">@Model.Login</div>
+        </div>
+        <div class="info-group">
+            <div class="info-label">PESEL</div>
+            <div class="info-value">@Model.Pesel</div>
+        </div>
+        <div class="info-group">
+            <div class="info-label">Data urodzenia</div>
+            <div class="info-value">@Model.DataUrodzenia?.ToString("dd.MM.yyyy")</div>
+        </div>
+        <div class="info-group">
+            <div class="info-label">Płeć</div>
+            <div class="info-value">@Model.Plec</div>
+        </div>
+        <div class="info-group">
+            <div class="info-label">Adres zamieszkania</div>
+            <div class="info-value">@Model.Adres</div>
+        </div>
+        <div class="info-group">
+            <div class="info-label">Email</div>
+            <div class="info-value">@Model.Email</div>
+        </div>
+        <div class="info-group">
+            <div class="info-label">Telefon</div>
+            <div class="info-value">@Model.Telefon</div>
+        </div>
+        <div class="info-group">
+            <div class="info-label">Rola</div>
+            <div class="info-value">Pacjent</div>
+        </div>
+    </div>
+
+    <div class="card-footer-custom">
+        <a href="@Url.Action("PracownikLista", "Account")" class="btn btn-outline-secondary" style="min-width: 150px;">
+            <i class="fas fa-arrow-left me-2"></i> Powrót do listy
+        </a>
+
+        <a href="@Url.Action("EdytujPacjenta", "Account", new { id = Model.ID })" class="btn btn-warning" style="min-width: 150px;">
+            <i class="fas fa-edit me-2"></i> Edytuj dane
+        </a>
+    </div>
+</div>

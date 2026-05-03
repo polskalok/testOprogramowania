@@ -792,5 +792,166 @@ namespace przychodnia.Controllers
            
             return ZmieniHaslo(id, noweHaslo);
         }
+
+
+
+
+        //nowe
+        public IActionResult PracownikDodaj()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult PracownikDodaj(Uzytkownik model)
+        {
+            ModelState.Remove("Plec");
+            ModelState.Remove("DataUrodzenia");
+
+            if (!string.IsNullOrEmpty(model.Pesel) && model.Pesel.Length == 11)
+            {
+                int genderDigit = int.Parse(model.Pesel.Substring(9, 1));
+                model.Plec = (genderDigit % 2 == 1) ? "Mężczyzna" : "Kobieta";
+
+                if (TryValidatePesel(model.Pesel, model.Plec, out DateTime dob, out string peselError))
+                {
+                    model.DataUrodzenia = dob;
+                }
+                else
+                {
+                    ModelState.AddModelError("Pesel", peselError);
+                }
+            }
+
+            if (ModelState.IsValid)
+            {
+                if (_context.Uzytkownicy.Any(u => u.Login == model.Login || u.Pesel == model.Pesel || u.Email == model.Email))
+                {
+                    ViewBag.Error = "Użytkownik z takimi danymi już istnieje.";
+                    return View(model);
+                }
+
+                model.Haslo = PasswordHasher.HashPassword(model.Haslo);
+                model.Permisje = 4; 
+                model.CzyAktywny = true;
+
+                _context.Uzytkownicy.Add(model);
+                _context.SaveChanges();
+
+                TempData["Success"] = $"Pacjent {model.Imie} {model.Nazwisko} został pomyślnie zarejestrowany.";
+
+                return RedirectToAction("PracownikLista"); 
+            }
+
+            return View(model);
+        }
+
+
+
+
+
+        [HttpGet]
+        public IActionResult PracownikPodglad(int id)
+        {
+            var pacjent = _context.Uzytkownicy.FirstOrDefault(u => u.ID == id);
+
+            if (pacjent == null)
+            {
+                return NotFound();
+            }
+
+            if ((pacjent.Permisje & 4) == 0)
+            {
+                return Unauthorized(); 
+            }
+
+            return View("PracownikPodglad", pacjent);
+        }
+    
+        [HttpGet]
+        public IActionResult EdytujPacjenta(int id)
+        {
+            var pacjent = _context.Uzytkownicy.FirstOrDefault(u => u.ID == id);
+            if (pacjent == null) return NotFound();
+
+            return View(pacjent);
+        }
+
+        // Edycja Pacjenta
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EdytujPacjenta(Uzytkownik model)
+        {
+            ModelState.Remove("Plec");
+            ModelState.Remove("DataUrodzenia");
+
+            if (!string.IsNullOrEmpty(model.Pesel) && model.Pesel.Length == 11)
+            {
+                int genderDigit = int.Parse(model.Pesel.Substring(9, 1));
+                model.Plec = (genderDigit % 2 == 1) ? "Mężczyzna" : "Kobieta";
+
+                if (TryValidatePesel(model.Pesel, model.Plec, out DateTime dob, out string peselError))
+                {
+                    model.DataUrodzenia = dob;
+                }
+                else
+                {
+                    ModelState.AddModelError("Pesel", peselError);
+                }
+            }
+
+            if (ModelState.IsValid)
+            {
+                var dbUser = _context.Uzytkownicy.FirstOrDefault(u => u.ID == model.ID);
+                if (dbUser != null)
+                {
+                    dbUser.Imie = model.Imie;
+                    dbUser.Nazwisko = model.Nazwisko;
+                    dbUser.Email = model.Email;
+                    dbUser.Pesel = model.Pesel;
+                    dbUser.Adres = model.Adres;
+                    dbUser.Telefon = model.Telefon;
+                    dbUser.Plec = model.Plec;
+                    dbUser.DataUrodzenia = model.DataUrodzenia;
+
+                    _context.SaveChanges();
+                    TempData["SuccessMessage"] = "Dane pacjenta zostały zaktualizowane.";
+                    return RedirectToAction("PracownikPodglad", new { id = dbUser.ID });
+                }
+            }
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult PracownikLista(string searchString)
+        {
+            var query = _context.Uzytkownicy
+                .Where(u => (u.Permisje & 4) != 0 && u.CzyAktywny);
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                searchString = searchString.ToLower();
+                query = query.Where(u =>
+                    u.Imie.ToLower().Contains(searchString) ||
+                    u.Nazwisko.ToLower().Contains(searchString) ||
+                    u.Pesel.Contains(searchString) ||
+                    u.Login.ToLower().Contains(searchString) ||
+                    u.Email.ToLower().Contains(searchString)
+                );
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
+            var pacjenci = query.ToList();
+            return View(pacjenci);
+        }
+
+
+
+
+
+
+
     }
 }

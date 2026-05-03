@@ -1,0 +1,136 @@
+﻿@model IEnumerable<przychodnia.Models.Uzytkownik>
+
+@{
+    ViewData["Title"] = "Lista Pacjentów";
+}
+
+<style>
+    .pracownik-actions {
+        margin-bottom: 20px;
+        display: flex;
+        gap: 10px;
+    }
+
+    .table-custom {
+        width: 100%;
+        background-color: white;
+        border-collapse: collapse;
+        margin-top: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+        .table-custom th {
+            background-color: #B2DAFA;
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid #1B263B;
+        }
+
+        .table-custom td {
+            padding: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+    .btn-action {
+        padding: 5px 12px;
+        text-decoration: none;
+        font-size: 0.85rem;
+        border: 1px solid #1B263B;
+        color: #1B263B;
+        border-radius: 4px;
+        transition: 0.2s;
+    }
+
+        .btn-action:hover {
+            background-color: #1B263B;
+            color: white;
+        }
+
+    .nav-btn {
+        padding: 10px 20px;
+        background-color: #1B263B;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+    
+        .nav-btn:hover {
+            background-color: #2c3e50;
+            color: white;
+        }
+</style>
+
+<h2>Lista Pacjentów</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle"></i> @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="pracownik-actions">
+    <a href="@Url.Action("PracownikDodaj", "Account")" class="nav-btn">Dodaj Nowego Pacjenta</a>
+    <a href="@Url.Action("PracownikLista", "Account")" class="btn btn-outline-secondary">Odśwież Listę</a>
+    <a href="@Url.Action("PracownikPanel", "Account")" class="btn btn-outline-dark">Powrót do Panelu</a>
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <form asp-action="PracownikLista" method="get" class="row g-3">
+            <div class="col-md-9">
+                <input type="text" name="searchString" value="@ViewBag.CurrentFilter"
+                       class="form-control" placeholder="Wyszukaj pacjenta..." />
+            </div>
+            <div class="col-md-3 d-grid gap-2 d-md-block">
+                <button type="submit" class="btn btn-primary" style="background-color: #1B263B;">Szukaj</button>
+                <a href="@Url.Action("PracownikLista", "Account")" class="btn btn-outline-secondary">Wyczyść</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(ViewBag.CurrentFilter))
+{
+    <p class="text-muted">Wyniki wyszukiwania dla: <strong>@ViewBag.CurrentFilter</strong></p>
+}
+
+@if (Model.Any())
+{
+    <table class="table-custom">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Login</th>
+                <th>Imię i Nazwisko</th>
+                <th>PESEL</th>
+                <th>Email</th>
+                <th>Akcje</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.ID</td>
+                    <td>@user.Login</td>
+                    <td>@user.Imie @user.Nazwisko</td>
+                    <td>@user.Pesel</td>
+                    <td>@user.Email</td>
+                    <td>
+                        <a href="@Url.Action("PracownikPodglad", "Account", new { id = user.ID })" class="btn-action">
+                            <i class="fas fa-eye"></i> Podgląd
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-info mt-4 text-center" style="border: 1px solid #1B263B; color: #1B263B;">
+        <i class="fas fa-search"></i> Nie znaleziono pacjentów o podanych kryteriach.
+    </div>
+}

@@ -4,9 +4,21 @@
 
 <div class="container text-center" style="margin-top: 50px;">
     <div class="card shadow" style="padding: 40px; border-radius: 15px;">
-        <h1 class="display-4" style="color: #1B263B;">Jesteś pracownikiem</h1>
-        <hr />
         <p class="lead">Witaj w systemie zarządzania przychodnią.</p>
+        <div class="row mt-4">
+            <div class="col-md-6 mb-3">
+                <a href="@Url.Action("PracownikLista", "Account")" class="btn btn-primary w-100 py-3" style="background-color: #1B263B;">
+                    <i class="fas fa-users"></i> Lista Pacjentów
+                </a>
+            </div>
+            <div class="col-md-6 mb-3">
+                <a href="@Url.Action("PracownikDodaj", "Account")" class="btn btn-success w-100 py-3">
+                    <i class="fas fa-user-plus"></i> Dodaj Pacjenta
+                </a>
+            </div>
+        </div>
+
+
         <div class="mt-4">
             <a href="@Url.Action("Index", "Home")" class="btn btn-outline-primary">Wróć do strony głównej</a>
         </div>
