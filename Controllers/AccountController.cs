@@ -937,7 +937,9 @@ namespace przychodnia.Controllers
                     u.Nazwisko.ToLower().Contains(searchString) ||
                     u.Pesel.Contains(searchString) ||
                     u.Login.ToLower().Contains(searchString) ||
-                    u.Email.ToLower().Contains(searchString)
+                    u.Email.ToLower().Contains(searchString) ||
+                    u.Adres.ToLower().Contains(searchString) ||
+                    u.Telefon.Contains(searchString)
                 );
             }
 

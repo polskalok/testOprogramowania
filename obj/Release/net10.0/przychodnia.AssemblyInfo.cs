@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("przychodnia")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c83f3b6ff3ec5bda035198288e4e3443470958cd")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+82d1325d1076c6c76121c737562f7ee622c7ba28")]
 [assembly: System.Reflection.AssemblyProductAttribute("przychodnia")]
 [assembly: System.Reflection.AssemblyTitleAttribute("przychodnia")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
