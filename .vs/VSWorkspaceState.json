@@ -10,6 +10,6 @@
     "\\Views\\Home",
     "\\Views\\Shared"
   ],
-  "SelectedNode": "\\Views\\Shared\\_Layout.cshtml",
+  "SelectedNode": "\\Controllers\\AccountController.cs",
   "PreviewInSolutionExplorer": false
 }

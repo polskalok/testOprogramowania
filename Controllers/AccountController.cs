@@ -929,18 +929,55 @@ namespace przychodnia.Controllers
             var query = _context.Uzytkownicy
                 .Where(u => (u.Permisje & 4) != 0 && u.CzyAktywny);
 
-            if (!string.IsNullOrEmpty(searchString))
+            if (!string.IsNullOrWhiteSpace(searchString))
             {
-                searchString = searchString.ToLower();
-                query = query.Where(u =>
-                    u.Imie.ToLower().Contains(searchString) ||
-                    u.Nazwisko.ToLower().Contains(searchString) ||
-                    u.Pesel.Contains(searchString) ||
-                    u.Login.ToLower().Contains(searchString) ||
-                    u.Email.ToLower().Contains(searchString) ||
-                    u.Adres.ToLower().Contains(searchString) ||
-                    u.Telefon.Contains(searchString)
-                );
+                searchString = searchString.Trim();
+
+                var digitsOnly = new string(searchString.Where(char.IsDigit).ToArray());
+
+                bool isPesel = digitsOnly.Length == 11 && digitsOnly == searchString;
+                bool isPhone = digitsOnly.Length >= 7 && digitsOnly.Length <= 12;
+
+                if (isPesel)
+                {
+                    query = query.Where(u => u.Pesel == digitsOnly);
+                }
+                else if (isPhone)
+                {
+                    query = query.Where(u =>
+                        u.Telefon.Replace("+", "").Contains(digitsOnly));
+                }
+                else if (searchString.Any(char.IsLetter))
+                {
+                    var parts = searchString.ToLower().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+                    if (parts.Length == 1)
+                    {
+                        string term = parts[0];
+                        query = query.Where(u =>
+                            u.Imie.ToLower().Contains(term) ||
+                            u.Nazwisko.ToLower().Contains(term) ||
+                            u.Adres.ToLower().Contains(term));
+                    }
+                    else
+                    {
+                        string imie = parts[0];
+                        string nazwisko = parts[1];
+
+                        query = query.Where(u =>
+                            u.Imie.ToLower().Contains(imie) &&
+                            u.Nazwisko.ToLower().Contains(nazwisko));
+                    }
+                }
+                else
+                {
+                    query = query.Where(u =>
+                        u.Imie.Contains(searchString) ||
+                        u.Nazwisko.Contains(searchString) ||
+                        u.Pesel.Contains(searchString) ||
+                        u.Adres.Contains(searchString) ||
+                        u.Telefon.Contains(searchString));
+                }
             }
 
             ViewBag.CurrentFilter = searchString;
