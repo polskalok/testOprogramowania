@@ -1,4 +1,4 @@
-﻿@model przychodnia.Models.Uzytkownik
+﻿@model przychodnia.Models.Pacjent
 
 @{
     ViewData["Title"] = "Edycja danych pacjenta";
@@ -17,9 +17,7 @@
             <form asp-action="EdytujPacjenta" method="post">
                 @Html.AntiForgeryToken()
                 <input type="hidden" asp-for="ID" />
-                <input type="hidden" asp-for="Login" />
-                <input type="hidden" asp-for="Haslo" />
-                <input type="hidden" asp-for="Permisje" />
+
 
                 <div class="row">
                     <div class="col-md-6 mb-3">

@@ -1,4 +1,4 @@
-﻿@model przychodnia.Models.Uzytkownik
+﻿@model przychodnia.Models.Pacjent
 
 @{
     ViewData["Title"] = "Podgląd Pacjenta";
@@ -70,22 +70,10 @@
 
     <div class="card-body-custom">
         <div class="info-group">
-            <div class="info-label">Login</div>
-            <div class="info-value">@Model.Login</div>
-        </div>
-        <div class="info-group">
             <div class="info-label">PESEL</div>
             <div class="info-value">@Model.Pesel</div>
         </div>
-        <div class="info-group">
-            <div class="info-label">Data urodzenia</div>
-            <div class="info-value">@Model.DataUrodzenia?.ToString("dd.MM.yyyy")</div>
-        </div>
-        <div class="info-group">
-            <div class="info-label">Płeć</div>
-            <div class="info-value">@Model.Plec</div>
-        </div>
-        <div class="info-group">
+           <div class="info-group">
             <div class="info-label">Adres zamieszkania</div>
             <div class="info-value">@Model.Adres</div>
         </div>
@@ -111,5 +99,18 @@
         <a href="@Url.Action("EdytujPacjenta", "Account", new { id = Model.ID })" class="btn btn-warning" style="min-width: 150px;">
             <i class="fas fa-edit me-2"></i> Edytuj dane
         </a>
+
+        <form asp-action="ZapomnijPacjenta" asp-controller="Account" method="post"
+              onsubmit="return confirm('UWAGA: Czy na pewno chcesz trwale usunąć dane tego pacjenta z kartoteki? Tej operacji nie można cofnąć.');"
+              style="display:inline;">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" value="@Model.ID" />
+            <button type="submit" class="btn btn-danger" style="min-width: 150px;">
+                <i class="fas fa-user-slash me-2"></i> Zapomnij pacjenta
+            </button>
+        </form>
+
+
+
     </div>
 </div>

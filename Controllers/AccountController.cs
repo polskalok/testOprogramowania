@@ -797,27 +797,30 @@ namespace przychodnia.Controllers
 
 
         //nowe
+
+
+
+        // --- DODAWANIE PACJENTA (Tylko wymagane pola) ---
+        [HttpGet]
         public IActionResult PracownikDodaj()
         {
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult PracownikDodaj(Uzytkownik model)
+        public IActionResult PracownikDodaj(Pacjent model)
         {
-            ModelState.Remove("Plec");
-            ModelState.Remove("DataUrodzenia");
-
+            // Wykonujemy tylko walidację formatu PESEL (czy ma 11 cyfr i czy suma kontrolna gra)
             if (!string.IsNullOrEmpty(model.Pesel) && model.Pesel.Length == 11)
             {
+                // 1. Wyliczamy płeć na podstawie PESEL
                 int genderDigit = int.Parse(model.Pesel.Substring(9, 1));
-                model.Plec = (genderDigit % 2 == 1) ? "Mężczyzna" : "Kobieta";
+                string wyliczonaPlec = (genderDigit % 2 == 1) ? "Mężczyzna" : "Kobieta";
 
-                if (TryValidatePesel(model.Pesel, model.Plec, out DateTime dob, out string peselError))
-                {
-                    model.DataUrodzenia = dob;
-                }
-                else
+                // 2. Przesyłamy wyliczoną płeć do walidatora. 
+                // Teraz 'actualGender' będzie zawsze równe 'expectedGender' i błąd zniknie.
+                if (!TryValidatePesel(model.Pesel, wyliczonaPlec, out _, out string peselError))
                 {
                     ModelState.AddModelError("Pesel", peselError);
                 }
@@ -825,166 +828,125 @@ namespace przychodnia.Controllers
 
             if (ModelState.IsValid)
             {
-                if (_context.Uzytkownicy.Any(u => u.Login == model.Login || u.Pesel == model.Pesel || u.Email == model.Email))
+                // Sprawdzamy czy taki PESEL już jest w tabeli Pacjenci
+                if (_context.Pacjenci.Any(p => p.Pesel == model.Pesel))
                 {
-                    ViewBag.Error = "Użytkownik z takimi danymi już istnieje.";
+                    ViewBag.Error = "Pacjent o tym numerze PESEL jest już w bazie.";
                     return View(model);
                 }
 
-                model.Haslo = PasswordHasher.HashPassword(model.Haslo);
-                model.Permisje = 4; 
-                model.CzyAktywny = true;
-
-                _context.Uzytkownicy.Add(model);
+                // Zapisujemy tylko te pola, które masz w bazie Pacjenci
+                _context.Pacjenci.Add(model);
                 _context.SaveChanges();
 
-                TempData["Success"] = $"Pacjent {model.Imie} {model.Nazwisko} został pomyślnie zarejestrowany.";
-
-                return RedirectToAction("PracownikLista"); 
+                TempData["Success"] = $"Pacjent {model.Imie} {model.Nazwisko} dodany pomyślnie.";
+                return RedirectToAction("PracownikLista");
             }
 
             return View(model);
         }
 
-
-
-
-
+        // --- PODGLĄD PACJENTA ---
         [HttpGet]
         public IActionResult PracownikPodglad(int id)
         {
-            var pacjent = _context.Uzytkownicy.FirstOrDefault(u => u.ID == id);
+            var pacjent = _context.Pacjenci.FirstOrDefault(p => p.ID == id);
+            if (pacjent == null) return NotFound();
+
+            return View("PracownikPodglad", pacjent);
+        }
+
+        // --- EDYCJA PACJENTA ---
+        [HttpGet]
+        public IActionResult EdytujPacjenta(int id)
+        {
+            var pacjent = _context.Pacjenci.FirstOrDefault(p => p.ID == id);
+            if (pacjent == null) return NotFound();
+
+            return View(pacjent);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EdytujPacjenta(Pacjent model)
+        {
+            // Ponowna walidacja PESEL przy edycji
+            if (!string.IsNullOrEmpty(model.Pesel))
+            {
+                if (!TryValidatePesel(model.Pesel, null, out _, out string peselError))
+                {
+                    ModelState.AddModelError("Pesel", peselError);
+                }
+            }
+
+            if (ModelState.IsValid)
+            {
+                var dbPacjent = _context.Pacjenci.FirstOrDefault(p => p.ID == model.ID);
+                if (dbPacjent != null)
+                {
+                    // Aktualizujemy tylko te 6 pól, które masz w bazie
+                    dbPacjent.Imie = model.Imie;
+                    dbPacjent.Nazwisko = model.Nazwisko;
+                    dbPacjent.Pesel = model.Pesel;
+                    dbPacjent.Adres = model.Adres;
+                    dbPacjent.Email = model.Email;
+                    dbPacjent.Telefon = model.Telefon;
+
+                    _context.SaveChanges();
+                    TempData["SuccessMessage"] = "Zmiany zostały zapisane.";
+                    return RedirectToAction("PracownikPodglad", new { id = dbPacjent.ID });
+                }
+            }
+
+            return View(model);
+        }
+
+        // --- LISTA PACJENTÓW (Wyszukiwanie po Twoich polach) ---
+        [HttpGet]
+        public IActionResult PracownikLista(string searchString)
+        {
+            var query = _context.Pacjenci.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchString))
+            {
+                string term = searchString.Trim().ToLower();
+                query = query.Where(p =>
+                    p.Imie.ToLower().Contains(term) ||
+                    p.Nazwisko.ToLower().Contains(term) ||
+                    p.Pesel.Contains(term) ||
+                    p.Adres.ToLower().Contains(term) ||
+                    p.Email.ToLower().Contains(term)
+                );
+            }
+
+            ViewBag.CurrentFilter = searchString;
+            return View(query.ToList());
+        }
+
+        //zapominanie pacjentow przez pracownika
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ZapomnijPacjenta(int id)
+        {
+            // Szukamy pacjenta w nowej tabeli kartotek
+            var pacjent = _context.Pacjenci.FirstOrDefault(p => p.ID == id);
 
             if (pacjent == null)
             {
                 return NotFound();
             }
 
-            if ((pacjent.Permisje & 4) == 0)
-            {
-                return Unauthorized(); 
-            }
+            // Usuwamy rekord z bazy danych
+            _context.Pacjenci.Remove(pacjent);
+            _context.SaveChanges();
 
-            return View("PracownikPodglad", pacjent);
-        }
-    
-        [HttpGet]
-        public IActionResult EdytujPacjenta(int id)
-        {
-            var pacjent = _context.Uzytkownicy.FirstOrDefault(u => u.ID == id);
-            if (pacjent == null) return NotFound();
+            // Komunikat dla pracownika
+            TempData["Success"] = "Dane pacjenta zostały trwale usunięte z kartoteki (prawo do zapomnienia).";
 
-            return View(pacjent);
+            return RedirectToAction("PracownikLista");
         }
 
-        // Edycja Pacjenta
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult EdytujPacjenta(Uzytkownik model)
-        {
-            ModelState.Remove("Plec");
-            ModelState.Remove("DataUrodzenia");
-
-            if (!string.IsNullOrEmpty(model.Pesel) && model.Pesel.Length == 11)
-            {
-                int genderDigit = int.Parse(model.Pesel.Substring(9, 1));
-                model.Plec = (genderDigit % 2 == 1) ? "Mężczyzna" : "Kobieta";
-
-                if (TryValidatePesel(model.Pesel, model.Plec, out DateTime dob, out string peselError))
-                {
-                    model.DataUrodzenia = dob;
-                }
-                else
-                {
-                    ModelState.AddModelError("Pesel", peselError);
-                }
-            }
-
-            if (ModelState.IsValid)
-            {
-                var dbUser = _context.Uzytkownicy.FirstOrDefault(u => u.ID == model.ID);
-                if (dbUser != null)
-                {
-                    dbUser.Imie = model.Imie;
-                    dbUser.Nazwisko = model.Nazwisko;
-                    dbUser.Email = model.Email;
-                    dbUser.Pesel = model.Pesel;
-                    dbUser.Adres = model.Adres;
-                    dbUser.Telefon = model.Telefon;
-                    dbUser.Plec = model.Plec;
-                    dbUser.DataUrodzenia = model.DataUrodzenia;
-
-                    _context.SaveChanges();
-                    TempData["SuccessMessage"] = "Dane pacjenta zostały zaktualizowane.";
-                    return RedirectToAction("PracownikPodglad", new { id = dbUser.ID });
-                }
-            }
-
-            return View(model);
-        }
-
-        [HttpGet]
-        public IActionResult PracownikLista(string searchString)
-        {
-            var query = _context.Uzytkownicy
-                .Where(u => (u.Permisje & 4) != 0 && u.CzyAktywny);
-
-            if (!string.IsNullOrWhiteSpace(searchString))
-            {
-                searchString = searchString.Trim();
-
-                var digitsOnly = new string(searchString.Where(char.IsDigit).ToArray());
-
-                bool isPesel = digitsOnly.Length == 11 && digitsOnly == searchString;
-                bool isPhone = digitsOnly.Length >= 7 && digitsOnly.Length <= 12;
-
-                if (isPesel)
-                {
-                    query = query.Where(u => u.Pesel == digitsOnly);
-                }
-                else if (isPhone)
-                {
-                    query = query.Where(u =>
-                        u.Telefon.Replace("+", "").Contains(digitsOnly));
-                }
-                else if (searchString.Any(char.IsLetter))
-                {
-                    var parts = searchString.ToLower().Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
-                    if (parts.Length == 1)
-                    {
-                        string term = parts[0];
-                        query = query.Where(u =>
-                            u.Imie.ToLower().Contains(term) ||
-                            u.Nazwisko.ToLower().Contains(term) ||
-                            u.Adres.ToLower().Contains(term));
-                    }
-                    else
-                    {
-                        string imie = parts[0];
-                        string nazwisko = parts[1];
-
-                        query = query.Where(u =>
-                            u.Imie.ToLower().Contains(imie) &&
-                            u.Nazwisko.ToLower().Contains(nazwisko));
-                    }
-                }
-                else
-                {
-                    query = query.Where(u =>
-                        u.Imie.Contains(searchString) ||
-                        u.Nazwisko.Contains(searchString) ||
-                        u.Pesel.Contains(searchString) ||
-                        u.Adres.Contains(searchString) ||
-                        u.Telefon.Contains(searchString));
-                }
-            }
-
-            ViewBag.CurrentFilter = searchString;
-
-            var pacjenci = query.ToList();
-            return View(pacjenci);
-        }
 
 
 

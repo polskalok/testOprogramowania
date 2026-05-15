@@ -1,5 +1,7 @@
-﻿@model IEnumerable<przychodnia.Models.Uzytkownik>
-
+﻿@model IEnumerable<przychodnia.Models.Pacjent>
+@{
+    ViewData["IsPatientList"] = true;
+}
 @{
     ViewData["Title"] = "Lista Pacjentów";
 }
@@ -102,7 +104,6 @@
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Login</th>
                 <th>Imię i Nazwisko</th>
                 <th>PESEL</th>
                 <th>Email</th>
@@ -114,7 +115,6 @@
             {
                 <tr>
                     <td>@user.ID</td>
-                    <td>@user.Login</td>
                     <td>@user.Imie @user.Nazwisko</td>
                     <td>@user.Pesel</td>
                     <td>@user.Email</td>
