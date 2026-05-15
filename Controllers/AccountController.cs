@@ -146,36 +146,96 @@ namespace przychodnia.Controllers
             return View();
         }
 
+        [HttpGet]
         public IActionResult AdminPanel(string searchString, bool showForgotten = false)
         {
-            var uzytkownicy = _context.Uzytkownicy.AsQueryable();
+            var login = HttpContext.Request.Cookies["AuthUser"];
+            if (string.IsNullOrEmpty(login)) return RedirectToAction("Login");
 
-            // filtr aktywnych uzytkownikow
+            var user = _context.Uzytkownicy.FirstOrDefault(u => u.Login == login);
+            if (user == null || (user.Permisje & 1) == 0) return Unauthorized();
+
+
+            var query = _context.Uzytkownicy.AsQueryable();
+
+
             if (showForgotten)
             {
-                uzytkownicy = uzytkownicy.Where(uzytkownik => !uzytkownik.CzyAktywny);
+                query = query.Where(u => !u.CzyAktywny);
             }
             else
             {
-                uzytkownicy = uzytkownicy.Where(uzytkownik => uzytkownik.CzyAktywny);
+                query = query.Where(u => u.CzyAktywny);
             }
 
-            // wyszukiwarka
-            if (!string.IsNullOrEmpty(searchString))
+
+            if (!string.IsNullOrWhiteSpace(searchString))
             {
-                uzytkownicy = uzytkownicy.Where(search => search.Nazwisko.ToLower().Contains(searchString)
-                                                  || search.Pesel.Contains(searchString)
-                                                  || search.Imie.ToLower().Contains(searchString)
-                                                  || search.Login.ToLower().Contains(searchString)
-                                            );
+                string term = searchString.Trim();
+                string termLower = term.ToLower();
+
+                var digitsOnly = new string(term.Where(char.IsDigit).ToArray());
+                bool startsWithPlus = term.StartsWith("+");
+
+                // PESEL
+                if (digitsOnly.Length == 11 && term.Length == 11 && !startsWithPlus)
+                {
+                    query = query.Where(u => u.Pesel == digitsOnly);
+                }
+                // TELEFON
+                else if ((digitsOnly.Length >= 7 && digitsOnly.Length <= 12) &&
+                         (term.All(char.IsDigit) || (startsWithPlus && term.Substring(1).All(char.IsDigit))))
+                {
+                    query = query.Where(u => u.Telefon != null && u.Telefon.Contains(digitsOnly));
+                }
+                else if (term.Any(char.IsLetter))
+                {
+                    var parts = term.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+                    if (parts.Length >= 2)
+                    {
+                        string p1 = parts[0].ToLower();
+                        string p2 = parts[1].ToLower();
+
+                        query = query.Where(u =>
+                            (u.Imie.ToLower().Contains(p1) && u.Nazwisko.ToLower().Contains(p2)) ||
+                            (u.Imie.ToLower().Contains(p2) && u.Nazwisko.ToLower().Contains(p1)) ||
+                            (u.Adres != null && u.Adres.ToLower().Contains(termLower)) ||
+                            u.Login.ToLower().Contains(termLower) ||
+                            u.Email.ToLower().Contains(termLower)
+                        );
+                    }
+                    else
+                    {
+                        query = query.Where(u =>
+                            u.Imie.ToLower().Contains(termLower) ||
+                            u.Nazwisko.ToLower().Contains(termLower) ||
+                            (u.Adres != null && u.Adres.ToLower().Contains(termLower)) ||
+                            u.Login.ToLower().Contains(termLower) ||
+                            u.Email.ToLower().Contains(termLower)
+                        );
+                    }
+                }
+            
+                else
+                {
+                    query = query.Where(u =>
+                        u.Imie.ToLower().Contains(termLower) ||
+                        u.Nazwisko.ToLower().Contains(termLower) ||
+                        u.Pesel.Contains(termLower) ||
+                        (u.Adres != null && u.Adres.ToLower().Contains(termLower)) ||
+                        (u.Telefon != null && u.Telefon.Contains(termLower)) ||
+                        u.Login.ToLower().Contains(termLower) ||
+                        u.Email.ToLower().Contains(termLower)
+                    );
+                }
             }
 
-            ViewBag.ShowForgotten = showForgotten;
             ViewBag.CurrentFilter = searchString;
+            ViewBag.ShowForgotten = showForgotten; 
 
-            return View(uzytkownicy.ToList());
+            return View(query.ToList());
         }
-
         public IActionResult Podglad(int id)
         {
             var user = _context.Uzytkownicy.FirstOrDefault(user => user.ID == id);
@@ -866,14 +926,22 @@ namespace przychodnia.Controllers
             return View(pacjent);
         }
 
+        // --- EDYCJA PACJENTA (Poprawka błędu płci) ---
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult EdytujPacjenta(Pacjent model)
         {
-            // Ponowna walidacja PESEL przy edycji
-            if (!string.IsNullOrEmpty(model.Pesel))
+            // Czyścimy błędy dla pól, których nie ma w modelu fizycznym
+            ModelState.Remove("Plec");
+            ModelState.Remove("DataUrodzenia");
+
+            if (!string.IsNullOrEmpty(model.Pesel) && model.Pesel.Length == 11)
             {
-                if (!TryValidatePesel(model.Pesel, null, out _, out string peselError))
+                // Wyliczamy płeć pomocniczą, by walidator nie wyrzucił błędu
+                int genderDigit = int.Parse(model.Pesel.Substring(9, 1));
+                string wyliczonaPlec = (genderDigit % 2 == 1) ? "Mężczyzna" : "Kobieta";
+
+                if (!TryValidatePesel(model.Pesel, wyliczonaPlec, out _, out string peselError))
                 {
                     ModelState.AddModelError("Pesel", peselError);
                 }
@@ -884,24 +952,24 @@ namespace przychodnia.Controllers
                 var dbPacjent = _context.Pacjenci.FirstOrDefault(p => p.ID == model.ID);
                 if (dbPacjent != null)
                 {
-                    // Aktualizujemy tylko te 6 pól, które masz w bazie
                     dbPacjent.Imie = model.Imie;
                     dbPacjent.Nazwisko = model.Nazwisko;
+                    dbPacjent.Email = model.Email;
                     dbPacjent.Pesel = model.Pesel;
                     dbPacjent.Adres = model.Adres;
-                    dbPacjent.Email = model.Email;
                     dbPacjent.Telefon = model.Telefon;
 
                     _context.SaveChanges();
-                    TempData["SuccessMessage"] = "Zmiany zostały zapisane.";
+                    TempData["SuccessMessage"] = "Dane pacjenta zostały zaktualizowane.";
                     return RedirectToAction("PracownikPodglad", new { id = dbPacjent.ID });
                 }
             }
-
             return View(model);
         }
 
-        // --- LISTA PACJENTÓW (Wyszukiwanie po Twoich polach) ---
+
+        // zaawansowane wyszukiwanie
+
         [HttpGet]
         public IActionResult PracownikLista(string searchString)
         {
@@ -909,20 +977,60 @@ namespace przychodnia.Controllers
 
             if (!string.IsNullOrWhiteSpace(searchString))
             {
-                string term = searchString.Trim().ToLower();
-                query = query.Where(p =>
-                    p.Imie.ToLower().Contains(term) ||
-                    p.Nazwisko.ToLower().Contains(term) ||
-                    p.Pesel.Contains(term) ||
-                    p.Adres.ToLower().Contains(term) ||
-                    p.Email.ToLower().Contains(term)
-                );
+                string term = searchString.Trim();
+                string termLower = term.ToLower();
+
+                var digitsOnly = new string(term.Where(char.IsDigit).ToArray());
+                bool startsWithPlus = term.StartsWith("+");
+
+                if (digitsOnly.Length == 11 && term.Length == 11 && !startsWithPlus)
+                {
+                    query = query.Where(p => p.Pesel == digitsOnly);
+                }
+                else if ((digitsOnly.Length >= 7 && digitsOnly.Length <= 12) &&
+                         (term.All(char.IsDigit) || (startsWithPlus && term.Substring(1).All(char.IsDigit))))
+                {
+                    query = query.Where(p => p.Telefon.Contains(digitsOnly));
+                }
+                else if (term.Any(char.IsLetter))
+                {
+                    var parts = term.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+                    if (parts.Length >= 2)
+                    {
+                        string p1 = parts[0].ToLower();
+                        string p2 = parts[1].ToLower();
+
+                        query = query.Where(p =>
+                            (p.Imie.ToLower().Contains(p1) && p.Nazwisko.ToLower().Contains(p2)) ||
+                            (p.Imie.ToLower().Contains(p2) && p.Nazwisko.ToLower().Contains(p1)) ||
+                            p.Adres.ToLower().Contains(termLower) 
+                        );
+                    }
+                    else
+                    {
+                        query = query.Where(p =>
+                            p.Imie.ToLower().Contains(termLower) ||
+                            p.Nazwisko.ToLower().Contains(termLower) ||
+                            p.Adres.ToLower().Contains(termLower)
+                        );
+                    }
+                }
+                else
+                {
+                    query = query.Where(p =>
+                        p.Imie.ToLower().Contains(termLower) ||
+                        p.Nazwisko.ToLower().Contains(termLower) ||
+                        p.Pesel.Contains(termLower) ||
+                        p.Adres.ToLower().Contains(termLower) ||
+                        p.Telefon.Contains(termLower)
+                    );
+                }
             }
 
             ViewBag.CurrentFilter = searchString;
             return View(query.ToList());
         }
-
         //zapominanie pacjentow przez pracownika
 
         [HttpPost]

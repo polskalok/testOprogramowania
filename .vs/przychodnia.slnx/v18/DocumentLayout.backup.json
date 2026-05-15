@@ -94,8 +94,7 @@
               "RelativeToolTip": "Views\\Shared\\_Layout.cshtml",
               "ViewState": "AgIAAFEAAAAAAAAAAAAkwGUAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-05-03T12:18:13.397Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-03T12:18:13.397Z"
             },
             {
               "$type": "Document",
@@ -107,8 +106,7 @@
               "RelativeToolTip": "Views\\Account\\AdminPanel.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-05-03T10:21:56.173Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-03T10:21:56.173Z"
             },
             {
               "$type": "Document",
@@ -137,8 +135,7 @@
               "RelativeToolTip": "Views\\Account\\PracownikLista.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-05-03T10:03:57.591Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-03T10:03:57.591Z"
             },
             {
               "$type": "Document",
@@ -150,8 +147,7 @@
               "RelativeToolTip": "Controllers\\AccountController.cs",
               "ViewState": "AgIAAKcDAAAAAAAAAAAAALsDAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-27T14:03:50.136Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-27T14:03:50.136Z"
             },
             {
               "$type": "Document",
@@ -163,8 +159,7 @@
               "RelativeToolTip": "Views\\Account\\PracownikDodaj.cshtml",
               "ViewState": "AgIAAB0AAAAAAAAAAAAIwD0AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-05-03T10:03:35.546Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-03T10:03:35.546Z"
             },
             {
               "$type": "Document",
@@ -176,8 +171,7 @@
               "RelativeToolTip": "Views\\Account\\PracownikPanel.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-05-03T09:55:15.975Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-03T09:55:15.975Z"
             },
             {
               "$type": "Document",
@@ -189,8 +183,7 @@
               "RelativeToolTip": "Views\\Account\\EdytujPacjenta.cshtml",
               "ViewState": "AgIAAAkAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-05-03T12:05:57.947Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-03T12:05:57.947Z"
             },
             {
               "$type": "Document",
@@ -202,8 +195,7 @@
               "RelativeToolTip": "Models\\Uzytkownik.cs",
               "ViewState": "AgIAAB4AAAAAAAAAAAAowDcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-26T13:56:28.615Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-26T13:56:28.615Z"
             },
             {
               "$type": "Document",
@@ -215,8 +207,7 @@
               "RelativeToolTip": "Models\\Pacjent.cs",
               "ViewState": "AgIAAAwAAAAAAAAAAAA5wCEAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-15T11:37:58.151Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-15T11:37:58.151Z"
             },
             {
               "$type": "Document",
@@ -228,8 +219,7 @@
               "RelativeToolTip": "Data\\ApplicationDbContext.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAA0AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-15T11:39:45.997Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-15T11:39:45.997Z"
             },
             {
               "$type": "Document",

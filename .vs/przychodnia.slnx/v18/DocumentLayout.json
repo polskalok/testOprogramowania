@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\polskalok\\documents\\github\\testoprogramowania\\views\\account\\pracownikpodglad.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:views\\account\\pracownikpodglad.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\polskalok\\documents\\github\\testoprogramowania\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\polskalok\\documents\\github\\testoprogramowania\\views\\account\\pracownikpodglad.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:views\\account\\pracownikpodglad.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\polskalok\\documents\\github\\testoprogramowania\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
@@ -74,7 +74,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
@@ -83,6 +83,10 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{40ea2e6b-2121-4bb8-a43e-c83c04b51041}"
             },
             {
               "$type": "Document",
@@ -94,8 +98,7 @@
               "RelativeToolTip": "Views\\Shared\\_Layout.cshtml",
               "ViewState": "AgIAAFEAAAAAAAAAAAAkwGUAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-05-03T12:18:13.397Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-03T12:18:13.397Z"
             },
             {
               "$type": "Document",
@@ -107,12 +110,11 @@
               "RelativeToolTip": "Views\\Account\\AdminPanel.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-05-03T10:21:56.173Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-03T10:21:56.173Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "PracownikPodglad.cshtml",
               "DocumentMoniker": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\Views\\Account\\PracownikPodglad.cshtml",
               "RelativeDocumentMoniker": "Views\\Account\\PracownikPodglad.cshtml",
@@ -124,10 +126,6 @@
               "EditorCaption": ""
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{40ea2e6b-2121-4bb8-a43e-c83c04b51041}"
-            },
-            {
               "$type": "Document",
               "DocumentIndex": 3,
               "Title": "PracownikLista.cshtml",
@@ -137,18 +135,17 @@
               "RelativeToolTip": "Views\\Account\\PracownikLista.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-05-03T10:03:57.591Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-03T10:03:57.591Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "AccountController.cs",
               "DocumentMoniker": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\Controllers\\AccountController.cs",
               "RelativeDocumentMoniker": "Controllers\\AccountController.cs",
               "ToolTip": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\Controllers\\AccountController.cs",
               "RelativeToolTip": "Controllers\\AccountController.cs",
-              "ViewState": "AgIAAKcDAAAAAAAAAAAAALsDAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAANMAAAAAAAAAAAAAAO0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-27T14:03:50.136Z",
               "EditorCaption": ""
@@ -163,8 +160,7 @@
               "RelativeToolTip": "Views\\Account\\PracownikDodaj.cshtml",
               "ViewState": "AgIAAB0AAAAAAAAAAAAIwD0AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-05-03T10:03:35.546Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-03T10:03:35.546Z"
             },
             {
               "$type": "Document",
@@ -176,8 +172,7 @@
               "RelativeToolTip": "Views\\Account\\PracownikPanel.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-05-03T09:55:15.975Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-03T09:55:15.975Z"
             },
             {
               "$type": "Document",
@@ -189,8 +184,7 @@
               "RelativeToolTip": "Views\\Account\\EdytujPacjenta.cshtml",
               "ViewState": "AgIAAAkAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-05-03T12:05:57.947Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-03T12:05:57.947Z"
             },
             {
               "$type": "Document",
@@ -202,8 +196,7 @@
               "RelativeToolTip": "Models\\Uzytkownik.cs",
               "ViewState": "AgIAAB4AAAAAAAAAAAAowDcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-26T13:56:28.615Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-26T13:56:28.615Z"
             },
             {
               "$type": "Document",
@@ -215,8 +208,7 @@
               "RelativeToolTip": "Models\\Pacjent.cs",
               "ViewState": "AgIAAAwAAAAAAAAAAAA5wCEAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-15T11:37:58.151Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-15T11:37:58.151Z"
             },
             {
               "$type": "Document",
@@ -228,8 +220,7 @@
               "RelativeToolTip": "Data\\ApplicationDbContext.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAA0AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-15T11:39:45.997Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-15T11:39:45.997Z"
             },
             {
               "$type": "Document",
