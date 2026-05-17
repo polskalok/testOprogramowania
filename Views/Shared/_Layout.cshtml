@@ -90,22 +90,16 @@
                     Wyloguj (@Context.Request.Cookies["AuthUser"])
                 </button>
             </form>
+            
+            <a asp-controller="Wizyta" asp-action="ListaWizyt" class="nav-btn">Moje Wizyty</a>
+            <a asp-controller="Wizyta" asp-action="Rejestruj" class="nav-btn">Nowa Rejestracja</a>
         }
         else
         {
             <a asp-controller="Account" asp-action="Login" class="nav-btn">Zaloguj</a>
+            <a href="#" class="nav-btn">O nas</a>
+            <a href="#" class="nav-btn">Kontakt</a>
         }
-
-        @if (ViewData["IsAdminPanel"] is bool isAdmin && isAdmin)
-        {
-            <a asp-controller="Account" asp-action="PracownikLista" class="nav-btn" style="background-color: var(--dark-navy); color: white;">Lista Pacjentów</a>
-        }
-        else
-        {
-            <a href="#" class="nav-btn">Przycisk 3</a>
-        }
-        <a href="#" class="nav-btn">Przycisk 4</a>
-        <a href="#" class="nav-btn">Przycisk 5</a>
     </nav>
     <main class="main-content">
         @RenderBody()
