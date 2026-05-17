@@ -1,0 +1,148 @@
+﻿@model przychodnia.Models.Wizyta
+
+<div class="container mt-4" style="max-width: 800px;">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card shadow-sm border-0">
+        <div class="card-header text-white" style="background-color: #1B263B; padding: 20px;">
+            <h3 class="m-0"><i class="fas fa-calendar-plus"></i> Nowa rejestracja wizyty (Przypadek 22)</h3>
+        </div>
+        <div class="card-body p-4">
+            <form asp-action="Rejestruj" method="post" id="formWizyta">
+                @Html.AntiForgeryToken()
+
+                <div class="mb-4 bg-light p-3 rounded border">
+                    <label class="form-label h6 text-secondary">1. Wybierz pacjenta (Wyszukiwanie po Imieniu, Nazwisku lub PESEL)</label>
+                    <input type="text" id="wyszukiwarkaPacjenta" class="form-control mb-2" placeholder="Zacznij wpisywać dane pacjenta..." />
+                    
+                    <select asp-for="PacjentID" id="selectPacjent" class="form-select" size="4">
+                        @foreach (var p in ViewBag.Pacjenci)
+                        {
+                            <option value="@p.ID" data-szukaj="@p.Imie.ToLower() @p.Nazwisko.ToLower() @p.Pesel">
+                                @p.Imie @p.Nazwisko — PESEL: @p.Pesel
+                            </option>
+                        }
+                    </select>
+                    <span asp-validation-for="PacjentID" class="text-danger small"></span>
+
+                    <div id="komunikatBrakPacjenta" class="mt-2 text-muted small d-none">
+                        Nie znaleziono takiego pacjenta.
+                        <a href="@Url.Action("DodajPacjenta", "Account")" class="btn btn-sm btn-outline-primary ms-2">
+                            <i class="fas fa-user-plus"></i> Zarejestruj pacjenta
+                        </a>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label font-weight-bold">2. Specjalizacja lekarza</label>
+                        <select id="selectSpecjalizacja" class="form-select">
+                            <option value="">-- Wybierz specjalizację --</option>
+                            @foreach (var spec in ((List<Uzytkownik>)ViewBag.Lekarze).Select(l => l.Specjalizacja).Distinct())
+                            {
+                                if (!string.IsNullOrEmpty(spec))
+                                {
+                                    <option value="@spec">@spec</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label font-weight-bold">3. Lekarz medyczny</label>
+                        <select asp-for="LekarzID" id="selectLekarz" class="form-select">
+                            <option value="">-- Wybierz lekarza --</option>
+                            @foreach (var l in ViewBag.Lekarze)
+                            {
+                                <option value="@l.ID" data-spec="@l.Specjalizacja">Dr @l.Imie @l.Nazwisko</option>
+                            }
+                        </select>
+                        <span asp-validation-for="LekarzID" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label font-weight-bold">4. Data i godzina rozpoczęcia</label>
+                        <input asp-for="DataRozpoczecia" type="datetime-local" class="form-control" />
+                        <span asp-validation-for="DataRozpoczecia" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label font-weight-bold">5. Przypisany gabinet</label>
+                        <select asp-for="GabinetID" class="form-select">
+                            <option value="">-- Wybierz wolny gabinet --</option>
+                            @foreach (var g in ViewBag.Gabinety)
+                            {
+                                <option value="@g.ID">@g.Numer (@g.Specjalnosc)</option>
+                            }
+                        </select>
+                        <span asp-validation-for="GabinetID" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <hr />
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="@Url.Action("AdminPanel", "Account")" class="btn btn-outline-secondary px-4">Anuluj</a>
+                    <button type="submit" class="btn btn-success px-5" style="background-color: #1B263B; border: none;">
+                        <i class="fas fa-save"></i> Zatwierdź rejestrację
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        // 1. Dynamiczne wyszukiwanie pacjenta w czasie rzeczywistym (Imię, Nazwisko, PESEL)
+        document.getElementById('wyszukiwarkaPacjenta').addEventListener('input', function (e) {
+            let filtr = e.target.value.toLowerCase();
+            let opcje = document.querySelectorAll('#selectPacjent option');
+            let znaleziono = false;
+
+            opcje.forEach(opt => {
+                let tekstDoSzukania = opt.getAttribute('data-szukaj');
+                if (tekstDoSzukania.includes(filtr)) {
+                    opt.style.display = "";
+                    znaleziono = true;
+                } else {
+                    opt.style.display = "none";
+                }
+            });
+
+            // Obsługa przepływu 3a (wyświetlenie przycisku dodawania pacjenta)
+            let komunikat = document.getElementById('komunikatBrakPacjenta');
+            if (!znaleziono && filtr.length > 0) {
+                komunikat.classList.remove('d-none');
+            } else {
+                komunikat.classList.add('d-none');
+            }
+        });
+
+        // 2. Filtrowanie lekarzy na podstawie wybranej specjalizacji
+        document.getElementById('selectSpecjalizacja').addEventListener('change', function (e) {
+            let wybranaSpec = e.target.value;
+            let opcjeLekarzy = document.querySelectorAll('#selectLekarz option');
+
+            opcjeLekarzy.forEach(opt => {
+                let lekarzSpec = opt.getAttribute('data-spec');
+                if (wybranaSpec === "" || lekarzSpec === wybranaSpec || opt.value === "") {
+                    opt.style.display = "";
+                } else {
+                    opt.style.display = "none";
+                }
+            });
+            document.getElementById('selectLekarz').value = ""; // reset wyboru lekarza
+        });
+    </script>
+}

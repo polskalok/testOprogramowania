@@ -1,0 +1,144 @@
+﻿@model List<przychodnia.Models.Wizyta>
+
+<div class="container mt-4">
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header text-white d-flex justify-content-between align-items-center" style="background-color: #1B263B;">
+            <h4 class="m-0"><i class="fas fa-list"></i> Harmonogram i wyszukiwanie wizyt</h4>
+            @if (ViewBag.CzyLekarz == false)
+            {
+                <a href="@Url.Action("Rejestruj", "Wizyta")" class="btn btn-sm btn-light font-weight-bold text-dark">
+                    <i class="fas fa-plus"></i> Nowa rejestracja
+                </a>
+            }
+        </div>
+        
+        <div class="card-body bg-light border-bottom">
+            <form asp-action="ListaWizyt" method="get" class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label small font-weight-bold">Pacjent (Imię, Nazwisko lub PESEL)</label>
+                    <input type="text" name="szukajPacjenta" class="form-control" value="@ViewBag.AktualnyPacjent" placeholder="Wyszukaj pacjenta..." />
+                </div>
+
+                @if (ViewBag.CzyLekarz == false)
+                {
+                    <div class="col-md-3">
+                        <label class="form-label small font-weight-bold">Lekarz</label>
+                        <select name="szukajLekarza" class="form-select">
+                            <option value="">-- Wszyscy --</option>
+                            @foreach (var l in ViewBag.WszyscyLekarze)
+                            {
+                                <option value="@l.ID" selected="@(ViewBag.AktualnyLekarz == l.ID ? "selected" : null)">
+                                    Dr @l.Imie @l.Nazwisko
+                                </option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small font-weight-bold">Specjalizacja</label>
+                        <select name="szukajSpecjalizacja" class="form-select">
+                            <option value="">-- Wszystkie --</option>
+                            @foreach (var spec in ViewBag.WszystkieSpecjalizacje)
+                            {
+                                <option value="@spec" selected="@(ViewBag.AktualnaSpecjalizacja == spec ? "selected" : null)">
+                                    @spec
+                                </option>
+                            }
+                        </select>
+                    </div>
+                }
+
+                <div class="col-md-2">
+                    <label class="form-label small font-weight-bold">Data od</label>
+                    <input type="date" name="dataOd" class="form-control" value="@ViewBag.AktualnaDataOd" />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small font-weight-bold">Data do</label>
+                    <input type="date" name="dataDo" class="form-control" value="@ViewBag.AktualnaDataDo" />
+                </div>
+
+                <div class="col-12 d-flex justify-content-end gap-2 mt-3">
+                    <a href="@Url.Action("ListaWizyt")" class="btn btn-outline-secondary btn-sm">Wyczyść filtry</a>
+                    <button type="submit" class="btn btn-primary btn-sm px-4" style="background-color: #1B263B; border: none;">
+                        <i class="fas fa-search"></i> Szukaj
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card-body p-0">
+            @if (ViewBag.Komunikat != null)
+            {
+                <div class="alert alert-warning m-4 text-center" role="alert">
+                    <i class="fas fa-exclamation-triangle"></i> @ViewBag.Komunikat
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped m-0 align-middle">
+                        <thead class="table-dark" style="background-color: #2c3e50;">
+                            <tr>
+                                <th>Data i godzina</th>
+                                <th>Pacjent</th>
+                                <th>Lekarz</th>
+                                <th>Specjalizacja</th>
+                                <th>Gabinet</th>
+                                <th>Status</th>
+                                @if (ViewBag.CzyLekarz == true)
+                                {
+                                    <th class="text-center">Akcja</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var w in Model)
+                            {
+                                <tr>
+                                    <td class="font-weight-bold">@w.DataRozpoczecia.ToString("dd.MM.yyyy HH:mm")</td>
+                                    <td>
+                                        <span class="d-block font-weight-bold">@w.Pacjent!.Imie @w.Pacjent.Nazwisko</span>
+                                        <small class="text-muted">PESEL: @w.Pacjent.Pesel</small>
+                                    </td>
+                                    <td>Dr @w.Lekarz!.Imie @w.Lekarz.Nazwisko</td>
+                                    <td><span class="badge bg-secondary">@w.Lekarz.Specjalizacja</span></td>
+                                    <td><strong>@w.Gabinet!.Numer</strong> <small class="text-muted">(@w.Gabinet.Specjalnosc)</small></td>
+                                    <td>
+                                        @if (w.Status == "Zarejestrowana")
+                                        {
+                                            <span class="badge bg-primary">Zarejestrowana</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-success">Zrealizowana</span>
+                                        }
+                                    </td>
+                                    @if (ViewBag.CzyLekarz == true)
+                                    {
+                                        <td class="text-center">
+                                            @if (w.Status == "Zarejestrowana" && w.DataRozpoczecia <= DateTime.Now)
+                                            {
+                                                <a href="@Url.Action("UzupelnijWyniki", "Wizyta", new { id = w.ID })" class="btn btn-sm btn-success">
+                                                    <i class="fas fa-file-medical"></i> Przyjmij pacjenta
+                                                </a>
+                                            }
+                                            else if (w.Status == "Zrealizowana")
+                                            {
+                                                <a href="@Url.Action("UzupelnijWyniki", "Wizyta", new { id = w.ID })" class="btn btn-sm btn-outline-info">
+                                                    <i class="fas fa-eye"></i> Podgląd karty
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted small">Oczekuje (Przyszła)</span>
+                                            }
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>

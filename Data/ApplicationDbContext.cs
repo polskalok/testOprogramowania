@@ -14,6 +14,8 @@ namespace przychodnia.Data
         
         public DbSet<Uzytkownik> Uzytkownicy { get; set; }
         public DbSet<Pacjent> Pacjenci { get; set; }
+        public DbSet<Gabinet> Gabinety { get; set; }
+        public DbSet<Wizyta> Wizyty { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

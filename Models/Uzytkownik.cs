@@ -51,5 +51,9 @@ namespace przychodnia.Models
 
        
         public string? OstatniaHasla { get; set; } = string.Empty;
+
+        public string Specjalizacja { get; set; } = string.Empty;
+
+        
     }
 }

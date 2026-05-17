@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\przychodnia.Tests\\przychodnia.Tests.csproj": {}
+    "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\przychodnia.Tests\\przychodnia.Tests.csproj": {}
   },
   "projects": {
-    "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\przychodnia.csproj": {
+    "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\przychodnia.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\przychodnia.csproj",
+        "projectUniqueName": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\przychodnia.csproj",
         "projectName": "przychodnia",
-        "projectPath": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\przychodnia.csproj",
-        "packagesPath": "C:\\Users\\polskalok\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\obj\\",
+        "projectPath": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\przychodnia.csproj",
+        "packagesPath": "C:\\Users\\Kito\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\polskalok\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Kito\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,12 +26,10 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
-            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {}
           }
@@ -50,7 +48,6 @@
       },
       "frameworks": {
         "net10.0": {
-          "framework": "net10.0",
           "targetAlias": "net10.0",
           "dependencies": {
             "Microsoft.EntityFrameworkCore.Design": {
@@ -101,7 +98,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.203/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.AspNetCore": "(,10.0.32767]",
             "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",
@@ -519,20 +516,20 @@
         }
       }
     },
-    "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\przychodnia.Tests\\przychodnia.Tests.csproj": {
+    "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\przychodnia.Tests\\przychodnia.Tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\przychodnia.Tests\\przychodnia.Tests.csproj",
+        "projectUniqueName": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\przychodnia.Tests\\przychodnia.Tests.csproj",
         "projectName": "przychodnia.Tests",
-        "projectPath": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\przychodnia.Tests\\przychodnia.Tests.csproj",
-        "packagesPath": "C:\\Users\\polskalok\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\przychodnia.Tests\\obj\\",
+        "projectPath": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\przychodnia.Tests\\przychodnia.Tests.csproj",
+        "packagesPath": "C:\\Users\\Kito\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\przychodnia.Tests\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\polskalok\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Kito\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -541,16 +538,14 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
-            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\przychodnia.csproj": {
-                "projectPath": "C:\\Users\\polskalok\\Documents\\GitHub\\testOprogramowania\\przychodnia.csproj"
+              "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\przychodnia.csproj": {
+                "projectPath": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\przychodnia.csproj"
               }
             }
           }
@@ -569,7 +564,6 @@
       },
       "frameworks": {
         "net10.0": {
-          "framework": "net10.0",
           "targetAlias": "net10.0",
           "dependencies": {
             "Microsoft.EntityFrameworkCore.InMemory": {
@@ -613,7 +607,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.203/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",

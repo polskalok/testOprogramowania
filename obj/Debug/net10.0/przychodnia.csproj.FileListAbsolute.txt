@@ -774,8 +774,6 @@ C:\Users\Kito\Documents\GitHub\testOprogramowania\obj\Debug\net10.0\compressed\b
 C:\Users\Kito\Documents\GitHub\testOprogramowania\obj\Debug\net10.0\compressed\kv97ssrc5z-{0}-muycvpuwrr-muycvpuwrr.gz
 C:\Users\Kito\Documents\GitHub\testOprogramowania\obj\Debug\net10.0\compressed\p9r627hz8v-{0}-87fc7y1x7t-87fc7y1x7t.gz
 C:\Users\Kito\Documents\GitHub\testOprogramowania\obj\Debug\net10.0\compressed\ckqgjkkkzj-{0}-jfsiqqwiad-jfsiqqwiad.gz
-C:\Users\Kito\Documents\GitHub\testOprogramowania\obj\Debug\net10.0\compressed\ochgt1ikxb-{0}-mdrzq0kfc4-mdrzq0kfc4.gz
-C:\Users\Kito\Documents\GitHub\testOprogramowania\obj\Debug\net10.0\compressed\hem0r65rpz-{0}-mdrzq0kfc4-mdrzq0kfc4.gz
 C:\Users\Kito\Documents\GitHub\testOprogramowania\obj\Debug\net10.0\staticwebassets.build.json
 C:\Users\Kito\Documents\GitHub\testOprogramowania\obj\Debug\net10.0\staticwebassets.build.json.cache
 C:\Users\Kito\Documents\GitHub\testOprogramowania\obj\Debug\net10.0\staticwebassets.development.json
@@ -2090,3 +2088,5 @@ C:\Users\polskalok\Documents\GitHub\testOprogramowania\obj\Debug\net10.0\refint\
 C:\Users\polskalok\Documents\GitHub\testOprogramowania\obj\Debug\net10.0\przychodnia.pdb
 C:\Users\polskalok\Documents\GitHub\testOprogramowania\obj\Debug\net10.0\przychodnia.genruntimeconfig.cache
 C:\Users\polskalok\Documents\GitHub\testOprogramowania\obj\Debug\net10.0\ref\przychodnia.dll
+C:\Users\Kito\Documents\GitHub\testOprogramowania\obj\Debug\net10.0\compressed\ochgt1ikxb-{0}-jvtlygsfut-jvtlygsfut.gz
+C:\Users\Kito\Documents\GitHub\testOprogramowania\obj\Debug\net10.0\compressed\hem0r65rpz-{0}-jvtlygsfut-jvtlygsfut.gz
