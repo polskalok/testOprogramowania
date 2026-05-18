@@ -17,9 +17,6 @@ namespace przychodnia.Controllers
             _context = context;
         }
 
-        // =========================================================================
-        // --- PUNKT 22: REJESTRACJA WIZYTY (GET) ---
-        // =========================================================================
         [HttpGet]
         public IActionResult Rejestruj()
         {
@@ -39,21 +36,46 @@ namespace przychodnia.Controllers
             return View(new Wizyta { DataRozpoczecia = DateTime.Now.AddDays(1) });
         }
 
-        // =========================================================================
-        // --- PUNKT 22: REJESTRACJA WIZYTY (POST) ---
-        // =========================================================================
+
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Rejestruj(Wizyta model)
         {
+            
+            if (model.PacjentID == null || model.PacjentID == 0)
+            {
+                ModelState.AddModelError("PacjentID", "Musisz wybrać pacjenta z listy.");
+            }
+            if (model.LekarzID == null || model.LekarzID == 0)
+            {
+                ModelState.AddModelError("LekarzID", "Wybór lekarza jest wymagany.");
+            }
+            if (model.GabinetID == null || model.GabinetID == 0)
+            {
+                ModelState.AddModelError("GabinetID", "Wybór gabinetu jest wymagany.");
+            }
+
+            
+            model.DataRozpoczecia = new DateTime(
+                model.DataRozpoczecia.Year,
+                model.DataRozpoczecia.Month,
+                model.DataRozpoczecia.Day,
+                model.DataRozpoczecia.Hour,
+                model.DataRozpoczecia.Minute,
+                0, 0
+            );
+
             model.DataZakonczenia = model.DataRozpoczecia.AddMinutes(30);
 
+           
             if (!ModelState.IsValid)
             {
                 PrzygotujDaneDoFormularza();
                 return View(model);
             }
 
+           
             bool konflikt = _context.Wizyty.Any(w =>
                 w.Status == "Zarejestrowana" &&
                 (w.GabinetID == model.GabinetID || w.LekarzID == model.LekarzID) &&
@@ -67,6 +89,7 @@ namespace przychodnia.Controllers
                 return View(model);
             }
 
+            
             model.Status = "Zarejestrowana";
             _context.Wizyty.Add(model);
             _context.SaveChanges();
@@ -75,9 +98,6 @@ namespace przychodnia.Controllers
             return RedirectToAction("Rejestruj");
         }
 
-        // =========================================================================
-        // --- PUNKT 23 & 24: PRZEGLĄD I WYSZUKIWANIE WIZYT ---
-        // =========================================================================
         [HttpGet]
         public IActionResult ListaWizyt(string szukajPacjenta, int? szukajLekarza, string szukajSpecjalizacja, DateTime? dataOd, DateTime? dataDo)
         {
@@ -169,9 +189,7 @@ namespace przychodnia.Controllers
             return View(wizyty);
         }
 
-        // =========================================================================
-        // --- PUNKT 25: REJESTRACJA WYNIKÓW WIZYTY (GET) ---
-        // =========================================================================
+        
         [HttpGet]
         public IActionResult UzupelnijWyniki(int id)
         {
@@ -210,9 +228,7 @@ namespace przychodnia.Controllers
             return View(wizyta);
         }
 
-        // =========================================================================
-        // --- PUNKT 25: REJESTRACJA WYNIKÓW WIZYTY (POST) ---
-        // =========================================================================
+  
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult UzupelnijWyniki(int id, string opisDoleglywosci, string zalecenia, string przepisaneLeki)
@@ -232,7 +248,7 @@ namespace przychodnia.Controllers
             if (wizyta == null) return NotFound();
             if (wizyta.LekarzID != zalogowanyId) return Forbid();
 
-            // 5a. Walidacja wyjątków: Opis dolegliwości oraz zalecenia nie mogą pozostać puste
+            
             if (string.IsNullOrWhiteSpace(opisDoleglywosci) || string.IsNullOrWhiteSpace(zalecenia))
             {
                 ModelState.AddModelError("", "Opis dolegliwości oraz zalecenia nie mogą pozostać puste.");
@@ -247,7 +263,7 @@ namespace przychodnia.Controllers
             wizyta.OpisDoleglywosci = opisDoleglywosci;
             wizyta.Zalecenia = zalecenia;
             wizyta.PrzepisaneLeki = przepisaneLeki;
-            wizyta.Status = "Zrealizowana"; // Nieodwracalna zmiana statusu
+            wizyta.Status = "Zrealizowana"; 
 
             _context.SaveChanges();
 

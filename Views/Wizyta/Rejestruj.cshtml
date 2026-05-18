@@ -69,7 +69,7 @@
                 <div class="row mb-4">
                     <div class="col-md-6">
                         <label class="form-label font-weight-bold">4. Data i godzina rozpoczęcia</label>
-                        <input asp-for="DataRozpoczecia" type="datetime-local" class="form-control" />
+                        <input asp-for="DataRozpoczecia" type="datetime-local" class="form-control" step="60" value="@Model.DataRozpoczecia.ToString("yyyy-MM-ddTHH:mm")" />
                         <span asp-validation-for="DataRozpoczecia" class="text-danger small"></span>
                     </div>
                     <div class="col-md-6">
@@ -88,7 +88,8 @@
                 <hr />
 
                 <div class="d-flex justify-content-between mt-4">
-                    <a href="@Url.Action("AdminPanel", "Account")" class="btn btn-outline-secondary px-4">Anuluj</a>
+                    <a href="@Url.Action("ListaWizyt", "Wizyta")" class="btn btn-outline-secondary px-4">Anuluj</a>
+    
                     <button type="submit" class="btn btn-success px-5" style="background-color: #1B263B; border: none;">
                         <i class="fas fa-save"></i> Zatwierdź rejestrację
                     </button>
@@ -104,7 +105,7 @@
     }
 
     <script>
-        // 1. Dynamiczne wyszukiwanie pacjenta w czasie rzeczywistym (Imię, Nazwisko, PESEL)
+        
         document.getElementById('wyszukiwarkaPacjenta').addEventListener('input', function (e) {
             let filtr = e.target.value.toLowerCase();
             let opcje = document.querySelectorAll('#selectPacjent option');
@@ -112,7 +113,7 @@
 
             opcje.forEach(opt => {
                 let tekstDoSzukania = opt.getAttribute('data-szukaj');
-                if (tekstDoSzukania.includes(filtr)) {
+                if (tekstDoSzukania && tekstDoSzukania.includes(filtr)) {
                     opt.style.display = "";
                     znaleziono = true;
                 } else {
@@ -120,7 +121,6 @@
                 }
             });
 
-            // Obsługa przepływu 3a (wyświetlenie przycisku dodawania pacjenta)
             let komunikat = document.getElementById('komunikatBrakPacjenta');
             if (!znaleziono && filtr.length > 0) {
                 komunikat.classList.remove('d-none');
@@ -129,7 +129,7 @@
             }
         });
 
-        // 2. Filtrowanie lekarzy na podstawie wybranej specjalizacji
+       
         document.getElementById('selectSpecjalizacja').addEventListener('change', function (e) {
             let wybranaSpec = e.target.value;
             let opcjeLekarzy = document.querySelectorAll('#selectLekarz option');
@@ -142,7 +142,7 @@
                     opt.style.display = "none";
                 }
             });
-            document.getElementById('selectLekarz').value = ""; // reset wyboru lekarza
+            document.getElementById('selectLekarz').value = "";
         });
     </script>
 }
