@@ -16,6 +16,8 @@ namespace przychodnia.Models
         [RegularExpression(@"^[a-zA-Z\u0100-\u017F\s-]+$", ErrorMessage = "Nazwisko może zawierać tylko litery i myślnik.")]
         public string Nazwisko { get; set; } = string.Empty;
 
+
+        [Required(ErrorMessage = "Pole wymagane")]
         public string Adres { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Numer PESEL jest wymagany.")]

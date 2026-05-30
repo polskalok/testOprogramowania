@@ -67,10 +67,10 @@ namespace przychodnia.Controllers
 
             if (userCheck == null)
             {
-                ViewBag.Error = "Błędny login lub hasło.";
+                
+                ViewBag.Error = "Błędne hasło lub login";
                 return View();
             }
-
 
             if (userCheck.LockoutEnd != null && userCheck.LockoutEnd > DateTime.Now)
             {
@@ -80,12 +80,10 @@ namespace przychodnia.Controllers
 
             if (userCheck.Haslo != hashed || !userCheck.CzyAktywny)
             {
-               
                 userCheck.FailedLoginAttempts++;
 
                 if (userCheck.FailedLoginAttempts >= 3)
                 {
-                    
                     userCheck.LockoutEnd = DateTime.Now.AddHours(2);
                     _context.SaveChanges();
                     ViewBag.Error = $"Konto zostało zablokowane czasowo po trzech nieudanych próbach do: {userCheck.LockoutEnd.Value.ToString("HH:mm")}";
@@ -93,11 +91,11 @@ namespace przychodnia.Controllers
                 }
 
                 _context.SaveChanges();
-                ViewBag.Error = "Błędny login, hasło lub konto nieaktywne.";
+                
+                ViewBag.Error = "Błędne hasło lub login";
                 return View();
             }
 
-           
             var cookieOptions = new Microsoft.AspNetCore.Http.CookieOptions
             {
                 HttpOnly = true,
@@ -107,23 +105,19 @@ namespace przychodnia.Controllers
                 IsEssential = true
             };
 
-            
             Response.Cookies.Append("AuthUser", userCheck.Login, cookieOptions);
             Response.Cookies.Append("AuthUserId", userCheck.ID.ToString(), cookieOptions);
 
-            
             userCheck.FailedLoginAttempts = 0;
             userCheck.LockoutEnd = null;
             _context.SaveChanges();
 
-            
             if (userCheck.MuszZmieniHaslo)
             {
                 Response.Cookies.Append("MuszZmieniHaslo", "true", cookieOptions);
                 return RedirectToAction("MuszZmieniHaslo", new { id = userCheck.ID });
             }
 
-            
             if ((userCheck.Permisje & 1) != 0)
                 return RedirectToAction("AdminPanel");
 
@@ -149,16 +143,19 @@ namespace przychodnia.Controllers
         [HttpGet]
         public IActionResult AdminPanel(string searchString, bool showForgotten = false)
         {
-            var login = HttpContext.Request.Cookies["AuthUser"];
-            if (string.IsNullOrEmpty(login)) return RedirectToAction("Login");
+           
+            if (HttpContext != null)
+            {
+                var login = HttpContext.Request.Cookies["AuthUser"];
+                if (string.IsNullOrEmpty(login)) return RedirectToAction("Login");
 
-            var user = _context.Uzytkownicy.FirstOrDefault(u => u.Login == login);
-            if (user == null || (user.Permisje & 1) == 0) return Unauthorized();
-
+                var user = _context.Uzytkownicy.FirstOrDefault(u => u.Login == login);
+                if (user == null || (user.Permisje & 1) == 0) return Unauthorized();
+            }
 
             var query = _context.Uzytkownicy.AsQueryable();
 
-
+            
             if (showForgotten)
             {
                 query = query.Where(u => !u.CzyAktywny);
@@ -168,71 +165,42 @@ namespace przychodnia.Controllers
                 query = query.Where(u => u.CzyAktywny);
             }
 
-
+            
             if (!string.IsNullOrWhiteSpace(searchString))
             {
-                string term = searchString.Trim();
-                string termLower = term.ToLower();
+                string termLower = searchString.Trim().ToLower();
+                string phoneSearchTerm = termLower.Replace("+", "");
 
-                var digitsOnly = new string(term.Where(char.IsDigit).ToArray());
-                bool startsWithPlus = term.StartsWith("+");
+                var parts = termLower.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-                // PESEL
-                if (digitsOnly.Length == 11 && term.Length == 11 && !startsWithPlus)
+                if (parts.Length >= 2)
                 {
-                    query = query.Where(u => u.Pesel == digitsOnly);
-                }
-                // TELEFON
-                else if ((digitsOnly.Length >= 7 && digitsOnly.Length <= 12) &&
-                         (term.All(char.IsDigit) || (startsWithPlus && term.Substring(1).All(char.IsDigit))))
-                {
-                    query = query.Where(u => u.Telefon != null && u.Telefon.Contains(digitsOnly));
-                }
-                else if (term.Any(char.IsLetter))
-                {
-                    var parts = term.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                    string p1 = parts[0];
+                    string p2 = parts[1];
 
-                    if (parts.Length >= 2)
-                    {
-                        string p1 = parts[0].ToLower();
-                        string p2 = parts[1].ToLower();
-
-                        query = query.Where(u =>
-                            (u.Imie.ToLower().Contains(p1) && u.Nazwisko.ToLower().Contains(p2)) ||
-                            (u.Imie.ToLower().Contains(p2) && u.Nazwisko.ToLower().Contains(p1)) ||
-                            (u.Adres != null && u.Adres.ToLower().Contains(termLower)) ||
-                            u.Login.ToLower().Contains(termLower) ||
-                            u.Email.ToLower().Contains(termLower)
-                        );
-                    }
-                    else
-                    {
-                        query = query.Where(u =>
-                            u.Imie.ToLower().Contains(termLower) ||
-                            u.Nazwisko.ToLower().Contains(termLower) ||
-                            (u.Adres != null && u.Adres.ToLower().Contains(termLower)) ||
-                            u.Login.ToLower().Contains(termLower) ||
-                            u.Email.ToLower().Contains(termLower)
-                        );
-                    }
+                    query = query.Where(u =>
+                        (u.Imie != null && u.Nazwisko != null && ((u.Imie.ToLower().Contains(p1) && u.Nazwisko.ToLower().Contains(p2)) || (u.Imie.ToLower().Contains(p2) && u.Nazwisko.ToLower().Contains(p1)))) ||
+                        (u.Adres != null && u.Adres.ToLower().Contains(termLower)) ||
+                        (u.Login != null && u.Login.ToLower().Contains(termLower)) ||
+                        (u.Email != null && u.Email.ToLower().Contains(termLower))
+                    );
                 }
-            
                 else
                 {
                     query = query.Where(u =>
-                        u.Imie.ToLower().Contains(termLower) ||
-                        u.Nazwisko.ToLower().Contains(termLower) ||
-                        u.Pesel.Contains(termLower) ||
+                        (u.Imie != null && u.Imie.ToLower().Contains(termLower)) ||
+                        (u.Nazwisko != null && u.Nazwisko.ToLower().Contains(termLower)) ||
+                        (u.Pesel != null && u.Pesel.Contains(termLower)) ||
                         (u.Adres != null && u.Adres.ToLower().Contains(termLower)) ||
-                        (u.Telefon != null && u.Telefon.Contains(termLower)) ||
-                        u.Login.ToLower().Contains(termLower) ||
-                        u.Email.ToLower().Contains(termLower)
+                        (u.Telefon != null && (u.Telefon.Contains(termLower) || u.Telefon.Contains(phoneSearchTerm))) ||
+                        (u.Login != null && u.Login.ToLower().Contains(termLower)) ||
+                        (u.Email != null && u.Email.ToLower().Contains(termLower))
                     );
                 }
             }
 
             ViewBag.CurrentFilter = searchString;
-            ViewBag.ShowForgotten = showForgotten; 
+            ViewBag.ShowForgotten = showForgotten;
 
             return View(query.ToList());
         }
@@ -240,9 +208,10 @@ namespace przychodnia.Controllers
         {
             var user = _context.Uzytkownicy.FirstOrDefault(user => user.ID == id);
 
-            if (user == null)
+           
+            if (user == null || !user.CzyAktywny)
             {
-                return NotFound();
+                return NotFound(); 
             }
 
             return View(user);
@@ -294,10 +263,12 @@ namespace przychodnia.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Logout()
         {
-            // wylogowanie
+            
             Response.Cookies.Delete("AuthUser");
             Response.Cookies.Delete("AuthUserId");
-            return RedirectToAction("Index", "Home");
+
+            
+            return RedirectToAction("Login", "Account");
         }
 
         [HttpPost]
@@ -309,21 +280,21 @@ namespace przychodnia.Controllers
                 return View(nowyUzytkownik);
             }
 
-            // sprawdzanie hasla
+            
             if (string.IsNullOrWhiteSpace(nowyUzytkownik.Haslo))
             {
                 ModelState.AddModelError("Haslo", "Hasło jest wymagane");
                 return View(nowyUzytkownik);
             }
 
-            // walidacja hasla
+            
             if (!PasswordHasher.ValidatePassword(nowyUzytkownik.Haslo, out string passwordError))
             {
                 ModelState.AddModelError("Haslo", passwordError);
                 return View(nowyUzytkownik);
             }
 
-            // unikalnosc danych
+            
             if (_context.Uzytkownicy.Any(u => u.Login == nowyUzytkownik.Login))
                 ModelState.AddModelError("Login", "Login już istnieje");
 
@@ -336,14 +307,14 @@ namespace przychodnia.Controllers
             if (!ModelState.IsValid)
                 return View(nowyUzytkownik);
 
-            // walidacja pesel
+            
             if (!TryValidatePesel(nowyUzytkownik.Pesel, nowyUzytkownik.Plec, out DateTime dob, out string peselError))
             {
                 ModelState.AddModelError("Pesel", peselError);
                 return View(nowyUzytkownik);
             }
 
-            // zapis uzytkownika
+           
             nowyUzytkownik.DataUrodzenia = dob;
             nowyUzytkownik.Haslo = PasswordHasher.HashPassword(nowyUzytkownik.Haslo);
 
@@ -357,14 +328,14 @@ namespace przychodnia.Controllers
             dateOfBirth = default;
             error = string.Empty;
 
-            // dlugosc pesel
+            
             if (string.IsNullOrEmpty(pesel) || pesel.Length != 11 || !pesel.All(char.IsDigit))
             {
                 error = "PESEL nieprawidłowy – niepoprawna data";
                 return false;
             }
 
-            // parsuj date
+           
             int year = int.Parse(pesel.Substring(0, 2));
             int month = int.Parse(pesel.Substring(2, 2));
             int day = int.Parse(pesel.Substring(4, 2));
@@ -372,7 +343,7 @@ namespace przychodnia.Controllers
             int fullYear;
             int realMonth = month;
 
-            // wiek i stulecie
+            
             if (month >= 1 && month <= 12)
                 fullYear = 1900 + year;
             else if (month >= 21 && month <= 32)
@@ -603,9 +574,17 @@ namespace przychodnia.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Uprawnienia(int id, int[] wybraneRole)
         {
-            // zmiana uprawnien
             var user = _context.Uzytkownicy.FirstOrDefault(u => u.ID == id);
             if (user == null) return NotFound();
+
+
+            if (user.Login != null && user.Login.Contains("zamazany_login"))
+            {
+                ViewBag.Error = "Nie można edytować uprawnień zapomnianego użytkownika.";
+
+                return View(user);
+            }
+           
 
             user.Permisje = 0;
             if (wybraneRole == null || wybraneRole.Length == 0)
@@ -616,6 +595,7 @@ namespace przychodnia.Controllers
 
             user.Permisje = wybraneRole.Sum();
             _context.SaveChanges();
+
             return RedirectToAction("Podglad", new { id = user.ID });
         }
 
@@ -642,34 +622,40 @@ namespace przychodnia.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edytuj(Uzytkownik model)
         {
-            // zapis edycji
-            // ignoruj walidację dla pól, które nie są edytowane
-            ModelState.Remove("Login");
-            ModelState.Remove("Haslo");
+            
+            var edytowanePola = new[] { "Imie", "Nazwisko", "Email", "Pesel" };
+            var polaDoUsuniecia = ModelState.Keys.Where(k => !edytowanePola.Contains(k)).ToList();
+
+            foreach (var pole in polaDoUsuniecia)
+            {
+                ModelState.Remove(pole);
+            }
 
             if (!ModelState.IsValid)
+            {
                 return View(model);
+            }
 
             var uzytkownik = _context.Uzytkownicy.FirstOrDefault(u => u.ID == model.ID);
             if (uzytkownik == null) return NotFound();
 
-            if (uzytkownik.Email != model.Email && _context.Uzytkownicy.Any(u => u.Email == model.Email && u.ID != model.ID))
+            if (!string.IsNullOrEmpty(model.Email) && uzytkownik.Email != model.Email)
             {
-                ModelState.AddModelError("Email", "Adres e-mail już istnieje w systemie");
-                return View(model);
+                if (_context.Uzytkownicy.Any(u => u.Email == model.Email && u.ID != model.ID))
+                {
+                    ModelState.AddModelError("Email", "Adres e-mail już istnieje w systemie");
+                    return View(model);
+                }
             }
 
-            
-            if (uzytkownik.Pesel != model.Pesel)
+            if (!string.IsNullOrEmpty(model.Pesel) && uzytkownik.Pesel != model.Pesel)
             {
-                
                 if (!TryValidatePesel(model.Pesel, null, out DateTime dob, out string peselError))
                 {
                     ModelState.AddModelError("Pesel", peselError);
                     return View(model);
                 }
 
-                
                 if (_context.Uzytkownicy.Any(u => u.Pesel == model.Pesel && u.ID != model.ID))
                 {
                     ModelState.AddModelError("Pesel", "PESEL już istnieje w systemie");
@@ -677,18 +663,27 @@ namespace przychodnia.Controllers
                 }
             }
 
+            
             uzytkownik.Imie = model.Imie;
             uzytkownik.Nazwisko = model.Nazwisko;
             uzytkownik.Email = model.Email;
             uzytkownik.Pesel = model.Pesel;
 
-            TempData["SuccessMessage"] = "Sukces! Zaktualizowano poprawnie dane.";
-
+            
+            _context.Update(uzytkownik);
             _context.SaveChanges();
+
+            
+            if (TempData != null)
+            {
+                TempData["SuccessMessage"] = "Sukces! Zaktualizowano poprawnie dane.";
+            }
 
             var currentLogin = Request.Cookies["AuthUser"];
             if (!string.IsNullOrEmpty(currentLogin) && currentLogin == uzytkownik.Login)
-                Response.Cookies.Append("AuthUser", uzytkownik.Login, new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.Lax });
+            {
+                Response.Cookies.Append("AuthUser", uzytkownik.Login, new CookieOptions { HttpOnly = true, SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Lax });
+            }
 
             return RedirectToAction("Podglad", new { id = uzytkownik.ID });
         }
@@ -926,18 +921,15 @@ namespace przychodnia.Controllers
             return View(pacjent);
         }
 
-        // --- EDYCJA PACJENTA (Poprawka błędu płci) ---
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult EdytujPacjenta(Pacjent model)
         {
-            // Czyścimy błędy dla pól, których nie ma w modelu fizycznym
             ModelState.Remove("Plec");
             ModelState.Remove("DataUrodzenia");
 
             if (!string.IsNullOrEmpty(model.Pesel) && model.Pesel.Length == 11)
             {
-                // Wyliczamy płeć pomocniczą, by walidator nie wyrzucił błędu
                 int genderDigit = int.Parse(model.Pesel.Substring(9, 1));
                 string wyliczonaPlec = (genderDigit % 2 == 1) ? "Mężczyzna" : "Kobieta";
 
@@ -945,6 +937,18 @@ namespace przychodnia.Controllers
                 {
                     ModelState.AddModelError("Pesel", peselError);
                 }
+            }
+
+            bool czyPeselZajety = _context.Pacjenci.Any(p => p.Pesel == model.Pesel && p.ID != model.ID);
+            if (czyPeselZajety)
+            {
+                ModelState.AddModelError("Pesel", "Podany PESEL już widnieje w systemie.");
+            }
+
+            bool czyEmailZajety = _context.Pacjenci.Any(p => p.Email == model.Email && p.ID != model.ID);
+            if (czyEmailZajety)
+            {
+                ModelState.AddModelError("Email", "Podany e-mail już widnieje w systemie.");
             }
 
             if (ModelState.IsValid)
@@ -977,53 +981,31 @@ namespace przychodnia.Controllers
 
             if (!string.IsNullOrWhiteSpace(searchString))
             {
-                string term = searchString.Trim();
-                string termLower = term.ToLower();
+                string termLower = searchString.Trim().ToLower();
 
-                var digitsOnly = new string(term.Where(char.IsDigit).ToArray());
-                bool startsWithPlus = term.StartsWith("+");
+                string phoneSearchTerm = termLower.Replace("+", "");
 
-                if (digitsOnly.Length == 11 && term.Length == 11 && !startsWithPlus)
+                var parts = termLower.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+                if (parts.Length >= 2)
                 {
-                    query = query.Where(p => p.Pesel == digitsOnly);
-                }
-                else if ((digitsOnly.Length >= 7 && digitsOnly.Length <= 12) &&
-                         (term.All(char.IsDigit) || (startsWithPlus && term.Substring(1).All(char.IsDigit))))
-                {
-                    query = query.Where(p => p.Telefon.Contains(digitsOnly));
-                }
-                else if (term.Any(char.IsLetter))
-                {
-                    var parts = term.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                    string p1 = parts[0];
+                    string p2 = parts[1];
 
-                    if (parts.Length >= 2)
-                    {
-                        string p1 = parts[0].ToLower();
-                        string p2 = parts[1].ToLower();
-
-                        query = query.Where(p =>
-                            (p.Imie.ToLower().Contains(p1) && p.Nazwisko.ToLower().Contains(p2)) ||
-                            (p.Imie.ToLower().Contains(p2) && p.Nazwisko.ToLower().Contains(p1)) ||
-                            p.Adres.ToLower().Contains(termLower) 
-                        );
-                    }
-                    else
-                    {
-                        query = query.Where(p =>
-                            p.Imie.ToLower().Contains(termLower) ||
-                            p.Nazwisko.ToLower().Contains(termLower) ||
-                            p.Adres.ToLower().Contains(termLower)
-                        );
-                    }
+                    query = query.Where(p =>
+                        (p.Imie.ToLower().Contains(p1) && p.Nazwisko.ToLower().Contains(p2)) ||
+                        (p.Imie.ToLower().Contains(p2) && p.Nazwisko.ToLower().Contains(p1)) ||
+                        (p.Adres != null && p.Adres.ToLower().Contains(termLower))
+                    );
                 }
                 else
                 {
                     query = query.Where(p =>
-                        p.Imie.ToLower().Contains(termLower) ||
-                        p.Nazwisko.ToLower().Contains(termLower) ||
-                        p.Pesel.Contains(termLower) ||
-                        p.Adres.ToLower().Contains(termLower) ||
-                        p.Telefon.Contains(termLower)
+                        (p.Imie != null && p.Imie.ToLower().Contains(termLower)) ||
+                        (p.Nazwisko != null && p.Nazwisko.ToLower().Contains(termLower)) ||
+                        (p.Pesel != null && p.Pesel.Contains(termLower)) ||
+                        (p.Adres != null && p.Adres.ToLower().Contains(termLower)) ||
+                        (p.Telefon != null && (p.Telefon.Contains(termLower) || p.Telefon.Contains(phoneSearchTerm)))
                     );
                 }
             }

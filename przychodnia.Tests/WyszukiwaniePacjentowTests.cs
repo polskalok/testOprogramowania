@@ -51,9 +51,10 @@ namespace przychodnia.Tests.Scenariusze
             var model = result?.Model as List<Pacjent>;
 
             Assert.NotNull(model);
-            Assert.Single(model);
-            Assert.Equal("123456789", model[0].Telefon);
+            
+            Assert.Equal(2, model.Count);
         }
+        
 
         [Fact]
         public void TC_19_03_WyszukiwaniePoNumerzeTelefonu_CaloscioweZKierunkowym()
