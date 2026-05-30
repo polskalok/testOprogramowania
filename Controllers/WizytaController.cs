@@ -127,45 +127,61 @@ namespace przychodnia.Controllers
                 query = query.Where(w => w.LekarzID == zalogowanyId);
             }
 
-            if (!dataOd.HasValue && !dataDo.HasValue && string.IsNullOrEmpty(szukajPacjenta) && !szukajLekarza.HasValue && string.IsNullOrEmpty(szukajSpecjalizacja))
+            
+            bool czyPierwszeWejscie = szukajPacjenta == null && !szukajLekarza.HasValue && szukajSpecjalizacja == null && !dataOd.HasValue && !dataDo.HasValue;
+
+            
+            bool czyPusteWyszukiwanie = !czyPierwszeWejscie && string.IsNullOrEmpty(szukajPacjenta) && !szukajLekarza.HasValue && string.IsNullOrEmpty(szukajSpecjalizacja) && !dataOd.HasValue && !dataDo.HasValue;
+
+            if (czyPierwszeWejscie)
             {
+                
                 DateTime dzis = DateTime.Today;
                 query = query.Where(w => w.DataRozpoczecia >= dzis);
             }
-
-            if (!string.IsNullOrEmpty(szukajPacjenta))
+            else if (czyPusteWyszukiwanie)
             {
-                string fraza = szukajPacjenta.ToLower();
-                query = query.Where(w =>
-                    w.Pacjent!.Pesel.Contains(fraza) ||
-                    (w.Pacjent.Imie + " " + w.Pacjent.Nazwisko).ToLower().Contains(fraza)
-                );
+                
+                ViewBag.Komunikat = "Wypełnij co najmniej jedno kryterium";
+                query = query.Where(w => false); 
             }
-
-            if (!czyLekarz && szukajLekarza.HasValue)
+            else
             {
-                query = query.Where(w => w.LekarzID == szukajLekarza.Value);
-            }
+                
+                if (!string.IsNullOrEmpty(szukajPacjenta))
+                {
+                    string fraza = szukajPacjenta.ToLower();
+                    query = query.Where(w =>
+                        w.Pacjent!.Pesel.Contains(fraza) ||
+                        (w.Pacjent.Imie + " " + w.Pacjent.Nazwisko).ToLower().Contains(fraza)
+                    );
+                }
 
-            if (!czyLekarz && !string.IsNullOrEmpty(szukajSpecjalizacja))
-            {
-                query = query.Where(w => w.Lekarz!.Specjalizacja == szukajSpecjalizacja);
-            }
+                if (!czyLekarz && szukajLekarza.HasValue)
+                {
+                    query = query.Where(w => w.LekarzID == szukajLekarza.Value);
+                }
 
-            if (dataOd.HasValue)
-            {
-                query = query.Where(w => w.DataRozpoczecia >= dataOd.Value);
-            }
+                if (!czyLekarz && !string.IsNullOrEmpty(szukajSpecjalizacja))
+                {
+                    query = query.Where(w => w.Lekarz!.Specjalizacja == szukajSpecjalizacja);
+                }
 
-            if (dataDo.HasValue)
-            {
-                DateTime koniecDnia = dataDo.Value.Date.AddDays(1).AddTicks(-1);
-                query = query.Where(w => w.DataRozpoczecia <= koniecDnia);
+                if (dataOd.HasValue)
+                {
+                    query = query.Where(w => w.DataRozpoczecia >= dataOd.Value);
+                }
+
+                if (dataDo.HasValue)
+                {
+                    DateTime koniecDnia = dataDo.Value.Date.AddDays(1).AddTicks(-1);
+                    query = query.Where(w => w.DataRozpoczecia <= koniecDnia);
+                }
             }
 
             var wizyty = query.OrderBy(w => w.DataRozpoczecia).ToList();
 
-            if (!wizyty.Any())
+            if (!wizyty.Any() && !czyPierwszeWejscie && !czyPusteWyszukiwanie)
             {
                 ViewBag.Komunikat = "Nie znaleziono wizyt spełniających kryteria.";
             }
@@ -189,7 +205,7 @@ namespace przychodnia.Controllers
             return View(wizyty);
         }
 
-        
+
         [HttpGet]
         public IActionResult UzupelnijWyniki(int id)
         {
