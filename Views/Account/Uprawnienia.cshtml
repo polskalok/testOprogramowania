@@ -40,6 +40,7 @@
             <p class="text-muted mb-3">Zaznacz odpowiednie uprawnienia dla użytkownika:</p>
 
             <div class="list-group mb-4">
+                
                 <label class="list-group-item d-flex gap-3 py-3">
                     <input class="form-check-input" type="checkbox" name="wybraneRole" value="1"
                     @( (Model.Permisje & 1) != 0 ? "checked" : "" )>
@@ -49,14 +50,45 @@
                     </span>
                 </label>
 
-                <label class="list-group-item d-flex gap-3 py-3">
-                    <input class="form-check-input" type="checkbox" name="wybraneRole" value="2"
-                    @( (Model.Permisje & 2) != 0 ? "checked" : "" )>
-                    <span>
-                        <strong>Pracownik</strong>
-                        <small class="d-block text-muted">Dostęp do modułów medycznych i rejestracji.</small>
-                    </span>
-                </label>
+                <div class="list-group-item py-3">
+                    <div class="d-flex gap-3 align-items-start">
+                        <input class="form-check-input mt-1" type="checkbox" name="wybraneRole" value="2" id="checkPracownik"
+                        @( (Model.Permisje & 2) != 0 ? "checked" : "" )>
+                        <label for="checkPracownik" style="cursor: pointer; flex-grow: 1; margin: 0;">
+                            <strong>Pracownik</strong>
+                            <small class="d-block text-muted">Dostęp do modułów medycznych i rejestracji.</small>
+                        </label>
+                    </div>
+
+                    <div id="sekcjaPracownika" class="mt-3 p-3 border rounded" style="display: @( (Model.Permisje & 2) != 0 ? "block" : "none" ); background-color: #f8f9fa;">
+                        <h6 class="mb-3 font-weight-bold" style="color: #1B263B;">Określ stanowisko:</h6>
+                        
+                        <div class="form-check mb-2">
+                            <input class="form-check-input typ-pracownika" type="radio" name="typPracownika" id="typRecepcja" value="Recepcjonista"
+                            @( string.IsNullOrEmpty(Model.Specjalizacja) ? "checked" : "" )>
+                            <label class="form-check-label" for="typRecepcja">
+                                Recepcjonista <small class="text-muted">(Brak specjalizacji, zarządza wizytami)</small>
+                            </label>
+                        </div>
+                        
+                        <div class="form-check mb-3">
+                            <input class="form-check-input typ-pracownika" type="radio" name="typPracownika" id="typLekarz" value="Lekarz"
+                            @( !string.IsNullOrEmpty(Model.Specjalizacja) ? "checked" : "" )>
+                            <label class="form-check-label" for="typLekarz">
+                                Lekarz <small class="text-muted">(Posiada dedykowaną specjalizację)</small>
+                            </label>
+                        </div>
+
+                        <div id="sekcjaSpecjalizacji" style="display: @( !string.IsNullOrEmpty(Model.Specjalizacja) ? "block" : "none" ); border-top: 1px solid #dee2e6; padding-top: 10px;">
+                            <label for="selectSpecjalizacja" class="form-label font-weight-bold mb-1" style="font-size: 0.9rem;">Wybierz specjalizację medyczną: <span class="text-danger">*</span></label>
+                            <select name="specjalizacja" id="selectSpecjalizacja" class="form-select border-primary" style="background-color: #fff;">
+                                <option value="">-- Wybierz specjalizację --</option>
+                                <!option value="Internista" @(Model.Specjalizacja == "Internista" ? "selected" : "")>Internista</!option>
+                                <!option value="Pediatra" @(Model.Specjalizacja == "Pediatra" ? "selected" : "")>Pediatra</!option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
 
                 <label class="list-group-item d-flex gap-3 py-3">
                     <input class="form-check-input" type="checkbox" name="wybraneRole" value="4"
@@ -66,6 +98,7 @@
                         <small class="d-block text-muted">Podstawowy profil pacjenta.</small>
                     </span>
                 </label>
+
             </div>
 
             <div class="pt-3 border-top d-flex justify-content-between">
@@ -79,3 +112,34 @@
         </form>
     }
 </div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const checkPracownik = document.getElementById('checkPracownik');
+            const sekcjaPracownika = document.getElementById('sekcjaPracownika');
+            const radioTypy = document.querySelectorAll('.typ-pracownika');
+            const sekcjaSpecjalizacji = document.getElementById('sekcjaSpecjalizacji');
+
+            // Pokazywanie/ukrywanie sekcji po kliknięciu głównego checkboxa Pracownika
+            checkPracownik.addEventListener('change', function () {
+                if (this.checked) {
+                    sekcjaPracownika.style.display = 'block';
+                } else {
+                    sekcjaPracownika.style.display = 'none';
+                }
+            });
+
+            // Pokazywanie/ukrywanie listy specjalizacji po wybraniu Recepcja / Lekarz
+            radioTypy.forEach(radio => {
+                radio.addEventListener('change', function () {
+                    if (this.value === 'Lekarz') {
+                        sekcjaSpecjalizacji.style.display = 'block';
+                    } else {
+                        sekcjaSpecjalizacji.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+}

@@ -1,0 +1,126 @@
+﻿@model przychodnia.Models.Wizyta
+
+@{
+    // Odczytujemy tryb z kontrolera (true = zrealizowana/tylko do odczytu, false = trwa/można edytować)
+    bool trybPodgladu = ViewBag.TrybPodgladu ?? false;
+    ViewData["Title"] = trybPodgladu ? "Podgląd karty pacjenta" : "Uzupełnianie karty medycznej";
+}
+
+<div class="container mt-4" style="max-width: 900px;">
+    
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            <i class="fas fa-exclamation-triangle"></i> Proszę poprawić błędy w formularzu.
+            <div asp-validation-summary="All" class="text-danger mt-2"></div>
+        </div>
+    }
+
+    <div class="card shadow-sm border-0">
+        <div class="card-header text-white d-flex justify-content-between align-items-center" style="background-color: #1B263B; padding: 15px 20px;">
+            <h4 class="m-0">
+                @if (trybPodgladu)
+                {
+                    <i class="fas fa-file-medical-alt me-2"></i>
+                }
+                else
+                {
+
+                    <i class="fas fa-stethoscope me-2"></i>
+                }
+                @ViewData["Title"]
+            </h4>
+            <span class="badge @(trybPodgladu ? "bg-success" : "bg-primary")" style="font-size: 0.9rem;">
+                Status: @Model.Status
+            </span>
+        </div>
+        
+        <div class="card-body p-4">
+            <div class="row mb-4 bg-light p-3 rounded border">
+                <div class="col-md-4">
+                    <span class="text-muted d-block small text-uppercase">Pacjent</span>
+                    <strong>@Model.Pacjent?.Imie @Model.Pacjent?.Nazwisko</strong><br />
+                    <small>PESEL: @Model.Pacjent?.Pesel</small>
+                </div>
+                <div class="col-md-4">
+                    <span class="text-muted d-block small text-uppercase">Data i Czas</span>
+                    <strong>@Model.DataRozpoczecia.ToString("dd.MM.yyyy HH:mm")</strong>
+                </div>
+                <div class="col-md-4">
+                    <span class="text-muted d-block small text-uppercase">Gabinet</span>
+                    <strong>Nr @Model.Gabinet?.Numer</strong><br />
+                    <small>@Model.Gabinet?.Specjalnosc</small>
+                </div>
+            </div>
+
+            <form asp-action="UzupelnijWyniki" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="ID" />
+
+                <div class="mb-4">
+                    <label asp-for="OpisDoleglywosci" class="form-label font-weight-bold">
+                        Wywiad i opis dolegliwości @if(!trybPodgladu){
+                        <span class="text-danger">*</span>
+                    }
+                </label>
+                    
+                @if (trybPodgladu)
+                {
+                    <div class="p-3 border rounded" style="background-color: #f8f9fa; min-height: 80px; white-space: pre-wrap;">@Model.OpisDoleglywosci</div>
+                }
+                else
+                {
+                    <textarea asp-for="OpisDoleglywosci" class="form-control" rows="4" placeholder="Opisz zgłaszane objawy, przebieg choroby..."></textarea>
+                }
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Zalecenia" class="form-label font-weight-bold">
+                    Zalecenia lekarskie i skierowania @if(!trybPodgladu){
+                    <span class="text-danger">*</span>
+                }
+            </label>
+                    
+            @if (trybPodgladu)
+            {
+                <div class="p-3 border rounded" style="background-color: #f8f9fa; min-height: 80px; white-space: pre-wrap;">@Model.Zalecenia</div>
+            }
+            else
+            {
+                <textarea asp-for="Zalecenia" class="form-control" rows="4" placeholder="Wpisz zalecenia, dalsze kroki leczenia..."></textarea>
+            }
+        </div>
+
+        <div class="mb-4">
+            <label asp-for="PrzepisaneLeki" class="form-label font-weight-bold">Przepisane leki i dawkowanie (Opcjonalne)</label>
+                    
+            @if (trybPodgladu)
+            {
+                <div class="p-3 border rounded" style="background-color: #f8f9fa; min-height: 50px; white-space: pre-wrap;">
+                    @(string.IsNullOrWhiteSpace(Model.PrzepisaneLeki) ? "Brak przepisanych leków." : Model.PrzepisaneLeki)
+                </div>
+            }
+            else
+            {
+                <textarea asp-for="PrzepisaneLeki" class="form-control" rows="2" placeholder="Np. Amotaks 1g - 1 tab. co 12 godzin"></textarea>
+            }
+        </div>
+
+        <hr class="mt-5 mb-4" />
+
+        <div class="d-flex justify-content-between">
+            <a asp-action="ListaWizyt" class="btn btn-outline-secondary px-4">
+                <i class="fas fa-arrow-left"></i> Wróć do harmonogramu
+            </a>
+                    
+            @if (!trybPodgladu)
+            {
+                <button type="submit" class="btn btn-success px-4" onclick="return confirm('Uwaga: Zapisanie wyników jest nieodwracalne i zakończy wizytę. Czy na pewno chcesz kontynuować?');">
+                    <i class="fas fa-save"></i> Zatwierdź i zakończ wizytę
+                </button>
+            }
+        </div>
+    </form>
+</div>
+</div>
+</div>

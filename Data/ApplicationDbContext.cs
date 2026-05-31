@@ -1,27 +1,27 @@
-﻿using Microsoft.EntityFrameworkCore;
-using przychodnia.Models;
-using System.Reflection.Emit;
+﻿    using Microsoft.EntityFrameworkCore;
+    using przychodnia.Models;
+    using System.Reflection.Emit;
 
-namespace przychodnia.Data
-{
-    public class ApplicationDbContext : DbContext
+    namespace przychodnia.Data
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
+        public class ApplicationDbContext : DbContext
         {
-        }
+            public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+                : base(options)
+            {
+            }
 
         
-        public DbSet<Uzytkownik> Uzytkownicy { get; set; }
-        public DbSet<Pacjent> Pacjenci { get; set; }
-        public DbSet<Gabinet> Gabinety { get; set; }
-        public DbSet<Wizyta> Wizyty { get; set; }
+            public DbSet<Uzytkownik> Uzytkownicy { get; set; }
+            public DbSet<Pacjent> Pacjenci { get; set; }
+            public DbSet<Gabinet> Gabinety { get; set; }
+            public DbSet<Wizyta> Wizyty { get; set; }   
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            // Jeśli Twoja tabela w projekt.db nazywa się inaczej niż "Uzytkownicy" (np. "Users"), 
-            // odkomentuj linię poniżej i wpisz właściwą nazwę:
-            // modelBuilder.Entity<Uzytkownik>().ToTable("Uzytkownicy");
+            protected override void OnModelCreating(ModelBuilder modelBuilder)
+            {
+                // Jeśli Twoja tabela w projekt.db nazywa się inaczej niż "Uzytkownicy" (np. "Users"), 
+                // odkomentuj linię poniżej i wpisz właściwą nazwę:
+                // modelBuilder.Entity<Uzytkownik>().ToTable("Uzytkownicy");
+            }
         }
     }
-}

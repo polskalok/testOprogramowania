@@ -572,19 +572,17 @@ namespace przychodnia.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Uprawnienia(int id, int[] wybraneRole)
+        // DODANE PARAMETRY: typPracownika i specjalizacja
+        public IActionResult Uprawnienia(int id, int[] wybraneRole, string typPracownika, string specjalizacja)
         {
             var user = _context.Uzytkownicy.FirstOrDefault(u => u.ID == id);
             if (user == null) return NotFound();
 
-
             if (user.Login != null && user.Login.Contains("zamazany_login"))
             {
                 ViewBag.Error = "Nie można edytować uprawnień zapomnianego użytkownika.";
-
                 return View(user);
             }
-           
 
             user.Permisje = 0;
             if (wybraneRole == null || wybraneRole.Length == 0)
@@ -593,7 +591,34 @@ namespace przychodnia.Controllers
                 return View(user);
             }
 
-            user.Permisje = wybraneRole.Sum();
+            int nowePermisje = wybraneRole.Sum();
+            user.Permisje = nowePermisje;
+
+            // --- NOWA LOGIKA: Zarządzanie pod-uprawnieniami Pracownika (Maska bitowa = 2) ---
+            if ((nowePermisje & 2) != 0)
+            {
+                if (typPracownika == "Lekarz")
+                {
+                    if (string.IsNullOrEmpty(specjalizacja))
+                    {
+                        ViewBag.Error = "Wybierz specjalizację dla lekarza.";
+                        return View(user);
+                    }
+                    user.Specjalizacja = specjalizacja; // Zapisanie specjalizacji
+                }
+                else
+                {
+                    // Recepcjonista - wymuszamy brak specjalizacji
+                    user.Specjalizacja = null;
+                }
+            }
+            else
+            {
+                // Jeśli admin całkowicie odbierze uprawnienia pracownika, czyścimy specjalizację z bazy
+                user.Specjalizacja = null;
+            }
+            // ---------------------------------------------------------------------------------
+
             _context.SaveChanges();
 
             return RedirectToAction("Podglad", new { id = user.ID });

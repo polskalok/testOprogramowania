@@ -1,4 +1,39 @@
-﻿<!DOCTYPE html>
+﻿@inject przychodnia.Data.ApplicationDbContext _context
+@{
+    // Pobieranie danych o zalogowanym użytkowniku z bazy
+    var idCookie = Context.Request.Cookies["AuthUserId"];
+    przychodnia.Models.Uzytkownik? zalogowanyUzytkownik = null;
+    string rolaOpis = "";
+
+    if (!string.IsNullOrEmpty(idCookie) && int.TryParse(idCookie, out int userId))
+    {
+        zalogowanyUzytkownik = _context.Uzytkownicy.FirstOrDefault(u => u.ID == userId && u.CzyAktywny);
+        
+        if (zalogowanyUzytkownik != null)
+        {
+            if ((zalogowanyUzytkownik.Permisje & 1) != 0)
+            {
+                rolaOpis = "Administrator";
+            }
+            else if ((zalogowanyUzytkownik.Permisje & 2) != 0)
+            {
+                if (!string.IsNullOrEmpty(zalogowanyUzytkownik.Specjalizacja))
+                {
+                    rolaOpis = $"Lekarz ({zalogowanyUzytkownik.Specjalizacja})";
+                }
+                else
+                {
+                    rolaOpis = "Recepcjonista";
+                }
+            }
+            else
+            {
+                rolaOpis = "Pacjent";
+            }
+        }
+    }
+}
+<!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="utf-8" />
@@ -48,6 +83,7 @@
                 display: flex;
                 flex-wrap: wrap;
                 gap: 10px;
+                align-items: center; /* Dodane, aby wyśrodkować elementy w pionie */
             }
 
             .nav-btn {
@@ -93,6 +129,17 @@
             
             <a asp-controller="Wizyta" asp-action="ListaWizyt" class="nav-btn">Moje Wizyty</a>
             <a asp-controller="Wizyta" asp-action="Rejestruj" class="nav-btn">Nowa Rejestracja</a>
+
+            @if (zalogowanyUzytkownik != null)
+            {
+                <div style="margin-left: auto; text-align: right; color: var(--dark-navy); line-height: 1.2; padding-right: 10px;">
+                    <span style="font-size: 0.75rem; text-transform: uppercase; opacity: 0.8;">Zalogowany jako:</span><br />
+                    <strong style="font-size: 0.95rem;">@zalogowanyUzytkownik.Imie @zalogowanyUzytkownik.Nazwisko</strong><br />
+                    <span style="display: inline-block; background-color: var(--dark-navy); color: white; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; margin-top: 3px;">
+                        @rolaOpis
+                    </span>
+                </div>
+            }
         }
         else
         {
@@ -101,7 +148,14 @@
             <a href="#" class="nav-btn">Kontakt</a>
         }
     </nav>
+    
     <main class="main-content">
         @RenderBody()
-    </main>    <link rel="stylesheet" href="css/site.css" /> <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>    @RenderSection("Scripts", required: false)
-    </body></html>
+    </main>
+
+    <link rel="stylesheet" href="css/site.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
