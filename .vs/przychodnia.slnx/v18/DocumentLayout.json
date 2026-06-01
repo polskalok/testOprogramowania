@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\kito\\documents\\github\\testoprogramowania\\controllers\\wizytacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:controllers\\wizytacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\kito\\documents\\github\\testoprogramowania\\views\\account\\uprawnienia.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:views\\account\\uprawnienia.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
@@ -21,10 +25,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\kito\\documents\\github\\testoprogramowania\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\kito\\documents\\github\\testoprogramowania\\controllers\\wizytacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|solutionrelative:controllers\\wizytacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{F5470283-BFFB-DED6-9962-C79FC0AF7A7C}|przychodnia.csproj|c:\\users\\kito\\documents\\github\\testoprogramowania\\models\\wizyta.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -126,19 +126,6 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "UzupelnijWyniki.cshtml",
-              "DocumentMoniker": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\Views\\Wizyta\\UzupelnijWyniki.cshtml",
-              "RelativeDocumentMoniker": "Views\\Wizyta\\UzupelnijWyniki.cshtml",
-              "ToolTip": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\Views\\Wizyta\\UzupelnijWyniki.cshtml",
-              "RelativeToolTip": "Views\\Wizyta\\UzupelnijWyniki.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAH0AAAAGAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-05-31T20:30:19.008Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 12,
               "Title": "_ViewImports.cshtml",
               "DocumentMoniker": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\Views\\_ViewImports.cshtml",
@@ -151,7 +138,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "AccountController.cs",
               "DocumentMoniker": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\Controllers\\AccountController.cs",
               "RelativeDocumentMoniker": "Controllers\\AccountController.cs",
@@ -184,12 +171,11 @@
               "RelativeToolTip": "Models\\Wizyta.cs",
               "ViewState": "AgIAABAAAAAAAAAAAAA2wC0AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-17T12:40:22.738Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-17T12:40:22.738Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "ApplicationDbContext.cs",
               "DocumentMoniker": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\Data\\ApplicationDbContext.cs",
               "RelativeDocumentMoniker": "Data\\ApplicationDbContext.cs",
@@ -197,31 +183,30 @@
               "RelativeToolTip": "Data\\ApplicationDbContext.cs",
               "ViewState": "AgIAAAcAAAAAAAAAAAAkwBEAAAA4AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-15T11:39:45.997Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-15T11:39:45.997Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Uprawnienia.cshtml",
               "DocumentMoniker": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\Views\\Account\\Uprawnienia.cshtml",
               "RelativeDocumentMoniker": "Views\\Account\\Uprawnienia.cshtml",
               "ToolTip": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\Views\\Account\\Uprawnienia.cshtml",
               "RelativeToolTip": "Views\\Account\\Uprawnienia.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAJAAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAADkAAAAAAAAAAAAAAFcAAAB8AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-04-26T14:14:03.188Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 0,
               "Title": "WizytaController.cs",
               "DocumentMoniker": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\Controllers\\WizytaController.cs",
               "RelativeDocumentMoniker": "Controllers\\WizytaController.cs",
               "ToolTip": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\Controllers\\WizytaController.cs",
               "RelativeToolTip": "Controllers\\WizytaController.cs",
-              "ViewState": "AgIAAAMBAAAAAAAAAAAgwCgBAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAE4AAAAAAAAAAAAgwL4AAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-05-17T13:13:12.603Z",
               "EditorCaption": ""
@@ -229,6 +214,18 @@
             {
               "$type": "Document",
               "DocumentIndex": 3,
+              "Title": "UzupelnijWyniki.cshtml",
+              "DocumentMoniker": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\Views\\Wizyta\\UzupelnijWyniki.cshtml",
+              "RelativeDocumentMoniker": "Views\\Wizyta\\UzupelnijWyniki.cshtml",
+              "ToolTip": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\Views\\Wizyta\\UzupelnijWyniki.cshtml",
+              "RelativeToolTip": "Views\\Wizyta\\UzupelnijWyniki.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAH0AAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-31T20:30:19.008Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "_Layout.cshtml",
               "DocumentMoniker": "C:\\Users\\Kito\\Documents\\GitHub\\testOprogramowania\\Views\\Shared\\_Layout.cshtml",
               "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
@@ -236,8 +233,7 @@
               "RelativeToolTip": "Views\\Shared\\_Layout.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAKAAAAAHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-05-03T12:18:13.397Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-03T12:18:13.397Z"
             },
             {
               "$type": "Document",
@@ -249,8 +245,7 @@
               "RelativeToolTip": "Views\\Wizyta\\ListaWizyt.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAI8AAAAGAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-05-17T13:17:07.735Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-17T13:17:07.735Z"
             },
             {
               "$type": "Document",

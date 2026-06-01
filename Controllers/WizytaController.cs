@@ -113,6 +113,7 @@ namespace przychodnia.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
+            // 1. Sprawdzamy czy pracownik jest lekarzem (czy ma specjalizację)
             bool czyLekarz = !string.IsNullOrEmpty(uzytkownik.Specjalizacja);
             ViewBag.CzyLekarz = czyLekarz;
 
@@ -122,70 +123,53 @@ namespace przychodnia.Controllers
                 .Include(w => w.Gabinet)
                 .AsNoTracking();
 
+            // 2. Jeśli to Lekarz, OD RAZU odcinamy wizyty innych lekarzy
             if (czyLekarz)
             {
                 query = query.Where(w => w.LekarzID == zalogowanyId);
             }
+            // Recepcjonista (brak specjalizacji) ominie ten krok i będzie widział wszystkie wizyty.
 
-            
-            bool czyPierwszeWejscie = szukajPacjenta == null && !szukajLekarza.HasValue && szukajSpecjalizacja == null && !dataOd.HasValue && !dataDo.HasValue;
-
-            
-            bool czyPusteWyszukiwanie = !czyPierwszeWejscie && string.IsNullOrEmpty(szukajPacjenta) && !szukajLekarza.HasValue && string.IsNullOrEmpty(szukajSpecjalizacja) && !dataOd.HasValue && !dataDo.HasValue;
-
-            if (czyPierwszeWejscie)
+            // 3. Aplikujemy filtry wyszukiwania TYLKO, jeśli użytkownik coś wpisał
+            if (!string.IsNullOrEmpty(szukajPacjenta))
             {
-                
-                DateTime dzis = DateTime.Today;
-                query = query.Where(w => w.DataRozpoczecia >= dzis);
-            }
-            else if (czyPusteWyszukiwanie)
-            {
-                
-                ViewBag.Komunikat = "Wypełnij co najmniej jedno kryterium";
-                query = query.Where(w => false); 
-            }
-            else
-            {
-                
-                if (!string.IsNullOrEmpty(szukajPacjenta))
-                {
-                    string fraza = szukajPacjenta.ToLower();
-                    query = query.Where(w =>
-                        w.Pacjent!.Pesel.Contains(fraza) ||
-                        (w.Pacjent.Imie + " " + w.Pacjent.Nazwisko).ToLower().Contains(fraza)
-                    );
-                }
-
-                if (!czyLekarz && szukajLekarza.HasValue)
-                {
-                    query = query.Where(w => w.LekarzID == szukajLekarza.Value);
-                }
-
-                if (!czyLekarz && !string.IsNullOrEmpty(szukajSpecjalizacja))
-                {
-                    query = query.Where(w => w.Lekarz!.Specjalizacja == szukajSpecjalizacja);
-                }
-
-                if (dataOd.HasValue)
-                {
-                    query = query.Where(w => w.DataRozpoczecia >= dataOd.Value);
-                }
-
-                if (dataDo.HasValue)
-                {
-                    DateTime koniecDnia = dataDo.Value.Date.AddDays(1).AddTicks(-1);
-                    query = query.Where(w => w.DataRozpoczecia <= koniecDnia);
-                }
+                string fraza = szukajPacjenta.ToLower();
+                query = query.Where(w =>
+                    w.Pacjent!.Pesel.Contains(fraza) ||
+                    (w.Pacjent.Imie + " " + w.Pacjent.Nazwisko).ToLower().Contains(fraza)
+                );
             }
 
+            if (!czyLekarz && szukajLekarza.HasValue)
+            {
+                query = query.Where(w => w.LekarzID == szukajLekarza.Value);
+            }
+
+            if (!czyLekarz && !string.IsNullOrEmpty(szukajSpecjalizacja))
+            {
+                query = query.Where(w => w.Lekarz!.Specjalizacja == szukajSpecjalizacja);
+            }
+
+            if (dataOd.HasValue)
+            {
+                query = query.Where(w => w.DataRozpoczecia >= dataOd.Value);
+            }
+
+            if (dataDo.HasValue)
+            {
+                DateTime koniecDnia = dataDo.Value.Date.AddDays(1).AddTicks(-1);
+                query = query.Where(w => w.DataRozpoczecia <= koniecDnia);
+            }
+
+            // 4. Pobieramy posortowane wyniki z bazy
             var wizyty = query.OrderBy(w => w.DataRozpoczecia).ToList();
 
-            if (!wizyty.Any() && !czyPierwszeWejscie && !czyPusteWyszukiwanie)
+            if (!wizyty.Any())
             {
-                ViewBag.Komunikat = "Nie znaleziono wizyt spełniających kryteria.";
+                ViewBag.Komunikat = "Brak wizyt spełniających wybrane kryteria.";
             }
 
+            // 5. Przygotowanie danych do list rozwijanych (tylko dla recepcji)
             if (!czyLekarz)
             {
                 ViewBag.WszyscyLekarze = _context.Uzytkownicy.Where(u => (u.Permisje & 2) != 0 && u.CzyAktywny && !string.IsNullOrEmpty(u.Specjalizacja)).ToList();
@@ -196,6 +180,7 @@ namespace przychodnia.Controllers
                     .ToList();
             }
 
+            // Zapamiętanie filtrów w formularzu
             ViewBag.AktualnyPacjent = szukajPacjenta;
             ViewBag.AktualnyLekarz = szukajLekarza;
             ViewBag.AktualnaSpecjalizacja = szukajSpecjalizacja;
