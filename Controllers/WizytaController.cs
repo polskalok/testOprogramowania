@@ -45,15 +45,15 @@ namespace przychodnia.Controllers
             
             if (model.PacjentID == null || model.PacjentID == 0)
             {
-                ModelState.AddModelError("PacjentID", "Musisz wybrać pacjenta z listy.");
+                ModelState.AddModelError("PacjentID", "Wypełnij to pole");
             }
             if (model.LekarzID == null || model.LekarzID == 0)
             {
-                ModelState.AddModelError("LekarzID", "Wybór lekarza jest wymagany.");
+                ModelState.AddModelError("LekarzID", "Wypełnij to pole");
             }
             if (model.GabinetID == null || model.GabinetID == 0)
             {
-                ModelState.AddModelError("GabinetID", "Wybór gabinetu jest wymagany.");
+                ModelState.AddModelError("GabinetID", "Wypełnij to pole");
             }
 
             
@@ -84,7 +84,7 @@ namespace przychodnia.Controllers
 
             if (konflikt)
             {
-                ModelState.AddModelError("DataRozpoczecia", "Brak wolnych terminów w tym okresie dla wybranego lekarza lub gabinetu.");
+                ModelState.AddModelError("DataRozpoczecia", "Brak wolnych terminów w tym okresie");
                 PrzygotujDaneDoFormularza();
                 return View(model);
             }
@@ -113,9 +113,33 @@ namespace przychodnia.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            // 1. Sprawdzamy czy pracownik jest lekarzem (czy ma specjalizację)
             bool czyLekarz = !string.IsNullOrEmpty(uzytkownik.Specjalizacja);
             ViewBag.CzyLekarz = czyLekarz;
+
+            bool czyFormularzWyslany = Request.Query.Count > 0;
+
+            bool brakKryteriow = string.IsNullOrWhiteSpace(szukajPacjenta) &&
+                                 !szukajLekarza.HasValue &&
+                                 string.IsNullOrWhiteSpace(szukajSpecjalizacja) &&
+                                 !dataOd.HasValue &&
+                                 !dataDo.HasValue;
+
+            if (czyFormularzWyslany && brakKryteriow)
+            {
+                ViewBag.Komunikat = "Wypełnij co najmniej jedno kryterium";
+
+                if (!czyLekarz)
+                {
+                    ViewBag.WszyscyLekarze = _context.Uzytkownicy.Where(u => (u.Permisje & 2) != 0 && u.CzyAktywny && !string.IsNullOrEmpty(u.Specjalizacja)).ToList();
+                    ViewBag.WszystkieSpecjalizacje = _context.Uzytkownicy.Where(u => !string.IsNullOrEmpty(u.Specjalizacja) && u.CzyAktywny).Select(u => u.Specjalizacja).Distinct().ToList();
+                }
+                return View(new List<Wizyta>());
+            }
+
+            if (!czyFormularzWyslany)
+            {
+                dataOd = DateTime.Today;
+            }
 
             var query = _context.Wizyty
                 .Include(w => w.Pacjent)
@@ -123,15 +147,12 @@ namespace przychodnia.Controllers
                 .Include(w => w.Gabinet)
                 .AsNoTracking();
 
-            // 2. Jeśli to Lekarz, OD RAZU odcinamy wizyty innych lekarzy
             if (czyLekarz)
             {
                 query = query.Where(w => w.LekarzID == zalogowanyId);
             }
-            // Recepcjonista (brak specjalizacji) ominie ten krok i będzie widział wszystkie wizyty.
 
-            // 3. Aplikujemy filtry wyszukiwania TYLKO, jeśli użytkownik coś wpisał
-            if (!string.IsNullOrEmpty(szukajPacjenta))
+            if (!string.IsNullOrWhiteSpace(szukajPacjenta))
             {
                 string fraza = szukajPacjenta.ToLower();
                 query = query.Where(w =>
@@ -145,7 +166,7 @@ namespace przychodnia.Controllers
                 query = query.Where(w => w.LekarzID == szukajLekarza.Value);
             }
 
-            if (!czyLekarz && !string.IsNullOrEmpty(szukajSpecjalizacja))
+            if (!czyLekarz && !string.IsNullOrWhiteSpace(szukajSpecjalizacja))
             {
                 query = query.Where(w => w.Lekarz!.Specjalizacja == szukajSpecjalizacja);
             }
@@ -161,15 +182,13 @@ namespace przychodnia.Controllers
                 query = query.Where(w => w.DataRozpoczecia <= koniecDnia);
             }
 
-            // 4. Pobieramy posortowane wyniki z bazy
             var wizyty = query.OrderBy(w => w.DataRozpoczecia).ToList();
 
-            if (!wizyty.Any())
+            if (!wizyty.Any() && string.IsNullOrEmpty(ViewBag.Komunikat))
             {
-                ViewBag.Komunikat = "Brak wizyt spełniających wybrane kryteria.";
+                ViewBag.Komunikat = "Nie znaleziono wizyt spełniających kryteria";
             }
 
-            // 5. Przygotowanie danych do list rozwijanych (tylko dla recepcji)
             if (!czyLekarz)
             {
                 ViewBag.WszyscyLekarze = _context.Uzytkownicy.Where(u => (u.Permisje & 2) != 0 && u.CzyAktywny && !string.IsNullOrEmpty(u.Specjalizacja)).ToList();
@@ -180,12 +199,12 @@ namespace przychodnia.Controllers
                     .ToList();
             }
 
-            // Zapamiętanie filtrów w formularzu
+            // --- TUTAJ JEST POPRAWIONY FORMAT Z GODZINĄ ---
             ViewBag.AktualnyPacjent = szukajPacjenta;
             ViewBag.AktualnyLekarz = szukajLekarza;
             ViewBag.AktualnaSpecjalizacja = szukajSpecjalizacja;
-            ViewBag.AktualnaDataOd = dataOd?.ToString("yyyy-MM-dd");
-            ViewBag.AktualnaDataDo = dataDo?.ToString("yyyy-MM-dd");
+            ViewBag.AktualnaDataOd = dataOd?.ToString("yyyy-MM-ddTHH:mm");
+            ViewBag.AktualnaDataDo = dataDo?.ToString("yyyy-MM-ddTHH:mm");
 
             return View(wizyty);
         }

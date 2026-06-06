@@ -49,11 +49,11 @@
 
                 <div class="col-md-2">
                     <label class="form-label small font-weight-bold">Data od</label>
-                    <input type="date" name="dataOd" class="form-control" value="@ViewBag.AktualnaDataOd" />
+                    <input type="datetime-local" name="dataOd" class="form-control" value="@ViewBag.AktualnaDataOd" />
                 </div>
                 <div class="col-md-2">
                     <label class="form-label small font-weight-bold">Data do</label>
-                    <input type="date" name="dataDo" class="form-control" value="@ViewBag.AktualnaDataDo" />
+                    <input type="datetime-local" name="dataDo" class="form-control" value="@ViewBag.AktualnaDataDo" />
                 </div>
 
                 <div class="col-12 d-flex justify-content-end gap-2 mt-3">
@@ -115,7 +115,7 @@
                                     @if (ViewBag.CzyLekarz == true)
                                     {
                                         <td class="text-center">
-                                            @if (w.Status == "Zarejestrowana" && w.DataRozpoczecia <= DateTime.Now)
+                                            @if (w.Status == "Zarejestrowana")
                                             {
                                                 <a href="@Url.Action("UzupelnijWyniki", "Wizyta", new { id = w.ID })" class="btn btn-sm btn-success">
                                                     <i class="fas fa-file-medical"></i> Przyjmij pacjenta
@@ -126,10 +126,6 @@
                                                 <a href="@Url.Action("UzupelnijWyniki", "Wizyta", new { id = w.ID })" class="btn btn-sm btn-outline-info">
                                                     <i class="fas fa-eye"></i> Podgląd karty
                                                 </a>
-                                            }
-                                            else
-                                            {
-                                                <span class="text-muted small">Oczekuje (Przyszła)</span>
                                             }
                                         </td>
                                     }
