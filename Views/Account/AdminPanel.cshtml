@@ -114,7 +114,6 @@
                 <th>Imię i Nazwisko</th>
                 <th>Rola</th>
                 <th>Status</th>
-                <th>Akcje</th>
             </tr>
         </thead>
         <tbody>
@@ -138,16 +137,6 @@
                         <span class="badge @(user.CzyAktywny ? "bg-success" : "bg-danger")">
                             @(user.CzyAktywny ? "Aktywny" : "Zapomniany")
                         </span>
-                    </td>
-                    <td>
-                        <a href="@Url.Action("Podglad", "Account", new { id = user.ID })" class="btn-action">Podgląd</a>
-                        
-                        @if (user.CzyAktywny)
-                        {
-                            <a href="@Url.Action("Zapomnij", "Account", new { id = user.ID })"
-                               class="btn-action"
-                               onclick="return confirm('Czy na pewno chcesz zmienić status na Zapomniany?')">Zapomnij</a>
-                        }
                     </td>
                 </tr>
             }
