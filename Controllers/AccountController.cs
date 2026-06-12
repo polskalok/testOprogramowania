@@ -31,8 +31,8 @@ namespace przychodnia.Controllers
 
             if (user == null || !user.CzyAktywny)
             {
-                
-                ViewBag.Error = "Podane dane nie pasują do żadnego konta w systemie.";
+
+                ViewBag.Error = "Upewnij się że wszystkie dane są wprowadzone poprawnie";
                 return View();
             }
 
@@ -277,7 +277,9 @@ namespace przychodnia.Controllers
         {
             if (!ModelState.IsValid)
             {
+                TempData["SuccessMessage"] = "Pomyślnie dodano użytkownika";
                 return View(nowyUzytkownik);
+              
             }
 
             
@@ -320,6 +322,8 @@ namespace przychodnia.Controllers
 
             _context.Uzytkownicy.Add(nowyUzytkownik);
             _context.SaveChanges();
+
+            TempData["SuccessMessage"] = $"Poprawnie dodano nowego użytkownika: {nowyUzytkownik.Imie} {nowyUzytkownik.Nazwisko} ({nowyUzytkownik.Login}).";
             return RedirectToAction("AdminPanel");
         }
 
@@ -448,9 +452,7 @@ namespace przychodnia.Controllers
 
             _context.SaveChanges();
 
-            // czyszczenie ciasteczek
-            Response.Cookies.Delete("AuthUser");
-            Response.Cookies.Delete("AuthUserId");
+            TempData["SuccessMessage"] = "Użytkownik został pomyślnie zanonimizowany i przeniesiony do zapomnianych.";
 
             return RedirectToAction("AdminPanel");
         }
@@ -604,18 +606,18 @@ namespace przychodnia.Controllers
                         ViewBag.Error = "Wybierz specjalizację dla lekarza.";
                         return View(user);
                     }
-                    user.Specjalizacja = specjalizacja; // Zapisanie specjalizacji
+                    user.Specjalizacja = specjalizacja ?? ""; // Zapisanie specjalizacji
                 }
                 else
                 {
                     // Recepcjonista - wymuszamy brak specjalizacji
-                    user.Specjalizacja = null;
+                    user.Specjalizacja = "";
                 }
             }
             else
             {
                 // Jeśli admin całkowicie odbierze uprawnienia pracownika, czyścimy specjalizację z bazy
-                user.Specjalizacja = null;
+                user.Specjalizacja = "";
             }
             // ---------------------------------------------------------------------------------
 
@@ -675,7 +677,10 @@ namespace przychodnia.Controllers
 
             if (!string.IsNullOrEmpty(model.Pesel) && uzytkownik.Pesel != model.Pesel)
             {
-                if (!TryValidatePesel(model.Pesel, null, out DateTime dob, out string peselError))
+                int genderDigit = int.Parse(model.Pesel.Substring(9, 1));
+                string wyliczonaPlec = (genderDigit % 2 == 1) ? "Mężczyzna" : "Kobieta";
+
+                if (!TryValidatePesel(model.Pesel, wyliczonaPlec, out DateTime dob, out string peselError))
                 {
                     ModelState.AddModelError("Pesel", peselError);
                     return View(model);
@@ -690,6 +695,7 @@ namespace przychodnia.Controllers
 
             
             uzytkownik.Imie = model.Imie;
+            uzytkownik.Login = model.Login;
             uzytkownik.Nazwisko = model.Nazwisko;
             uzytkownik.Email = model.Email;
             uzytkownik.Pesel = model.Pesel;

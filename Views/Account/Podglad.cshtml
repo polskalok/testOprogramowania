@@ -103,12 +103,19 @@
             <div class="info-label">Telefon</div>
             <div class="info-value">@Model.Telefon</div>
         </div>
-        <div class="info-group">
-            <div class="info-label">Uprawnienia</div>
-            <div class="info-value">
-                @(Model.Permisje == 1 ? "Administrator" : Model.Permisje == 2 ? "Pracownik" : "Użytkownik")
-            </div>
-        </div>
+<div class="info-group">
+    <div class="info-label">Uprawnienia</div>
+    <div class="info-value">
+        @{
+            var role = new List<string>();
+            if ((Model.Permisje & 1) != 0) role.Add("Administrator");
+            if ((Model.Permisje & 2) != 0) role.Add("Pracownik");
+            if ((Model.Permisje & 4) != 0) role.Add("Pacjent");
+            if (Model.Permisje == 0) role.Add("Brak");
+        }
+        @string.Join(", ", role)
+    </div>
+</div>
         @if (Model.LockoutEnd != null && Model.LockoutEnd > DateTime.Now)
         {
             <div class="info-group lockout-info">

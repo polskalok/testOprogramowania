@@ -116,7 +116,8 @@ namespace przychodnia.Controllers
             bool czyLekarz = !string.IsNullOrEmpty(uzytkownik.Specjalizacja);
             ViewBag.CzyLekarz = czyLekarz;
 
-            bool czyFormularzWyslany = Request.Query.Count > 0;
+            bool czyFormularzWyslany = szukajPacjenta != null || szukajLekarza.HasValue || szukajSpecjalizacja != null || dataOd.HasValue || dataDo.HasValue;
+
 
             bool brakKryteriow = string.IsNullOrWhiteSpace(szukajPacjenta) &&
                                  !szukajLekarza.HasValue &&
@@ -186,7 +187,7 @@ namespace przychodnia.Controllers
 
             if (!wizyty.Any() && string.IsNullOrEmpty(ViewBag.Komunikat))
             {
-                ViewBag.Komunikat = "Nie znaleziono wizyt spełniających kryteria";
+                ViewBag.Komunikat = "Nie znaleziono wizyt spełniających kryteria.";
             }
 
             if (!czyLekarz)
@@ -213,6 +214,9 @@ namespace przychodnia.Controllers
         [HttpGet]
         public IActionResult UzupelnijWyniki(int id)
         {
+
+            ModelState.AddModelError("", "Opis dolegliwości oraz zlecenia nie mogą pozostać puste");
+
             var idCookie = Request.Cookies["AuthUserId"];
             if (string.IsNullOrEmpty(idCookie) || !int.TryParse(idCookie, out int zalogowanyId))
             {

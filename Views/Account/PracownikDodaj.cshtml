@@ -2,6 +2,10 @@
 @{
     ViewData["Title"] = "Dodaj Pacjenta";
 }
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">@ViewBag.Error</div>
+}
 
 <div style="max-width: 600px; margin: auto; background: white; padding: 25px; border-radius: 10px; border: 1px solid #dee2e6;">
     <h2 style="border-bottom: 3px solid #1B263B; padding-bottom: 10px;">Rejestracja nowego pacjenta</h2>
@@ -37,7 +41,7 @@
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label>Email</label>
-                <input asp-for="Email" type="email" class="form-control" />
+                <input asp-for="Email" type="text" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="col-md-6 mb-3">
